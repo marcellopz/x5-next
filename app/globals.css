@@ -25,6 +25,7 @@
 }
 
 @theme inline {
+  --breakpoint-xs: 30rem;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -47,11 +48,19 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --radius: var(--radius);
+
+  /* Animations */
+  --animate-spin: spin 1s linear infinite;
 }
 
-/* Base layer styles for consistent theming */
-* {
-  border-color: var(--border);
+/* Keyframes for animations */
+@keyframes spin {
+  from {
+    transform: rotate(10deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 body {
