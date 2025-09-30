@@ -6,7 +6,7 @@ import { MobileMenuButton } from "./mobile-menu";
 export function Navbar() {
   return (
     <header className="sticky top-0 z-10 border-b border-border bg-background/80 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="mx-auto flex h-14 w-full max-w-7xl items-center gap-3 px-4">
+      <div className="container mx-auto flex h-14 w-full items-center gap-3 px-4">
         <BrandLogo />
         <NavigationMenu />
         <div className="ml-auto flex items-center gap-2">

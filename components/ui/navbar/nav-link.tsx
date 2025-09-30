@@ -17,7 +17,7 @@ export function NavLink({ href, label }: NavLinkProps) {
     <Link
       href={href}
       className={cn(
-        "rounded-md px-3 py-1.5 text-sm text-muted-foreground hover:text-foreground hover:bg-muted/40 transition",
+        "rounded-md px-3 py-1.5 text-md text-muted-foreground hover:text-foreground hover:bg-muted/40 transition",
         active && "text-foreground bg-muted/50"
       )}
     >
