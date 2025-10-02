@@ -10,6 +10,9 @@ import { StatsCard } from "@/components/home/stats-card";
 import { GraphCard } from "@/components/home/graph-card";
 import { getPlayerByAccountId, getTimeElapsed } from "@/lib/utils";
 
+// Serve cached data immediately, then refresh cache in background for next request
+export const revalidate = 0;
+
 export default async function Home() {
   const playerList = await getPlayerList();
   const rankChangeLog = await getRankChangeLog();

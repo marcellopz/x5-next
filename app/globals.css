@@ -3,21 +3,21 @@
 :root {
   /* Dark theme colors as default (from spark-works) */
   --background: hsl(220, 60%, 7%);
-  --foreground: hsl(210, 40%, 98%);
+  --foreground: hsl(210, 40%, 93%);
   --card: hsl(220, 50%, 9%);
-  --card-foreground: hsl(210, 40%, 98%);
+  --card-foreground: hsl(210, 40%, 93%);
   --popover: hsl(220, 50%, 9%);
-  --popover-foreground: hsl(210, 40%, 98%);
+  --popover-foreground: hsl(210, 40%, 93%);
   --primary: hsl(42, 60%, 52%);
   --primary-foreground: hsl(222.2, 47.4%, 11.2%);
   --secondary: hsl(220, 35%, 12.5%);
-  --secondary-foreground: hsl(210, 40%, 98%);
+  --secondary-foreground: hsl(210, 40%, 93%);
   --muted: hsl(220, 35%, 12%);
   --muted-foreground: hsl(215, 20%, 70%);
   --accent: hsl(220, 40%, 14%);
-  --accent-foreground: hsl(210, 40%, 98%);
+  --accent-foreground: hsl(210, 40%, 93%);
   --destructive: hsl(0, 62.8%, 30.6%);
-  --destructive-foreground: hsl(210, 40%, 98%);
+  --destructive-foreground: hsl(210, 40%, 93%);
   --border: hsl(42, 38%, 32%);
   --input: hsl(42, 38%, 32%);
   --ring: hsl(42, 60%, 45%);

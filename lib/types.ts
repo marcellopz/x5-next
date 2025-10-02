@@ -111,3 +111,15 @@ export interface InitialRankPlayer {
 export interface InitialRanksData {
   [nameId: string]: InitialRankPlayer;
 }
+
+// Player Summary Data Types
+export interface PlayerSummaryData {
+  numberOfMatches: number;
+  summonerName: string;
+  tagLine: string;
+  winRate: number;
+}
+
+export interface PlayerSummary {
+  [accountId: string]: PlayerSummaryData;
+}

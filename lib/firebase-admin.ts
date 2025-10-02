@@ -5,6 +5,7 @@ import type {
   Player,
   PlayerList,
   PlayerRankChanges,
+  PlayerSummary,
   RankChangeLog,
   SummarizedOverallData,
 } from "./types";
@@ -98,6 +99,20 @@ export async function getInitialRankChangeLog(): Promise<InitialRanksData | null
     return data as InitialRanksData | null;
   } catch (error) {
     console.error(`Error fetching initial rank change log:`, error);
+    throw error;
+  }
+}
+
+// Fetches player summary data from pre-processed-data/player-summary
+export async function getPlayerSummary(): Promise<PlayerSummary | null> {
+  try {
+    const snapshot = await db
+      .ref("pre-processed-data/player-summary")
+      .once("value");
+    const data = snapshot.val();
+    return data as PlayerSummary | null;
+  } catch (error) {
+    console.error(`Error fetching player summary:`, error);
     throw error;
   }
 }
