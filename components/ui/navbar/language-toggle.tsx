@@ -14,7 +14,7 @@ export function LanguageToggle() {
           "px-3 py-1.5 text-xs font-medium transition-colors",
           language === "pt"
             ? "text-foreground bg-accent"
-            : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+            : "text-muted-foreground hover:text-foreground hover:bg-accent/50 cursor-pointer"
         )}
       >
         PT
@@ -25,7 +25,7 @@ export function LanguageToggle() {
           "px-3 py-1.5 text-xs font-medium transition-colors",
           language === "en"
             ? "text-foreground bg-accent"
-            : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+            : "text-muted-foreground hover:text-foreground hover:bg-accent/50 cursor-pointer"
         )}
       >
         EN

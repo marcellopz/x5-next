@@ -1,10 +1,12 @@
 import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { getDatabase } from "firebase-admin/database";
 import type {
+  InitialRanksData,
   Player,
   PlayerList,
   PlayerRankChanges,
   RankChangeLog,
+  SummarizedOverallData,
 } from "./types";
 
 // Initialize Firebase Admin SDK
@@ -70,6 +72,32 @@ export async function getPlayerRankChanges(
     return data as PlayerRankChanges | null;
   } catch (error) {
     console.error(`Error fetching rank changes for ${nameId}:`, error);
+    throw error;
+  }
+}
+
+// Fetches pre-processed overall statistics and analytics data
+export async function getSummarizedOverallData(): Promise<SummarizedOverallData | null> {
+  try {
+    const snapshot = await db
+      .ref(`pre-processed-data/overall-stats`)
+      .once("value");
+    const data = snapshot.val();
+    return data as SummarizedOverallData | null;
+  } catch (error) {
+    console.error(`Error fetching summarized overall data:`, error);
+    throw error;
+  }
+}
+
+// Fetches initial rank change log
+export async function getInitialRankChangeLog(): Promise<InitialRanksData | null> {
+  try {
+    const snapshot = await db.ref("player-initial-ranks").once("value");
+    const data = snapshot.val();
+    return data as InitialRanksData | null;
+  } catch (error) {
+    console.error(`Error fetching initial rank change log:`, error);
     throw error;
   }
 }

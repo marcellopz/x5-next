@@ -117,8 +117,13 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         <nav className="flex-1 py-4">
           <MobileNavLink href="/history" label="History" onClick={onClose} />
           <MobileNavLink
-            href="/matchmaking"
-            label="Matchmaking"
+            href="/player-list"
+            label="Player List"
+            onClick={onClose}
+          />
+          <MobileNavLink
+            href="/patch-notes"
+            label="Patch Notes"
             onClick={onClose}
           />
         </nav>

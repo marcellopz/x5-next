@@ -1,18 +1,28 @@
-import { getPlayerList, getRankChangeLog } from "@/lib/firebase-admin";
+import {
+  getInitialRankChangeLog,
+  getPlayerList,
+  getRankChangeLog,
+  getSummarizedOverallData,
+} from "@/lib/firebase-admin";
 import { PlayerCarousel } from "@/components/home/player-carousel";
-import { RecentChanges } from "@/components/home/recent-changes";
+import { PatchNotes } from "@/components/home/patch-notes";
 import { StatsCard } from "@/components/home/stats-card";
 import { GraphCard } from "@/components/home/graph-card";
+import { getPlayerByAccountId, getTimeElapsed } from "@/lib/utils";
 
 export default async function Home() {
   const playerList = await getPlayerList();
   const rankChangeLog = await getRankChangeLog();
+  const summarizedOverallData = await getSummarizedOverallData();
+  const initialRankChangeLog = await getInitialRankChangeLog();
 
   // Calculate some basic stats for the cards
   const totalPlayers = playerList ? Object.keys(playerList).length : 0;
-  const visiblePlayers = playerList
-    ? Object.values(playerList).filter((player) => !player.hide).length
-    : 0;
+
+  // Get the recent MVP player by account_id
+  const recentMVP = summarizedOverallData?.topRecentPlayer
+    ? getPlayerByAccountId(playerList, summarizedOverallData.topRecentPlayer)
+    : null;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -32,7 +42,10 @@ export default async function Home() {
           <PlayerCarousel />
         </div>
         <div>
-          <RecentChanges rankChangeLog={rankChangeLog} />
+          <PatchNotes
+            initialRankChangeLog={initialRankChangeLog}
+            rankChangeLog={rankChangeLog}
+          />
         </div>
       </div>
 
@@ -40,7 +53,7 @@ export default async function Home() {
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4 mb-6">
         <StatsCard
           title="Number of matches"
-          value={visiblePlayers}
+          value={summarizedOverallData?.numberOfGames || 0}
           description="Number of matches played"
         />
         <StatsCard
@@ -48,8 +61,20 @@ export default async function Home() {
           value={totalPlayers}
           description="All registered players"
         />
-        <StatsCard title="???" value="???" description="???" />
-        <StatsCard title="???" value="???" description="???" />
+        <StatsCard
+          title="Time since last match"
+          value={
+            summarizedOverallData?.mostRecentGameTimestamp
+              ? getTimeElapsed(summarizedOverallData.mostRecentGameTimestamp)
+              : "Unknown"
+          }
+          description="Time since last match"
+        />
+        <StatsCard
+          title="Recent MVP"
+          value={recentMVP?.name || "???"}
+          description="Most wins in the last 10 matches"
+        />
       </div>
 
       {/* Graph Cards Grid */}
