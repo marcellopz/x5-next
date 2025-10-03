@@ -3,7 +3,7 @@ import {
   getPlayerList,
   getRankChangeLog,
   getSummarizedOverallData,
-} from "@/lib/firebase-admin";
+} from "@/lib/endpoints";
 import { PlayerCarousel } from "@/components/home/player-carousel";
 import { PatchNotes } from "@/components/home/patch-notes";
 import { StatsCard } from "@/components/home/stats-card";

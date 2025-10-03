@@ -209,3 +209,7 @@ export interface MatchData {
 export interface AllReducedData {
   [matchId: string]: MatchData;
 }
+
+export interface MatchWithId extends MatchData {
+  matchId: string;
+}

@@ -1,4 +1,4 @@
-import { getPlayerList, getPlayerSummary } from "@/lib/firebase-admin";
+import { getPlayerList, getPlayerSummary } from "@/lib/endpoints";
 import { PlayerListTable } from "@/components/player-list/player-list-table";
 
 // Revalidate the page every request to get fresh data

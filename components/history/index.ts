@@ -1,4 +1,8 @@
-export { MatchEntry } from "./match-entry";
-export { PlayerDisplay } from "./player-display";
-export type { PlayerDisplayProps } from "./player-display";
-export { formatMatchDuration, formatMatchDate } from "./match-utils";
+export {
+  MatchEntry,
+  PlayerDisplay,
+  formatMatchDuration,
+  formatMatchDate,
+} from "./match-entry";
+export { MatchesList } from "./matches-list";
+export { MatchesContainer } from "./matches-container";

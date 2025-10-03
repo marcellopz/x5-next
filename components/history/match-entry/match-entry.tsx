@@ -2,8 +2,7 @@
 
 import * as React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { PlayerDisplay } from "./player-display";
-import { formatMatchDuration, formatMatchDate } from "./match-utils";
+import { formatMatchDuration, formatMatchDate, PlayerDisplay } from "./index";
 import type { MatchData } from "@/lib/types";
 
 interface MatchEntryProps {
