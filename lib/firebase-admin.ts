@@ -1,6 +1,7 @@
 import { initializeApp, getApps, cert } from "firebase-admin/app";
 import { getDatabase } from "firebase-admin/database";
 import type {
+  AllReducedData,
   InitialRanksData,
   Player,
   PlayerList,
@@ -113,6 +114,20 @@ export async function getPlayerSummary(): Promise<PlayerSummary | null> {
     return data as PlayerSummary | null;
   } catch (error) {
     console.error(`Error fetching player summary:`, error);
+    throw error;
+  }
+}
+
+// Fetches all reduced data from pre-processed-data/all-reduced
+export async function getAllReducedData(): Promise<AllReducedData | null> {
+  try {
+    const snapshot = await db
+      .ref("pre-processed-data/all-reduced")
+      .once("value");
+    const data = snapshot.val();
+    return data as AllReducedData | null;
+  } catch (error) {
+    console.error(`Error fetching all reduced data:`, error);
     throw error;
   }
 }

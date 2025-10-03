@@ -123,3 +123,89 @@ export interface PlayerSummaryData {
 export interface PlayerSummary {
   [accountId: string]: PlayerSummaryData;
 }
+
+// All Reduced Data Types (Match History)
+export interface ParticipantStats {
+  assists: number;
+  champLevel: number;
+  damageDealtToTurrets: number;
+  damageSelfMitigated: number;
+  deaths: number;
+  firstBloodKill: boolean;
+  goldEarned: number;
+  goldSpent: number;
+  item0: number;
+  item1: number;
+  item2: number;
+  item3: number;
+  item4: number;
+  item5: number;
+  item6: number;
+  kills: number;
+  largestKillingSpree: number;
+  largestMultiKill: number;
+  magicDamageDealtToChampions: number;
+  magicalDamageTaken: number;
+  physicalDamageDealtToChampions: number;
+  physicalDamageTaken: number;
+  totalCs: number;
+  totalDamageDealtToChampions: number;
+  totalDamageTaken: number;
+  trueDamageDealtToChampions: number;
+  visionScore: number;
+  visionWardsBoughtInGame: number;
+  wardsKilled: number;
+  wardsPlaced: number;
+  win: boolean;
+}
+
+export interface Participant {
+  championId: number;
+  championName: string;
+  participantId: number;
+  spells: string[];
+  spellsIds: number[];
+  stats: ParticipantStats;
+  summonerId: number;
+  summonerName: string;
+  tagLine: string;
+  teamId: number;
+}
+
+export interface Ban {
+  championId: number;
+  pickTurn: number;
+}
+
+export interface Team {
+  bans: Ban[];
+  baronKills: number;
+  dominionVictoryScore: number;
+  dragonKills: number;
+  firstBaron: boolean;
+  firstBlood: boolean;
+  firstDargon: boolean;
+  firstInhibitor: boolean;
+  firstTower: boolean;
+  hordeKills: number;
+  inhibitorKills: number;
+  riftHeraldKills: number;
+  teamId: number;
+  towerKills: number;
+  vilemawKills: number;
+  win: string;
+}
+
+export interface MatchData {
+  date: string;
+  gameDuration: number;
+  gameId: number;
+  gameMode: string;
+  gameVersion: string;
+  participants: Participant[];
+  teams: Team[];
+}
+
+export interface AllReducedData {
+  [matchId: string]: MatchData;
+}
