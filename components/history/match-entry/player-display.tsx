@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { championIds, CHAMPIONICONURL } from "@/lib/resources";
 import type { MatchData } from "@/lib/types";
 
@@ -40,9 +41,12 @@ export function PlayerDisplay({ participant }: PlayerDisplayProps) {
 
       {/* Player Info */}
       <div className="min-w-0">
-        <div className="text-xs font-medium truncate">
+        <Link
+          href={`/player/${participant.summonerId}`}
+          className="text-xs font-medium truncate hover:text-primary transition-colors block"
+        >
           {participant.summonerName}
-        </div>
+        </Link>
         <div className="text-xs text-muted-foreground truncate">
           {championName || `Champion ${participant.championId}`}
         </div>

@@ -49,7 +49,7 @@ export default function PatchNotes({
         />
       </CardHeader>
       <CardContent className="flex-1 overflow-hidden px-6">
-        <div className="h-full overflow-y-auto space-y-4 -mr-[12px] pr-[2px]">
+        <div className="h-full overflow-y-auto space-y-4">
           <PatchList groupedChanges={groupedChanges} maxEntries={4} />
         </div>
       </CardContent>
