@@ -1,3 +1,4 @@
+// eslint-disable-next-line storybook/no-renderer-packages
 import type { Meta, StoryObj } from "@storybook/react";
 import { Navbar } from "../components/ui/navbar";
 
@@ -97,7 +98,7 @@ export const WithScrolling: Story = {
           Scrolling Demo
         </h1>
         <p className="text-muted-foreground mb-8">
-          Scroll down to see the navbar's backdrop blur effect in action.
+          Scroll down to see the navbar&apos;s backdrop blur effect in action.
         </p>
         <div className="space-y-8">
           {Array.from({ length: 50 }, (_, i) => (

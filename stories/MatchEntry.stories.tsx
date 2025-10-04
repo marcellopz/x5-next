@@ -1,3 +1,4 @@
+// eslint-disable-next-line storybook/no-renderer-packages
 import type { Meta, StoryObj } from "@storybook/react";
 import { MatchEntry } from "@/components/history/match-entry";
 import type { MatchData } from "@/lib/types";
@@ -550,15 +551,15 @@ export const WithCustomClassName: Story = {
   },
 };
 
-// Multiple match entries to show how they look in a list
-export const MatchHistory: Story = {
-  render: () => (
-    <div className="space-y-4 max-w-4xl">
-      <MatchEntry match={sampleWinningMatch} />
-      <MatchEntry match={shortMatch} />
-      <MatchEntry
-        match={{ ...sampleWinningMatch, date: "2025-01-14T18:45:30.456Z" }}
-      />
-    </div>
-  ),
-};
+// // Multiple match entries to show how they look in a list
+// export const MatchHistory: Story = {
+//   render: () => (
+//     <div className="space-y-4 max-w-4xl">
+//       <MatchEntry match={sampleWinningMatch} />
+//       <MatchEntry match={shortMatch} />
+//       <MatchEntry
+//         match={{ ...sampleWinningMatch, date: "2025-01-14T18:45:30.456Z" }}
+//       />
+//     </div>
+//   ),
+// };

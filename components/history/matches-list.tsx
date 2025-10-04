@@ -50,11 +50,7 @@ export function MatchesList({ matches }: MatchesListProps) {
     <div className="h-full">
       <Virtuoso
         data={displayedMatches}
-        itemContent={(index, match) => (
-          <div className="px-4 pb-4">
-            <MatchEntry match={match} />
-          </div>
-        )}
+        itemContent={(index, match) => <MatchEntry match={match} />}
         endReached={loadMore}
         overscan={10000}
         components={{

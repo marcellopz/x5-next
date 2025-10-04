@@ -14,7 +14,7 @@ export default async function History() {
         </p>
       </div>
 
-      <div className="flex-1 overflow-hidden">
+      <div className="container mx-auto px-4 flex-1 overflow-hidden">
         <MatchesContainer matches={matches} />
       </div>
     </div>
