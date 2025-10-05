@@ -3,9 +3,10 @@ import { getPlayer } from "@/lib/endpoints";
 export default async function PlayerPage({
   params,
 }: {
-  params: { playerId: string };
+  params: Promise<{ playerId: string }>;
 }) {
-  const player = await getPlayer(params.playerId);
+  const { playerId } = await params;
+  const player = await getPlayer(playerId);
   console.log(player);
   return (
     <div className="container mx-auto px-4 py-8">
@@ -13,7 +14,7 @@ export default async function PlayerPage({
         <div>
           <h1 className="text-2xl font-bold tracking-tight">PlayerPage</h1>
           <p className="text-sm text-muted-foreground">
-            PlayerPage {params.playerId} {player?.name}
+            PlayerPage {playerId} {player?.name}
           </p>
         </div>
       </div>
