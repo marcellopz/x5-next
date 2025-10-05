@@ -8,6 +8,8 @@ import { PlayerCarousel } from "@/components/home/player-carousel";
 import { PatchNotes } from "@/components/home/patch-notes";
 import { StatsCard } from "@/components/home/stats-card";
 import { GraphCard } from "@/components/home/graph-card";
+import { PlayerStatsSection } from "@/components/home/player-stats";
+import { CollapsibleSection } from "@/components/ui/collapsible-section";
 import { getPlayerByAccountId, getTimeElapsed } from "@/lib/utils";
 
 // Serve cached data immediately, then refresh cache in background for next request
@@ -80,25 +82,32 @@ export default async function Home() {
         />
       </div>
 
-      {/* Graph Cards Grid */}
-      <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
-        <GraphCard
-          title="Games played per month"
-          description="Games played per month"
-        />
-        <GraphCard
-          title="Games played by hour of the day"
-          description="Games played by hour of the day"
-        />
-        <GraphCard
-          title="Games played by day of the week"
-          description="Games played by day of the week"
-        />
-        <GraphCard
-          title="Game duration distribution"
-          description="Game duration distribution"
-        />
+      {/* Player & Champion Stats Section */}
+      <div className="mb-6">
+        <PlayerStatsSection />
       </div>
+
+      {/* Match Analytics Section */}
+      <CollapsibleSection title="Activity Analytics">
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4">
+          <GraphCard
+            title="Games played per month"
+            description="Games played per month"
+          />
+          <GraphCard
+            title="Games played by hour of the day"
+            description="Games played by hour of the day"
+          />
+          <GraphCard
+            title="Games played by day of the week"
+            description="Games played by day of the week"
+          />
+          <GraphCard
+            title="Game duration distribution"
+            description="Game duration distribution"
+          />
+        </div>
+      </CollapsibleSection>
     </div>
   );
 }

@@ -9,7 +9,7 @@ interface StatsCardProps {
 export function StatsCard({ title, value, description }: StatsCardProps) {
   return (
     <Card>
-      <CardHeader className="pb-3">
+      <CardHeader>
         <CardTitle className="text-lg">{title}</CardTitle>
       </CardHeader>
       <CardContent>
