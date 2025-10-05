@@ -143,6 +143,10 @@ export const Controlled: Story = {
 
 // Multiple sections
 export const MultipleSections: Story = {
+  args: {
+    title: "",
+    children: null,
+  },
   render: () => (
     <div className="space-y-8">
       <CollapsibleSection title="Player Statistics">
