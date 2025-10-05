@@ -38,7 +38,7 @@ export default function PatchNotes({
   });
 
   return (
-    <Card className="h-[450px] flex flex-col">
+    <Card className="h-[500px] flex flex-col">
       <CardHeader className="pb-3">
         <CardTitle className="text-base">Patch Notes</CardTitle>
         <PatchStats

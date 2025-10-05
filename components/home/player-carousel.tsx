@@ -2,7 +2,7 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export function PlayerCarousel() {
   return (
-    <Card className="h-[450px]">
+    <Card className="h-[500px]">
       <CardHeader>
         <CardTitle className="text-lg">Player Carousel</CardTitle>
       </CardHeader>

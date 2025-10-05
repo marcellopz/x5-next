@@ -1,9 +1,6 @@
 import { getPlayerList, getPlayerSummary } from "@/lib/endpoints";
 import { PlayerListTable } from "@/components/player-list/player-list-table";
 
-// Revalidate the page every request to get fresh data
-export const revalidate = 0;
-
 export default async function PlayerListPage() {
   const [playerList, playerSummary] = await Promise.all([
     getPlayerList(),
