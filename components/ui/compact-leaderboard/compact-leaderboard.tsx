@@ -95,7 +95,7 @@ export function CompactLeaderboard({
         </CardHeader>
       )}
 
-      <CardContent className={cn(title ? "" : "pt-6", "px-3!")}>
+      <CardContent className={cn(title ? "" : "pt-6", "px-3! pb-3!")}>
         <div className="space-y-1">
           {displayedItems
             .slice(0, initialCount)
@@ -130,7 +130,7 @@ export function CompactLeaderboard({
         {hasMore && (
           <div className="mt-3">
             <Button
-              variant="ghost"
+              variant="secondary"
               size="sm"
               onClick={handleToggle}
               className="w-full text-xs"
