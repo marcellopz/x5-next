@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 
 export interface LeaderboardItem {
   id: string;
@@ -94,7 +95,7 @@ export function CompactLeaderboard({
         </CardHeader>
       )}
 
-      <CardContent className={title ? "" : "pt-6"}>
+      <CardContent className={cn(title ? "" : "pt-6", "px-3!")}>
         <div className="space-y-1">
           {displayedItems
             .slice(0, initialCount)

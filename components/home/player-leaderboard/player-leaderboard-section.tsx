@@ -53,10 +53,6 @@ export function PlayerStatsSection() {
           title="Top Win Rates"
           expanded={expanded}
           onExpandedChange={setExpanded}
-          collapsedAction={{
-            label: "See All Stats",
-            onClick: () => {},
-          }}
         />
 
         <CompactLeaderboard
@@ -64,10 +60,6 @@ export function PlayerStatsSection() {
           title="Top Average KDA"
           expanded={expanded}
           onExpandedChange={setExpanded}
-          collapsedAction={{
-            label: "See All Stats",
-            onClick: () => {},
-          }}
         />
 
         <CompactLeaderboard
@@ -75,10 +67,6 @@ export function PlayerStatsSection() {
           title="Top Kill Participation"
           expanded={expanded}
           onExpandedChange={setExpanded}
-          collapsedAction={{
-            label: "See All Stats",
-            onClick: () => {},
-          }}
         />
 
         <CompactLeaderboard
@@ -86,10 +74,6 @@ export function PlayerStatsSection() {
           title="Most Games Played"
           expanded={expanded}
           onExpandedChange={setExpanded}
-          collapsedAction={{
-            label: "See All Stats",
-            onClick: () => {},
-          }}
         />
       </div>
     </CollapsibleSection>

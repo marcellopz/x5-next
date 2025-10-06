@@ -149,7 +149,7 @@ export function MobileMenuButton() {
     <>
       <button
         onClick={() => setIsOpen(true)}
-        className="xs:hidden p-2 rounded-md hover:bg-accent transition-colors"
+        className="md:hidden p-2 rounded-md hover:bg-accent transition-colors"
         aria-label="Open menu"
       >
         <svg

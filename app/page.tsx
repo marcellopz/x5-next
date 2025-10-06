@@ -8,7 +8,8 @@ import {
   HeroSection,
   StatsCardsSection,
   PlayerStatsSection,
-  AnalyticsSection,
+  ActivitySection,
+  ChampionsSection,
 } from "@/components/home";
 import { PageHeader } from "@/components/ui/page-header";
 import { getPlayerByAccountId } from "@/lib/utils";
@@ -48,7 +49,9 @@ export default async function Home() {
 
       <PlayerStatsSection />
 
-      <AnalyticsSection />
+      <ChampionsSection />
+
+      <ActivitySection />
     </div>
   );
 }
