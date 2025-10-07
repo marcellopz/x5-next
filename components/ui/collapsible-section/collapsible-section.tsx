@@ -34,7 +34,7 @@ export function CollapsibleSection({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="flex flex-col">
       <button
         onClick={handleToggle}
         className="flex items-center gap-2 group cursor-pointer w-full"
@@ -51,7 +51,9 @@ export function CollapsibleSection({
 
       <div
         className={`grid transition-all duration-300 ease-in-out ${
-          expanded ? "grid-rows-[1fr] opacity-100" : "grid-rows-[0fr] opacity-0"
+          expanded
+            ? "grid-rows-[1fr] opacity-100 mt-5"
+            : "grid-rows-[0fr] opacity-0"
         }`}
       >
         <div className="overflow-hidden">{children}</div>
