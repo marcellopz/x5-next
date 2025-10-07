@@ -14,7 +14,7 @@ export function MiniStatCard({
   return (
     <Card className="h-full border-primary/30 flex flex-col justify-center gap-2 hover:border-primary/50 hover:bg-secondary/90 cursor-default">
       <CardHeader style={{ padding: "12px 16px 0 16px" }}>
-        <CardTitle style={{ fontSize: "20px" }}>{title}</CardTitle>
+        <CardTitle style={{ fontSize: "16px" }}>{title}</CardTitle>
       </CardHeader>
       <CardContent
         className="flex flex-col justify-between"
