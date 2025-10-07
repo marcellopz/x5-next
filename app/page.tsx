@@ -10,6 +10,7 @@ import {
   PlayerStatsSection,
   ActivitySection,
   ChampionsSection,
+  RolesSection,
 } from "@/components/home";
 import { PageHeader } from "@/components/ui/page-header";
 import { getPlayerByAccountId } from "@/lib/utils";
@@ -48,6 +49,8 @@ export default async function Home() {
       />
 
       <PlayerStatsSection />
+
+      <RolesSection />
 
       <ChampionsSection />
 

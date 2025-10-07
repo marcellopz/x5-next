@@ -33,6 +33,7 @@ export function ChampionCard({
               src={`${CHAMPIONICONURL}${championId}.png`}
               alt={championName}
               fill
+              sizes="48px"
               className="object-cover"
             />
           </div>

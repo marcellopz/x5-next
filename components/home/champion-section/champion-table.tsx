@@ -57,13 +57,13 @@ export function ChampionTable({ data, itemsPerPage = 7 }: ChampionTableProps) {
   };
 
   return (
-    <Card className="flex-1 flex flex-col">
+    <Card className="flex-1 flex flex-col min-w-0">
       <CardHeader>
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <CardTitle className="text-base">
             Highest Presence Champions
           </CardTitle>
-          <div>
+          <div className="w-full sm:w-auto">
             <Input
               placeholder="Search champions..."
               value={searchQuery}
@@ -74,61 +74,72 @@ export function ChampionTable({ data, itemsPerPage = 7 }: ChampionTableProps) {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="flex-1 flex flex-col align-middle justify-center py-2!">
-        <Table compact>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-12">#</TableHead>
-              <TableHead>Champion</TableHead>
-              <TableHead>Games</TableHead>
-              <TableHead>W/L</TableHead>
-              <TableHead>Win Rate</TableHead>
-              <TableHead>KDA</TableHead>
-              <TableHead>Avg Damage</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {currentChampions.map((champion) => (
-              <TableRow key={champion.rank}>
-                <TableCell className="font-medium">{champion.rank}</TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <div className="relative w-8 h-8 rounded-md overflow-hidden flex-shrink-0 bg-muted border-2 border-border">
-                      <Image
-                        src={`${CHAMPIONICONURL}${champion.championId}.png`}
-                        alt={champion.champion}
-                        fill
-                        className="object-cover"
-                      />
-                    </div>
-                    <span className="font-semibold">{champion.champion}</span>
-                  </div>
-                </TableCell>
-                <TableCell>{champion.games}</TableCell>
-                <TableCell>
-                  <span className="text-green-500 text-sm">
-                    {champion.wins}
-                  </span>
-                  {" / "}
-                  <span className="text-red-500 text-sm">
-                    {champion.losses}
-                  </span>
-                </TableCell>
-                <TableCell>{champion.winRate}</TableCell>
-                <TableCell>{champion.kda}</TableCell>
-                <TableCell>{champion.avgDamage}</TableCell>
+      <CardContent className="flex-1 flex flex-col align-middle justify-center py-2! overflow-hidden">
+        <div className="w-full overflow-x-auto">
+          <Table compact className="min-w-full">
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-12">#</TableHead>
+                <TableHead className="whitespace-nowrap">Champion</TableHead>
+                <TableHead className="whitespace-nowrap">Games</TableHead>
+                <TableHead className="whitespace-nowrap">W/L</TableHead>
+                <TableHead className="whitespace-nowrap">Win Rate</TableHead>
+                <TableHead className="whitespace-nowrap">KDA</TableHead>
+                <TableHead className="whitespace-nowrap">Avg Damage</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {currentChampions.map((champion) => (
+                <TableRow key={champion.rank}>
+                  <TableCell className="font-medium">{champion.rank}</TableCell>
+                  <TableCell>
+                    <div className="flex items-center gap-2 whitespace-nowrap">
+                      <div className="relative w-8 h-8 rounded-md overflow-hidden flex-shrink-0 bg-muted border-2 border-border">
+                        <Image
+                          src={`${CHAMPIONICONURL}${champion.championId}.png`}
+                          alt={champion.champion}
+                          fill
+                          sizes="28px"
+                          className="object-cover"
+                        />
+                      </div>
+                      <span className="font-semibold">{champion.champion}</span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    {champion.games}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    <span className="text-green-500 text-sm">
+                      {champion.wins}
+                    </span>
+                    {" / "}
+                    <span className="text-red-500 text-sm">
+                      {champion.losses}
+                    </span>
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    {champion.winRate}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    {champion.kda}
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    {champion.avgDamage}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </CardContent>
-      <CardFooter className="flex items-center justify-between pt-2">
+      <CardFooter className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2">
         <div className="text-sm text-muted-foreground">
           Showing {startIndex + 1}-{Math.min(endIndex, filteredData.length)} of{" "}
           {filteredData.length} champions
           {searchQuery && ` (filtered from ${data.length})`}
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start">
           <Button
             variant="outline"
             size="sm"
@@ -138,7 +149,7 @@ export function ChampionTable({ data, itemsPerPage = 7 }: ChampionTableProps) {
             <ChevronLeft className="h-4 w-4" />
             Previous
           </Button>
-          <div className="text-sm font-medium">
+          <div className="text-sm font-medium whitespace-nowrap">
             Page {currentPage} of {totalPages}
           </div>
           <Button
