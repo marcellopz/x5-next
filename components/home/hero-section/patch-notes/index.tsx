@@ -48,7 +48,7 @@ export default function PatchNotes({
           newPlayers={newPlayers}
         />
       </CardHeader>
-      <CardContent className="flex-1 overflow-hidden px-6">
+      <CardContent className="flex-1 overflow-hidden">
         <div className="h-full overflow-y-auto space-y-4">
           <PatchList groupedChanges={groupedChanges} maxEntries={4} />
         </div>
