@@ -24,7 +24,7 @@ export const standoutChampions: StandoutChampion[] = [
   {
     championId: 222,
     championName: "Jinx",
-    stat: "Highest Win Rate",
+    stat: "Most Wins (Last 20)",
     value: "75%",
     gamesPlayed: 24,
     winRate: "75%",
@@ -32,7 +32,7 @@ export const standoutChampions: StandoutChampion[] = [
   {
     championId: 64,
     championName: "Lee Sin",
-    stat: "Most Played",
+    stat: "Most Played (Last 20)",
     value: "48",
     gamesPlayed: 48,
     winRate: "62.5%",
@@ -40,7 +40,7 @@ export const standoutChampions: StandoutChampion[] = [
   {
     championId: 412,
     championName: "Thresh",
-    stat: "Best KDA",
+    stat: "Most Banned (Last 20)",
     value: "4.8",
     gamesPlayed: 32,
     winRate: "68.8%",
@@ -48,7 +48,7 @@ export const standoutChampions: StandoutChampion[] = [
   {
     championId: 157,
     championName: "Yasuo",
-    stat: "Highest Damage",
+    stat: "Most Losses (Last 20)",
     value: "28.5k",
     gamesPlayed: 36,
     winRate: "55.6%",
