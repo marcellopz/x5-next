@@ -1,1 +1,1 @@
-export { PlayerStatsSection } from "./player-leaderboard-section";
+export { PlayerOverallLeaderboard } from "./player-leaderboard-section";

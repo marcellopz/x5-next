@@ -38,8 +38,8 @@ export function ChampionCard({
             />
           </div>
           <div className="space-y-1 flex-1 min-w-0">
-            <div className="flex items-baseline gap-2">
-              <span className="text-xl font-bold truncate">{championName}</span>
+            <div className="flex items-baseline gap-2 justify-between">
+              <span className="text-md font-bold truncate">{championName}</span>
               <span className="text-lg font-semibold text-primary flex-shrink-0">
                 {value}
               </span>

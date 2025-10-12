@@ -22,13 +22,14 @@ export function StatsCardsSection({
   // Format the date for description
   const lastMatchDescription = mostRecentGameTimestamp
     ? `Last match was on ${new Date(mostRecentGameTimestamp).toLocaleDateString(
-        "en-US",
+        "pt-BR",
         {
           year: "numeric",
           month: "short",
           day: "numeric",
           hour: "2-digit",
           minute: "2-digit",
+          timeZone: "America/Sao_Paulo",
         }
       )}`
     : "No matches yet";

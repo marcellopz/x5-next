@@ -7,19 +7,22 @@ import {
 import {
   HeroSection,
   StatsCardsSection,
-  PlayerStatsSection,
   ActivitySection,
   ChampionsSection,
   RolesSection,
+  PlayerOverallLeaderboard,
 } from "@/components/home";
 import { PageHeader } from "@/components/ui/page-header";
 import { getPlayerByAccountId } from "@/lib/utils";
+import { getRoleLeaderboardData } from "@/lib/endpoints/cached";
 
 export default async function Home() {
   const playerList = await getPlayerList();
   const rankChangeLog = await getRankChangeLog();
   const summarizedOverallData = await getSummarizedOverallData();
   const initialRankChangeLog = await getInitialRankChangeLog();
+
+  const roleLeaderboard = await getRoleLeaderboardData();
 
   // Calculate some basic stats for the cards
   const totalPlayers = playerList ? Object.keys(playerList).length : 0;
@@ -48,11 +51,17 @@ export default async function Home() {
         recentMVP={recentMVP?.name || "???"}
       />
 
-      <PlayerStatsSection />
+      <PlayerOverallLeaderboard
+        leaderboard={summarizedOverallData?.leaderboard}
+      />
 
-      <RolesSection />
+      <RolesSection roleLeaderboard={roleLeaderboard} />
 
-      <ChampionsSection />
+      <ChampionsSection
+        championLeaderboard={summarizedOverallData?.championLeaderboard}
+        championTableData={summarizedOverallData?.champions}
+        totalGames={summarizedOverallData?.numberOfGames}
+      />
 
       <ActivitySection />
     </div>

@@ -8,6 +8,7 @@ import {
   _getInitialRankChangeLog,
   _getPlayerSummary,
   _getAllReducedData,
+  _getRoleLeaderboardData,
 } from "./internal";
 
 // Fetches all players from the "players" collection with stale-while-revalidate
@@ -81,5 +82,15 @@ export const getAllReducedData = unstable_cache(
   {
     revalidate: 30, // Cache for 30 seconds, then revalidate in background
     tags: ["all-reduced"],
+  }
+);
+
+// Fetches role leaderboard data from pre-processed-data/role-leaderboard with stale-while-revalidate
+export const getRoleLeaderboardData = unstable_cache(
+  _getRoleLeaderboardData,
+  ["role-leaderboard-data"],
+  {
+    revalidate: 30,
+    tags: ["role-leaderboard"],
   }
 );

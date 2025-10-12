@@ -8,6 +8,7 @@ import type {
   PlayerRankChanges,
   PlayerSummary,
   RankChangeLog,
+  RoleLeaderboardData,
   SummarizedOverallData,
 } from "../types";
 
@@ -132,6 +133,20 @@ export async function _getAllReducedData(): Promise<MatchWithId[]> {
     return matchesArray;
   } catch (error) {
     console.error(`Error fetching all reduced data:`, error);
+    throw error;
+  }
+}
+
+// Internal function to fetch role leaderboard data from Firebase
+export async function _getRoleLeaderboardData(): Promise<RoleLeaderboardData | null> {
+  try {
+    const snapshot = await db
+      .ref("pre-processed-data/role-leaderboard")
+      .once("value");
+    const data = snapshot.val();
+    return data as RoleLeaderboardData | null;
+  } catch (error) {
+    console.error(`Error fetching role leaderboard data:`, error);
     throw error;
   }
 }

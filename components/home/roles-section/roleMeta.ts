@@ -6,6 +6,121 @@ export type RoleStat = {
   description?: string; // metric value or context
 };
 
+// Map of stat titles to API field names and formatters
+export const TITLE_TO_API_MAPPING: Record<
+  string,
+  { apiKey: string; format: (value: number) => string }
+> = {
+  "Best KDA": {
+    apiKey: "kda",
+    format: (v) => `${v.toFixed(2)} avg KDA ratio`,
+  },
+  "Team Player": {
+    apiKey: "killParticipation",
+    format: (v) => `${(v * 100).toFixed(0)}% kill participation`,
+  },
+  "Farm Master": {
+    apiKey: "csPerMinute",
+    format: (v) => `${v.toFixed(1)} CS per minute`,
+  },
+  "Highest Damage": {
+    apiKey: "damagePerMinute",
+    format: (v) => `${v.toFixed(0)} damage per minute`,
+  },
+  "Gold Leader": {
+    apiKey: "goldPerMinute",
+    format: (v) => `${v.toFixed(0)} gold per minute`,
+  },
+  "Vision King": {
+    apiKey: "visionScorePerMinute",
+    format: (v) => `${v.toFixed(2)} vision score/min`,
+  },
+  "Early Advantage": {
+    apiKey: "goldDiffAt15",
+    format: (v) => `${v > 0 ? "+" : ""}${v.toFixed(0)}g @ 15 min`,
+  },
+  "Objective Crusher": {
+    apiKey: "damageDealtToObjectives",
+    format: (v) => `${v.toFixed(0)} objective damage`,
+  },
+  "Solo Kill Artist*": {
+    apiKey: "soloKills",
+    format: (v) => `${v.toFixed(1)} solo kills/game`,
+  },
+  "Tank Supreme*": {
+    apiKey: "damageSelfMitigated",
+    format: (v) => `${(v / 1000).toFixed(0)}k damage absorbed`,
+  },
+  "Turret Destroyer*": {
+    apiKey: "damageDealtToTurrets",
+    format: (v) => `${(v / 1000).toFixed(1)}k turret damage/game`,
+  },
+  "Objective Control*": {
+    apiKey: "objectiveControlRate",
+    format: (v) => `${(v * 100).toFixed(1)}% objective control rate`,
+  },
+  "Early Game Playmaker*": {
+    apiKey: "earlyGameKP",
+    format: (v) => `${(v * 100).toFixed(1)}% KP pre-15 min`,
+  },
+  "Jungle Diff King*": {
+    apiKey: "xpDiffAt15",
+    format: (v) => `${v > 0 ? "+" : ""}${v.toFixed(0)} XP @ 15 min`,
+  },
+  "Most Wins": {
+    apiKey: "wins",
+    format: (v) => `${(v * 100).toFixed(0)}% winrate (last 10)`,
+  },
+  "Roam Master*": {
+    apiKey: "roamsSuccessful",
+    format: (v) => `${v.toFixed(1)} successful roams/game`,
+  },
+  "First Blood Hunter*": {
+    apiKey: "firstBloodKill",
+    format: (v) => `${(v * 100).toFixed(0)}% first blood rate`,
+  },
+  "Damage Carry*": {
+    apiKey: "damageShare",
+    format: (v) => `${(v * 100).toFixed(1)}% team damage share`,
+  },
+  "Gold Efficiency*": {
+    apiKey: "damagePerGold",
+    format: (v) => `${v.toFixed(1)} damage per gold`,
+  },
+  "Death Efficiency*": {
+    apiKey: "damagePerDeath",
+    format: (v) => `${(v / 1000).toFixed(1)}k damage per death`,
+  },
+  "Ward Placer*": {
+    apiKey: "wardsPlaced",
+    format: (v) => `${v.toFixed(0)} wards placed/game`,
+  },
+  "Assist King*": {
+    apiKey: "assists",
+    format: (v) => `${v.toFixed(1)} assists per game`,
+  },
+  "Healing Hero*": {
+    apiKey: "totalHeal",
+    format: (v) => `${(v / 1000).toFixed(0)}k healing done/game`,
+  },
+  "Vision Denier*": {
+    apiKey: "wardsKilled",
+    format: (v) => `${v.toFixed(0)} wards cleared/game`,
+  },
+  "CC Master*": {
+    apiKey: "totalTimeCrowdControlDealt",
+    format: (v) => `${v.toFixed(0)} crowd control score`,
+  },
+  "Damage Absorbed*": {
+    apiKey: "damageSelfMitigated",
+    format: (v) => `${(v / 1000).toFixed(0)}k damage absorbed/game`,
+  },
+  "Damage Dealer*": {
+    apiKey: "damagePerMinute",
+    format: (v) => `${v.toFixed(0)} damage per minute`,
+  },
+};
+
 export const ROLE_META: Record<
   RoleKey,
   {

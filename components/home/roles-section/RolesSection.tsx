@@ -5,15 +5,16 @@ import { RoleKey } from "./roleMeta";
 import MapWithRoleTabs from "./MapWithRoleTabs";
 import RoleStatsPane from "./RoleStatsPane";
 import { CollapsibleSection } from "@/components/ui/collapsible-section";
+import { RoleLeaderboardData } from "@/lib/types";
 
 export interface RolesSectionProps {
   initialRole?: RoleKey;
-  miniStats?: Array<{ title: string; value: string | number }>;
+  roleLeaderboard?: RoleLeaderboardData | null;
 }
 
 export function RolesSection({
   initialRole = "mid",
-  miniStats,
+  roleLeaderboard,
 }: RolesSectionProps) {
   const [activeRole, setActiveRole] = useState<RoleKey>(initialRole);
   const [userSelected, setUserSelected] = useState<boolean>(false);
@@ -45,7 +46,10 @@ export function RolesSection({
             <MapWithRoleTabs activeRole={activeRole} onSelect={handleSelect} />
 
             <div className="lg:col-span-2 h-full">
-              <RoleStatsPane activeRole={activeRole} miniStats={miniStats} />
+              <RoleStatsPane
+                activeRole={activeRole}
+                roleLeaderboard={roleLeaderboard}
+              />
             </div>
           </div>
         </CardContent>

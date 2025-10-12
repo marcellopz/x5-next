@@ -78,6 +78,119 @@ export interface GamesPerMonth {
   [monthKey: string]: number; // e.g., "2025-04": 0, "2025-05": 6
 }
 
+export interface LeaderboardEntry {
+  legend_id: string;
+  legend_name: string;
+  summonerId: string;
+  value: number;
+}
+
+export interface Leaderboard {
+  killParticipation: LeaderboardEntry[];
+  numberOfChampionsPlayed: LeaderboardEntry[];
+  numberOfGames: LeaderboardEntry[];
+  winRate: LeaderboardEntry[];
+  winRateLast20Games: LeaderboardEntry[];
+}
+
+export interface RoleLeaderboardStats {
+  wins: LeaderboardEntry;
+  assists: LeaderboardEntry;
+  csAt10: LeaderboardEntry;
+  csAt15: LeaderboardEntry;
+  csAt20: LeaderboardEntry;
+  csDiffAt10: LeaderboardEntry;
+  csDiffAt15: LeaderboardEntry;
+  csDiffAt20: LeaderboardEntry;
+  csPerMinute: LeaderboardEntry;
+  damageDealtToObjectives: LeaderboardEntry;
+  damageDealtToTurrets: LeaderboardEntry;
+  damagePerDeath: LeaderboardEntry;
+  damagePerGold: LeaderboardEntry;
+  damagePerMinute: LeaderboardEntry;
+  damageSelfMitigated: LeaderboardEntry;
+  damageShare: LeaderboardEntry;
+  deaths: LeaderboardEntry;
+  doubleKills: LeaderboardEntry;
+  earlyGameKP: LeaderboardEntry;
+  firstBlood: LeaderboardEntry;
+  firstBloodAssist: LeaderboardEntry;
+  firstBloodKill: LeaderboardEntry;
+  firstTowerAssist: LeaderboardEntry;
+  firstTowerKill: LeaderboardEntry;
+  goldAt10: LeaderboardEntry;
+  goldAt15: LeaderboardEntry;
+  goldAt20: LeaderboardEntry;
+  goldDiffAt10: LeaderboardEntry;
+  goldDiffAt15: LeaderboardEntry;
+  goldDiffAt20: LeaderboardEntry;
+  goldEarned: LeaderboardEntry;
+  goldPerMinute: LeaderboardEntry;
+  inhibitorKills: LeaderboardEntry;
+  kda: LeaderboardEntry;
+  killParticipation: LeaderboardEntry;
+  kills: LeaderboardEntry;
+  killsAndAssistsPre15: LeaderboardEntry;
+  levelAt10: LeaderboardEntry;
+  levelAt15: LeaderboardEntry;
+  levelAt20: LeaderboardEntry;
+  magicDamageDealtToChampions: LeaderboardEntry;
+  neutralMinionsKilled: LeaderboardEntry;
+  objectiveControlRate: LeaderboardEntry;
+  pentaKills: LeaderboardEntry;
+  physicalDamageDealtToChampions: LeaderboardEntry;
+  quadraKills: LeaderboardEntry;
+  roamsSuccessful: LeaderboardEntry;
+  soloKills: LeaderboardEntry;
+  teamDamage: LeaderboardEntry;
+  teamKills: LeaderboardEntry;
+  teamKillsPre15: LeaderboardEntry;
+  timeCCingOthers: LeaderboardEntry;
+  totalCS: LeaderboardEntry;
+  totalDamageDealtToChampions: LeaderboardEntry;
+  totalDamageTaken: LeaderboardEntry;
+  totalHeal: LeaderboardEntry;
+  totalMinionsKilled: LeaderboardEntry;
+  totalTimeCrowdControlDealt: LeaderboardEntry;
+  tripleKills: LeaderboardEntry;
+  trueDamageDealtToChampions: LeaderboardEntry;
+  turretKills: LeaderboardEntry;
+  visionScore: LeaderboardEntry;
+  visionScorePerMinute: LeaderboardEntry;
+  visionWardsBoughtInGame: LeaderboardEntry;
+  wardsKilled: LeaderboardEntry;
+  wardsPlaced: LeaderboardEntry;
+  xpAt10: LeaderboardEntry;
+  xpAt15: LeaderboardEntry;
+  xpAt20: LeaderboardEntry;
+  xpDiffAt10: LeaderboardEntry;
+  xpDiffAt15: LeaderboardEntry;
+  xpDiffAt20: LeaderboardEntry;
+}
+
+export interface RoleLeaderboardData {
+  adc: RoleLeaderboardStats;
+  jungle: RoleLeaderboardStats;
+  mid: RoleLeaderboardStats;
+  support: RoleLeaderboardStats;
+  top: RoleLeaderboardStats;
+}
+
+export interface ChampionLeaderboardEntry {
+  championId: string;
+  championName: string;
+  numberOfGames: number;
+  value: number;
+  winRate: number;
+}
+
+export interface ChampionLeaderboard {
+  mostBanned: ChampionLeaderboardEntry;
+  mostLosses: ChampionLeaderboardEntry;
+  mostPlayed: ChampionLeaderboardEntry;
+  mostWins: ChampionLeaderboardEntry;
+}
+
 export interface SummarizedOverallData {
   blueSide: TeamSideStats;
   redSide: TeamSideStats;
@@ -92,6 +205,8 @@ export interface SummarizedOverallData {
   weekDayDistribution: number[]; // Array of 7 numbers (Sunday-Saturday)
   mostRecentGameTimestamp: number;
   topRecentPlayer: number;
+  leaderboard: Leaderboard;
+  championLeaderboard: ChampionLeaderboard;
 }
 
 // Initial Ranks Data Types
