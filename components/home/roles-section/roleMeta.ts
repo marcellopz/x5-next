@@ -41,7 +41,7 @@ export const TITLE_TO_API_MAPPING: Record<
   },
   "Objective Crusher": {
     apiKey: "damageDealtToObjectives",
-    format: (v) => `${v.toFixed(0)} objective damage`,
+    format: (v) => `${(v / 1000).toFixed(0)}k objective damage`,
   },
   "Solo Kill Artist*": {
     apiKey: "soloKills",

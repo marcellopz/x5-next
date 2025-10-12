@@ -23,7 +23,7 @@ function RoleTabButton({
       className={
         "inline-flex cursor-pointer items-center group absolute -translate-x-1/2 -translate-y-1/2 rounded-md border px-4 py-2 text-base md:px-5 md:py-2.5 md:text-lg transition-colors " +
         (active
-          ? "border-primary/80 bg-background text-foreground ring-2 ring-primary/50 z-2"
+          ? "border-primary/80 bg-primary/40 text-foreground ring-2 ring-primary/50 z-2"
           : "border-primary/40 bg-background/80 text-muted-foreground hover:bg-primary/15")
       }
       style={{ top: position.top, left: position.left }}

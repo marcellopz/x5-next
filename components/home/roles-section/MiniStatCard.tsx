@@ -20,7 +20,9 @@ export function MiniStatCard({
         className="flex flex-col justify-between"
         style={{ padding: "0 16px 12px 16px" }}
       >
-        <div className="text-lg font-semibold text-primary">{value}</div>
+        <div className="text-lg font-semibold text-primary whitespace-nowrap truncate">
+          {value}
+        </div>
         {description && (
           <p className="text-sm text-muted-foreground">{description}</p>
         )}
