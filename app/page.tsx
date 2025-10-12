@@ -63,7 +63,15 @@ export default async function Home() {
         totalGames={summarizedOverallData?.numberOfGames}
       />
 
-      <ActivitySection />
+      <ActivitySection
+        data={{
+          gamesPerMonth: summarizedOverallData?.gamesPerMonth || {},
+          gamesPerHour: summarizedOverallData?.hourlyDistribution || [],
+          gamesPerDay: summarizedOverallData?.weekDayDistribution || [],
+          gameDurationDistribution:
+            summarizedOverallData?.gameDurationHistogram || {},
+        }}
+      />
     </div>
   );
 }
