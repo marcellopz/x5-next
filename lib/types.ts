@@ -285,6 +285,7 @@ export interface ReducedParticipant {
   summonerName: string;
   tagLine: string;
   teamId: number;
+  role: string;
 }
 
 export interface Ban {
@@ -292,7 +293,7 @@ export interface Ban {
   pickTurn: number;
 }
 
-export interface Team {
+export interface ReducedTeamData {
   bans: Ban[];
   baronKills: number;
   dominionVictoryScore: number;
@@ -309,6 +310,7 @@ export interface Team {
   towerKills: number;
   vilemawKills: number;
   win: string;
+  goldEarned?: number;
 }
 
 export interface ReducedMatchData {
@@ -318,7 +320,7 @@ export interface ReducedMatchData {
   gameMode: string;
   gameVersion: string;
   participants: ReducedParticipant[];
-  teams: Team[];
+  teams: ReducedTeamData[];
 }
 
 export interface AllReducedData {

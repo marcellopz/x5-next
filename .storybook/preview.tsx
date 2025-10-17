@@ -1,9 +1,11 @@
 import type { Preview } from "@storybook/nextjs";
 import "../app/globals.css";
 import React from "react";
+import { INITIAL_VIEWPORTS } from "storybook/viewport";
 
 const preview: Preview = {
   parameters: {
+    options: INITIAL_VIEWPORTS,
     controls: {
       matchers: {
         color: /(background|color)$/i,

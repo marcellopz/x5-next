@@ -21,7 +21,6 @@ const meta = {
 export default meta;
 type Story = StoryObj<typeof meta>;
 
-// Sample match data for stories
 const sampleWinningMatch: ReducedMatchData = {
   date: "2025-01-15T23:20:42.993Z",
   gameDuration: 1563,
@@ -34,6 +33,7 @@ const sampleWinningMatch: ReducedMatchData = {
       championId: 81, // Ezreal
       championName: "Ezreal",
       participantId: 1,
+      role: "adc",
       spells: ["Flash", "Barrier"],
       spellsIds: [4, 21],
       stats: {
@@ -78,6 +78,7 @@ const sampleWinningMatch: ReducedMatchData = {
       championId: 38, // Kassadin
       championName: "Kassadin",
       participantId: 2,
+      role: "mid",
       spells: ["Flash", "Teleport"],
       spellsIds: [4, 12],
       stats: {
@@ -122,6 +123,7 @@ const sampleWinningMatch: ReducedMatchData = {
       championId: 5, // XinZhao
       championName: "XinZhao",
       participantId: 3,
+      role: "jungle",
       spells: ["Smite", "Flash"],
       spellsIds: [11, 4],
       stats: {
@@ -166,6 +168,7 @@ const sampleWinningMatch: ReducedMatchData = {
       championId: 58, // Renekton
       championName: "Renekton",
       participantId: 4,
+      role: "top",
       spells: ["Teleport", "Flash"],
       spellsIds: [12, 4],
       stats: {
@@ -210,6 +213,7 @@ const sampleWinningMatch: ReducedMatchData = {
       championId: 267, // Nami
       championName: "Nami",
       participantId: 5,
+      role: "support",
       spells: ["Heal", "Flash"],
       spellsIds: [7, 4],
       stats: {
@@ -255,6 +259,7 @@ const sampleWinningMatch: ReducedMatchData = {
       championId: 31, // Chogath
       championName: "Chogath",
       participantId: 6,
+      role: "top",
       spells: ["Flash", "Teleport"],
       spellsIds: [4, 12],
       stats: {
@@ -299,6 +304,7 @@ const sampleWinningMatch: ReducedMatchData = {
       championId: 61, // Orianna
       championName: "Orianna",
       participantId: 7,
+      role: "mid",
       spells: ["Flash", "Ignite"],
       spellsIds: [4, 14],
       stats: {
@@ -343,6 +349,7 @@ const sampleWinningMatch: ReducedMatchData = {
       championId: 111, // Nautilus
       championName: "Nautilus",
       participantId: 8,
+      role: "support",
       spells: ["Flash", "Ignite"],
       spellsIds: [4, 14],
       stats: {
@@ -387,6 +394,7 @@ const sampleWinningMatch: ReducedMatchData = {
       championId: 498, // Xayah
       championName: "Xayah",
       participantId: 9,
+      role: "adc",
       spells: ["Flash", "Barrier"],
       spellsIds: [4, 21],
       stats: {
@@ -431,6 +439,7 @@ const sampleWinningMatch: ReducedMatchData = {
       championId: 245, // Ekko
       championName: "Ekko",
       participantId: 10,
+      role: "jungle",
       spells: ["Smite", "Flash"],
       spellsIds: [11, 4],
       stats: {
@@ -524,7 +533,6 @@ const sampleWinningMatch: ReducedMatchData = {
   ],
 };
 
-// Short match for compact display
 const shortMatch: ReducedMatchData = {
   ...sampleWinningMatch,
   gameDuration: 892, // ~15 minutes
@@ -551,15 +559,62 @@ export const WithCustomClassName: Story = {
   },
 };
 
-// // Multiple match entries to show how they look in a list
-// export const MatchHistory: Story = {
-//   render: () => (
-//     <div className="space-y-4 max-w-4xl">
-//       <MatchEntry match={sampleWinningMatch} />
-//       <MatchEntry match={shortMatch} />
-//       <MatchEntry
-//         match={{ ...sampleWinningMatch, date: "2025-01-14T18:45:30.456Z" }}
-//       />
-//     </div>
-//   ),
-// };
+export const Mobile: Story = {
+  args: {
+    match: sampleWinningMatch,
+  },
+  render: () => (
+    <div className="w-full max-w-full">
+      <MatchEntry match={sampleWinningMatch} />
+    </div>
+  ),
+  globals: {
+    viewport: { value: "mobile1", isRotated: false },
+  },
+};
+
+export const Tablet: Story = {
+  args: {
+    match: sampleWinningMatch,
+  },
+  render: () => (
+    <div style={{ width: "768px", maxWidth: "768px" }}>
+      <MatchEntry match={sampleWinningMatch} />
+    </div>
+  ),
+  globals: {
+    viewport: { value: "tablet", isRotated: false },
+  },
+};
+
+export const Desktop: Story = {
+  args: {
+    match: sampleWinningMatch,
+  },
+  render: () => (
+    <div style={{ width: "1280px", maxWidth: "1280px" }}>
+      <MatchEntry match={sampleWinningMatch} />
+    </div>
+  ),
+  parameters: {
+    layout: "padded",
+  },
+  globals: {
+    viewport: { value: "desktop", isRotated: false },
+  },
+};
+
+export const MatchHistory: Story = {
+  args: {
+    match: sampleWinningMatch,
+  },
+  render: () => (
+    <div className="space-y-4 max-w-4xl">
+      <MatchEntry match={sampleWinningMatch} />
+      <MatchEntry match={shortMatch} />
+      <MatchEntry
+        match={{ ...sampleWinningMatch, date: "2025-01-14T18:45:30.456Z" }}
+      />
+    </div>
+  ),
+};
