@@ -14,7 +14,7 @@ import {
 } from "@/components/home";
 import { PageHeader } from "@/components/ui/page-header";
 import { getPlayerByAccountId } from "@/lib/utils";
-import { getRoleLeaderboardData } from "@/lib/endpoints/cached";
+import { getRoleLeaderboardData } from "@/lib/endpoints";
 
 export default async function Home() {
   const playerList = await getPlayerList();

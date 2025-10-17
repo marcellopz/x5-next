@@ -4,10 +4,10 @@ import * as React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { championIds, CHAMPIONICONURL } from "@/lib/resources";
-import type { MatchData } from "@/lib/types";
+import type { ReducedMatchData } from "@/lib/types";
 
 export interface PlayerDisplayProps {
-  participant: MatchData["participants"][0];
+  participant: ReducedMatchData["participants"][0];
 }
 
 export function PlayerDisplay({ participant }: PlayerDisplayProps) {

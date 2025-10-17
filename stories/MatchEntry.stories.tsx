@@ -1,7 +1,7 @@
 // eslint-disable-next-line storybook/no-renderer-packages
 import type { Meta, StoryObj } from "@storybook/react";
 import { MatchEntry } from "@/components/history/match-entry";
-import type { MatchData } from "@/lib/types";
+import type { ReducedMatchData } from "@/lib/types";
 
 const meta = {
   title: "Components/MatchEntry",
@@ -22,7 +22,7 @@ export default meta;
 type Story = StoryObj<typeof meta>;
 
 // Sample match data for stories
-const sampleWinningMatch: MatchData = {
+const sampleWinningMatch: ReducedMatchData = {
   date: "2025-01-15T23:20:42.993Z",
   gameDuration: 1563,
   gameId: 3102350687,
@@ -525,7 +525,7 @@ const sampleWinningMatch: MatchData = {
 };
 
 // Short match for compact display
-const shortMatch: MatchData = {
+const shortMatch: ReducedMatchData = {
   ...sampleWinningMatch,
   gameDuration: 892, // ~15 minutes
   date: "2025-01-16T14:30:15.123Z",

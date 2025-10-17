@@ -3,10 +3,10 @@
 import * as React from "react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { formatMatchDuration, formatMatchDate, PlayerDisplay } from "./index";
-import type { MatchData } from "@/lib/types";
+import type { ReducedMatchData } from "@/lib/types";
 
 interface MatchEntryProps {
-  match: MatchData;
+  match: ReducedMatchData;
   className?: string;
 }
 

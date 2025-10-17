@@ -56,10 +56,8 @@ export function CompactLeaderboard({
     }
   };
 
-  const displayedItems = expanded
-    ? items.slice(0, maxCount)
-    : items.slice(0, initialCount);
   const hasMore = items.length > initialCount;
+  const allItems = items.slice(0, maxCount);
 
   const getPositionNumber = (index: number) => {
     return `${index + 1}.`;
@@ -96,34 +94,18 @@ export function CompactLeaderboard({
       )}
 
       <CardContent className={cn(title ? "" : "pt-6", "px-3! pb-3!")}>
-        <div className="space-y-1">
-          {displayedItems
-            .slice(0, initialCount)
-            .map((item, index) =>
+        <div
+          className="transition-all duration-300 ease-in-out overflow-hidden"
+          style={{
+            maxHeight: expanded ? "2000px" : `${initialCount * 52}px`,
+          }}
+        >
+          <div className="space-y-1">
+            {allItems.map((item, index) =>
               renderItem
                 ? renderItem(item, index)
                 : defaultRenderItem(item, index)
             )}
-        </div>
-
-        {/* Animated expandable section */}
-        <div
-          className={`grid transition-all duration-300 ease-in-out ${
-            expanded && hasMore
-              ? "grid-rows-[1fr] opacity-100"
-              : "grid-rows-[0fr] opacity-0"
-          }`}
-        >
-          <div className="overflow-hidden">
-            <div className="space-y-1 mt-1">
-              {displayedItems
-                .slice(initialCount)
-                .map((item, index) =>
-                  renderItem
-                    ? renderItem(item, index + initialCount)
-                    : defaultRenderItem(item, index + initialCount)
-                )}
-            </div>
           </div>
         </div>
 
@@ -139,39 +121,39 @@ export function CompactLeaderboard({
             </Button>
 
             {/* Animated action buttons */}
-            <div
-              className={`grid transition-all duration-300 ease-in-out ${
-                expanded
-                  ? "grid-rows-[1fr] opacity-100"
-                  : "grid-rows-[0fr] opacity-0"
-              }`}
-            >
-              <div className="overflow-hidden">
-                <div className="space-y-2 mt-2">
-                  {expandedAction && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={expandedAction.onClick}
-                      className="w-full text-xs"
-                    >
-                      {expandedAction.label}
-                    </Button>
-                  )}
+            {(expandedAction || collapsedAction) && (
+              <div
+                className={`grid transition-[grid-template-rows] duration-500 ease-in-out ${
+                  expanded ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                }`}
+              >
+                <div className="overflow-hidden min-h-0">
+                  <div className="space-y-2 mt-2">
+                    {expandedAction && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={expandedAction.onClick}
+                        className="w-full text-xs"
+                      >
+                        {expandedAction.label}
+                      </Button>
+                    )}
 
-                  {collapsedAction && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={collapsedAction.onClick}
-                      className="w-full text-xs"
-                    >
-                      {collapsedAction.label}
-                    </Button>
-                  )}
+                    {collapsedAction && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={collapsedAction.onClick}
+                        className="w-full text-xs"
+                      >
+                        {collapsedAction.label}
+                      </Button>
+                    )}
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         )}
 

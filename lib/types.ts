@@ -240,7 +240,7 @@ export interface PlayerSummary {
 }
 
 // All Reduced Data Types (Match History)
-export interface ParticipantStats {
+export interface ReducedParticipantStats {
   assists: number;
   champLevel: number;
   damageDealtToTurrets: number;
@@ -274,13 +274,13 @@ export interface ParticipantStats {
   win: boolean;
 }
 
-export interface Participant {
+export interface ReducedParticipant {
   championId: number;
   championName: string;
   participantId: number;
   spells: string[];
   spellsIds: number[];
-  stats: ParticipantStats;
+  stats: ReducedParticipantStats;
   summonerId: number;
   summonerName: string;
   tagLine: string;
@@ -311,20 +311,20 @@ export interface Team {
   win: string;
 }
 
-export interface MatchData {
+export interface ReducedMatchData {
   date: string;
   gameDuration: number;
   gameId: number;
   gameMode: string;
   gameVersion: string;
-  participants: Participant[];
+  participants: ReducedParticipant[];
   teams: Team[];
 }
 
 export interface AllReducedData {
-  [matchId: string]: MatchData;
+  [matchId: string]: ReducedMatchData;
 }
 
-export interface MatchWithId extends MatchData {
+export interface MatchWithId extends ReducedMatchData {
   matchId: string;
 }

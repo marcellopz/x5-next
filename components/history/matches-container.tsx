@@ -9,7 +9,6 @@ interface MatchesContainerProps {
 
 export function MatchesContainer({ matches }: MatchesContainerProps) {
   // TODO: Add filter functionality here in the future
-
   return (
     <div className="h-full flex flex-col">
       {/* Future: Filter controls will go here */}
