@@ -36,6 +36,15 @@ export function MatchEntry({ match, className }: MatchEntryProps) {
     0
   );
 
+  const team100TotalKills = team100.reduce(
+    (acc, curr) => acc + curr.stats.kills,
+    0
+  );
+  const team200TotalKills = team200.reduce(
+    (acc, curr) => acc + curr.stats.kills,
+    0
+  );
+
   return (
     <div
       className={`rounded-lg border border-border bg-card text-card-foreground shadow-sm hover:shadow-md transition-shadow duration-200 p-3 sm:p-4 ${
@@ -60,11 +69,13 @@ export function MatchEntry({ match, className }: MatchEntryProps) {
             team={match.teams.find((t) => t.teamId === 100)!}
             isWinning={team100Won}
             goldEarned={team100GoldEarned}
+            totalKills={team100TotalKills}
           />
           {sortedTeam100.map((participant) => (
             <PlayerDisplay
               key={participant.participantId}
               participant={participant}
+              totalKills={team100TotalKills}
             />
           ))}
         </div>
@@ -75,11 +86,13 @@ export function MatchEntry({ match, className }: MatchEntryProps) {
             team={match.teams.find((t) => t.teamId === 200)!}
             isWinning={team200Won}
             goldEarned={team200GoldEarned}
+            totalKills={team200TotalKills}
           />
           {sortedTeam200.map((participant) => (
             <PlayerDisplay
               key={participant.participantId}
               participant={participant}
+              totalKills={team200TotalKills}
             />
           ))}
         </div>

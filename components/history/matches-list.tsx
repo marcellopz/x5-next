@@ -1,27 +1,10 @@
 "use client";
 
-import { List } from "react-window";
-import type { RowComponentProps } from "react-window";
 import type { MatchWithId } from "@/lib/types";
 import { MatchEntry } from "./match-entry";
 
 interface MatchesListProps {
   matches: MatchWithId[];
-}
-
-interface RowProps {
-  matches: MatchWithId[];
-}
-
-const ITEM_HEIGHT = 318;
-
-function Row({ index, matches }: RowComponentProps<RowProps>) {
-  const match = matches[index];
-  return (
-    <div className="pb-4">
-      <MatchEntry match={match} />
-    </div>
-  );
 }
 
 export function MatchesList({ matches }: MatchesListProps) {
@@ -33,12 +16,13 @@ export function MatchesList({ matches }: MatchesListProps) {
     );
   }
 
+  const matchesToShow = matches.slice(0, 4);
+
   return (
-    <List
-      rowComponent={Row}
-      rowCount={matches.length}
-      rowHeight={ITEM_HEIGHT}
-      rowProps={{ matches }}
-    />
+    <div className="space-y-4">
+      {matchesToShow.map((match) => (
+        <MatchEntry key={match.matchId} match={match} />
+      ))}
+    </div>
   );
 }
