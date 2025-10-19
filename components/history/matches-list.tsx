@@ -16,11 +16,9 @@ export function MatchesList({ matches }: MatchesListProps) {
     );
   }
 
-  const matchesToShow = matches.slice(0, 4);
-
   return (
     <div className="space-y-4">
-      {matchesToShow.map((match) => (
+      {matches.map((match) => (
         <MatchEntry key={match.matchId} match={match} />
       ))}
     </div>

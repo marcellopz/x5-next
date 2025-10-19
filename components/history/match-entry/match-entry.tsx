@@ -1,12 +1,7 @@
 "use client";
 
 import * as React from "react";
-import {
-  formatMatchDuration,
-  formatMatchDate,
-  PlayerDisplay,
-  TeamHeader,
-} from "./index";
+import { PlayerDisplay, TeamHeader, MatchHeader } from "./index";
 import type { ReducedMatchData } from "@/lib/types";
 import { sortParticipantsByRole } from "./match-utils";
 
@@ -16,34 +11,68 @@ interface MatchEntryProps {
 }
 
 export function MatchEntry({ match, className }: MatchEntryProps) {
-  // Separate participants by team
-  const team100 = match.participants.filter((p) => p.teamId === 100);
-  const team200 = match.participants.filter((p) => p.teamId === 200);
+  // Separate participants by team and calculate team stats in a single pass
+  const { team100Data, team200Data } = React.useMemo(() => {
+    const team100Participants: typeof match.participants = [];
+    const team200Participants: typeof match.participants = [];
 
-  // Determine which team won
-  const team100Won = match.teams.find((t) => t.teamId === 100)?.win === "Win";
-  const team200Won = match.teams.find((t) => t.teamId === 200)?.win === "Win";
+    const team100Stats = {
+      totalKills: 0,
+      totalDeaths: 0,
+      totalAssists: 0,
+      goldEarned: 0,
+    };
 
-  const sortedTeam100 = sortParticipantsByRole(team100);
-  const sortedTeam200 = sortParticipantsByRole(team200);
+    const team200Stats = {
+      totalKills: 0,
+      totalDeaths: 0,
+      totalAssists: 0,
+      goldEarned: 0,
+    };
 
-  const team100GoldEarned = team100.reduce(
-    (acc, curr) => acc + curr.stats.goldEarned,
-    0
-  );
-  const team200GoldEarned = team200.reduce(
-    (acc, curr) => acc + curr.stats.goldEarned,
-    0
-  );
+    // Single loop to separate teams and calculate stats
+    for (const participant of match.participants) {
+      if (participant.teamId === 100) {
+        team100Participants.push(participant);
+        team100Stats.totalKills += participant.stats.kills;
+        team100Stats.totalDeaths += participant.stats.deaths;
+        team100Stats.totalAssists += participant.stats.assists;
+        team100Stats.goldEarned += participant.stats.goldEarned;
+      } else {
+        team200Participants.push(participant);
+        team200Stats.totalKills += participant.stats.kills;
+        team200Stats.totalDeaths += participant.stats.deaths;
+        team200Stats.totalAssists += participant.stats.assists;
+        team200Stats.goldEarned += participant.stats.goldEarned;
+      }
+    }
 
-  const team100TotalKills = team100.reduce(
-    (acc, curr) => acc + curr.stats.kills,
-    0
-  );
-  const team200TotalKills = team200.reduce(
-    (acc, curr) => acc + curr.stats.kills,
-    0
-  );
+    return {
+      team100Data: {
+        participants: team100Participants,
+        sortedParticipants: sortParticipantsByRole(team100Participants),
+        ...team100Stats,
+      },
+      team200Data: {
+        participants: team200Participants,
+        sortedParticipants: sortParticipantsByRole(team200Participants),
+        ...team200Stats,
+      },
+    };
+  }, [match]);
+
+  // Determine teams and winning status
+  const { team100, team200, team100Won, team200Won } = React.useMemo(() => {
+    const t100 = match.teams.find((t) => t.teamId === 100)!;
+    const t200 = match.teams.find((t) => t.teamId === 200)!;
+
+    return {
+      team100: t100,
+      team200: t200,
+      team100Won: t100.win === "Win",
+      team200Won: t200.win === "Win",
+    };
+  }, [match.teams]);
 
   return (
     <div
@@ -51,31 +80,28 @@ export function MatchEntry({ match, className }: MatchEntryProps) {
         className || ""
       }`}
     >
-      <div className="pb-3 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-sm text-muted-foreground">
-            {formatMatchDuration(match.gameDuration)}
-          </span>
-        </div>
-        <div className="text-sm text-muted-foreground">
-          {formatMatchDate(match.date)}
-        </div>
-      </div>
+      <MatchHeader
+        matchId={match.gameId.toString()}
+        gameDuration={match.gameDuration}
+        date={match.date}
+      />
 
       <div className="grid grid-cols-2 gap-2 md:gap-3">
         {/* Team 100 (Blue Side) */}
         <div className="space-y-2">
           <TeamHeader
-            team={match.teams.find((t) => t.teamId === 100)!}
+            team={team100}
             isWinning={team100Won}
-            goldEarned={team100GoldEarned}
-            totalKills={team100TotalKills}
+            goldEarned={team100Data.goldEarned}
+            totalKills={team100Data.totalKills}
+            totalDeaths={team100Data.totalDeaths}
+            totalAssists={team100Data.totalAssists}
           />
-          {sortedTeam100.map((participant) => (
+          {team100Data.sortedParticipants.map((participant) => (
             <PlayerDisplay
               key={participant.participantId}
               participant={participant}
-              totalKills={team100TotalKills}
+              totalKills={team100Data.totalKills}
             />
           ))}
         </div>
@@ -83,16 +109,18 @@ export function MatchEntry({ match, className }: MatchEntryProps) {
         {/* Team 200 (Red Side) */}
         <div className="space-y-2">
           <TeamHeader
-            team={match.teams.find((t) => t.teamId === 200)!}
+            team={team200}
             isWinning={team200Won}
-            goldEarned={team200GoldEarned}
-            totalKills={team200TotalKills}
+            goldEarned={team200Data.goldEarned}
+            totalKills={team200Data.totalKills}
+            totalDeaths={team200Data.totalDeaths}
+            totalAssists={team200Data.totalAssists}
           />
-          {sortedTeam200.map((participant) => (
+          {team200Data.sortedParticipants.map((participant) => (
             <PlayerDisplay
               key={participant.participantId}
               participant={participant}
-              totalKills={team200TotalKills}
+              totalKills={team200Data.totalKills}
             />
           ))}
         </div>
