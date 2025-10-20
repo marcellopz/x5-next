@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import type { ReducedTeamData } from "@/lib/types";
+import Image from "next/image";
 
 interface TeamHeaderProps {
   team: ReducedTeamData;
@@ -20,6 +21,17 @@ export function TeamHeader({
   totalDeaths,
   totalAssists,
 }: TeamHeaderProps) {
+  // Icon sizes
+  const ICON_SIZE = 16;
+  // const GOLD_ICON_SIZE = 20;
+
+  // CSS filters for coloring icons
+  const winningFilter =
+    "invert(69%) sepia(58%) saturate(388%) hue-rotate(172deg) brightness(95%) contrast(86%)";
+  const losingFilter =
+    "invert(55%) sepia(78%) saturate(462%) hue-rotate(314deg) brightness(101%) contrast(91%)";
+  const iconFilter = isWinning ? winningFilter : losingFilter;
+
   return (
     <div
       className={`flex items-center justify-between mb-2 p-1 md:p-2 rounded-md lg:mb-3 text-xs xl:text-sm ${
@@ -33,31 +45,49 @@ export function TeamHeader({
       </span>
       <div className="hidden lg:flex items-center gap-4">
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full bg-orange-500" title="Dragons" />
-          <span>{team.hordeKills || 0}</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full bg-orange-500" title="Dragons" />
+          <Image
+            src="/game-entities/icon-dragon.svg"
+            alt="Dragons"
+            width={ICON_SIZE}
+            height={ICON_SIZE}
+            className="brightness-0 saturate-100"
+            style={{ filter: iconFilter }}
+            title="Dragons"
+          />
           <span>{team.dragonKills || 0}</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full bg-purple-600" title="Baron" />
+          <Image
+            src="/game-entities/icon-baron.svg"
+            alt="Baron"
+            width={ICON_SIZE}
+            height={ICON_SIZE}
+            className="brightness-0 saturate-100"
+            style={{ filter: iconFilter }}
+            title="Baron"
+          />
           <span>{team.baronKills || 0}</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-2 h-2 rounded-full bg-yellow-500" title="Towers" />
+          <Image
+            src="/game-entities/icon-tower.svg"
+            alt="Towers"
+            width={ICON_SIZE}
+            height={ICON_SIZE}
+            className="brightness-0 saturate-100"
+            style={{ filter: iconFilter }}
+            title="Towers"
+          />
           <span>{team.towerKills || 0}</span>
         </div>
-        <div className="flex items-center gap-1">
-          <div
-            className="w-2 h-2 rounded-full bg-blue-500"
-            title="Inhibitors"
-          />
-          <span>{team.inhibitorKills || 0}</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <div
-            className="w-2 h-2 rounded-full bg-yellow-400"
+        <div className="flex items-center">
+          <Image
+            src="/game-entities/icon-gold.svg"
+            alt="Gold Earned"
+            width={ICON_SIZE * 1.3}
+            height={ICON_SIZE * 1.3}
+            className="brightness-0 saturate-100"
+            style={{ filter: iconFilter }}
             title="Gold Earned"
           />
           <span>{(goldEarned / 1000).toFixed(1) || 0}k</span>

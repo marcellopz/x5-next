@@ -45,6 +45,7 @@ export function PlayerDisplay({ participant, totalKills }: PlayerDisplayProps) {
             width={40}
             height={40}
             className="rounded border border-border w-full h-full"
+            // priority
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.style.display = "none";
@@ -99,7 +100,7 @@ export function PlayerDisplay({ participant, totalKills }: PlayerDisplayProps) {
 
       {/* KDA */}
       <div className="flex items-center ml-1">
-        <div className="text-xs xl:text-sm font-medium text-center w-10 sm:w-12 md:w-14">
+        <div className="text-xs xl:text-sm font-medium text-center w-12 sm:w-14">
           <div>
             {participant.stats.kills}/{participant.stats.deaths}/
             {participant.stats.assists}
