@@ -31,7 +31,10 @@ export default function RootLayout({
           fontFeatureSettings: '"rlig" 1, "calt" 1',
         }}
       >
-        <div className="min-h-screen flex flex-col bg-background">
+        <div
+          id="root-container"
+          className="min-h-screen flex flex-col bg-background"
+        >
           <Navbar />
           <main className="flex-1">{children}</main>
         </div>

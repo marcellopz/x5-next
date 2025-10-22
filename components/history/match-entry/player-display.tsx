@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { memo } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { championIds, CHAMPIONICONURL, ITEMICONURL } from "@/lib/resources";
@@ -9,9 +10,14 @@ import type { ReducedMatchData } from "@/lib/types";
 export interface PlayerDisplayProps {
   participant: ReducedMatchData["participants"][0];
   totalKills: number;
+  priority?: boolean;
 }
 
-export function PlayerDisplay({ participant, totalKills }: PlayerDisplayProps) {
+export function PlayerDisplay({
+  participant,
+  totalKills,
+  priority = false,
+}: PlayerDisplayProps) {
   const championName =
     championIds[participant.championId as keyof typeof championIds];
   const championIconUrl = `${CHAMPIONICONURL}${participant.championId}.png`;
@@ -45,7 +51,7 @@ export function PlayerDisplay({ participant, totalKills }: PlayerDisplayProps) {
             width={40}
             height={40}
             className="rounded border border-border w-full h-full"
-            // priority
+            priority={priority}
             onError={(e) => {
               const target = e.target as HTMLImageElement;
               target.style.display = "none";
@@ -88,6 +94,7 @@ export function PlayerDisplay({ participant, totalKills }: PlayerDisplayProps) {
                 width={32}
                 height={32}
                 className="rounded-md w-full h-full object-cover"
+                priority={priority}
                 onError={(e) => {
                   const target = e.target as HTMLImageElement;
                   target.style.display = "none";
@@ -114,7 +121,7 @@ export function PlayerDisplay({ participant, totalKills }: PlayerDisplayProps) {
                 ).toFixed(1)}
           </div>
         </div>
-        <div className="hidden 2xl:block text-sm text-muted-foreground">
+        <div className="hidden 2xl:block w-8 text-sm text-muted-foreground">
           ({killParticipation}%)
         </div>
       </div>
@@ -137,3 +144,5 @@ export function PlayerDisplay({ participant, totalKills }: PlayerDisplayProps) {
     </div>
   );
 }
+
+export default memo(PlayerDisplay);

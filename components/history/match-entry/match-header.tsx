@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { memo } from "react";
 import Link from "next/link";
 import { formatMatchDuration, formatMatchDate } from "./match-utils";
 import { ExternalLinkIcon } from "lucide-react";
@@ -39,3 +40,5 @@ export function MatchHeader({ matchId, gameDuration, date }: MatchHeaderProps) {
     </div>
   );
 }
+
+export default memo(MatchHeader);

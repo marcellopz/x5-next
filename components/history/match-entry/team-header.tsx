@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { memo } from "react";
 import type { ReducedTeamData } from "@/lib/types";
 import Image from "next/image";
 
@@ -99,3 +100,5 @@ export function TeamHeader({
     </div>
   );
 }
+
+export default memo(TeamHeader);

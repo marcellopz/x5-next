@@ -1,20 +1,47 @@
 "use client";
 
-import * as React from "react";
-import { PlayerDisplay, TeamHeader, MatchHeader } from "./index";
+import { useMemo, memo, useState, useEffect } from "react";
+import { PlayerDisplay } from "./player-display";
+import { TeamHeader } from "./team-header";
+import { MatchHeader } from "./match-header";
+import { MatchEntrySkeleton } from "./match-entry-skeleton";
 import type { ReducedMatchData } from "@/lib/types";
 import { sortParticipantsByRole } from "./match-utils";
 
 interface MatchEntryProps {
   match: ReducedMatchData;
   className?: string;
+  priority?: boolean;
 }
 
-export function MatchEntry({ match, className }: MatchEntryProps) {
-  // Separate participants by team and calculate team stats in a single pass
-  const { team100Data, team200Data } = React.useMemo(() => {
-    const team100Participants: typeof match.participants = [];
-    const team200Participants: typeof match.participants = [];
+interface ProcessedTeamData {
+  participants: ReducedMatchData["participants"];
+  sortedParticipants: ReducedMatchData["participants"];
+  totalKills: number;
+  totalDeaths: number;
+  totalAssists: number;
+  goldEarned: number;
+}
+
+interface ProcessedMatchData {
+  team100Data: ProcessedTeamData;
+  team200Data: ProcessedTeamData;
+  team100: ReducedMatchData["teams"][0];
+  team200: ReducedMatchData["teams"][0];
+  team100Won: boolean;
+  team200Won: boolean;
+}
+
+export function MatchEntry({
+  match,
+  className,
+  priority = false,
+}: MatchEntryProps) {
+  const [isProcessing, setIsProcessing] = useState(!priority);
+
+  const processedData = useMemo((): ProcessedMatchData => {
+    const team100Participants: ReducedMatchData["participants"] = [];
+    const team200Participants: ReducedMatchData["participants"] = [];
 
     const team100Stats = {
       totalKills: 0,
@@ -30,7 +57,6 @@ export function MatchEntry({ match, className }: MatchEntryProps) {
       goldEarned: 0,
     };
 
-    // Single loop to separate teams and calculate stats
     for (const participant of match.participants) {
       if (participant.teamId === 100) {
         team100Participants.push(participant);
@@ -47,6 +73,9 @@ export function MatchEntry({ match, className }: MatchEntryProps) {
       }
     }
 
+    const t100 = match.teams.find((t) => t.teamId === 100)!;
+    const t200 = match.teams.find((t) => t.teamId === 200)!;
+
     return {
       team100Data: {
         participants: team100Participants,
@@ -58,21 +87,46 @@ export function MatchEntry({ match, className }: MatchEntryProps) {
         sortedParticipants: sortParticipantsByRole(team200Participants),
         ...team200Stats,
       },
-    };
-  }, [match]);
-
-  // Determine teams and winning status
-  const { team100, team200, team100Won, team200Won } = React.useMemo(() => {
-    const t100 = match.teams.find((t) => t.teamId === 100)!;
-    const t200 = match.teams.find((t) => t.teamId === 200)!;
-
-    return {
       team100: t100,
       team200: t200,
       team100Won: t100.win === "Win",
       team200Won: t200.win === "Win",
     };
-  }, [match.teams]);
+  }, [match]);
+
+  // Set processing to false when calculations are complete
+  useEffect(() => {
+    if (
+      processedData.team100Data &&
+      processedData.team200Data &&
+      processedData.team100 &&
+      processedData.team200
+    ) {
+      if (priority) {
+        // High priority: process immediately
+        setIsProcessing(false);
+      } else {
+        // Low priority: use requestIdleCallback for better performance
+        const processWhenIdle = () => {
+          if (window.requestIdleCallback) {
+            window.requestIdleCallback(() => {
+              setIsProcessing(false);
+            });
+          } else {
+            // Fallback for browsers without requestIdleCallback
+            setTimeout(() => setIsProcessing(false), 0);
+          }
+        };
+
+        processWhenIdle();
+      }
+    }
+  }, [processedData, priority]);
+
+  // Show skeleton while processing
+  if (isProcessing) {
+    return <MatchEntrySkeleton className={className} />;
+  }
 
   return (
     <div
@@ -90,18 +144,19 @@ export function MatchEntry({ match, className }: MatchEntryProps) {
         {/* Team 100 (Blue Side) */}
         <div className="space-y-2">
           <TeamHeader
-            team={team100}
-            isWinning={team100Won}
-            goldEarned={team100Data.goldEarned}
-            totalKills={team100Data.totalKills}
-            totalDeaths={team100Data.totalDeaths}
-            totalAssists={team100Data.totalAssists}
+            team={processedData.team100}
+            isWinning={processedData.team100Won}
+            goldEarned={processedData.team100Data.goldEarned}
+            totalKills={processedData.team100Data.totalKills}
+            totalDeaths={processedData.team100Data.totalDeaths}
+            totalAssists={processedData.team100Data.totalAssists}
           />
-          {team100Data.sortedParticipants.map((participant) => (
+          {processedData.team100Data.sortedParticipants.map((participant) => (
             <PlayerDisplay
               key={participant.participantId}
               participant={participant}
-              totalKills={team100Data.totalKills}
+              totalKills={processedData.team100Data.totalKills}
+              priority={priority}
             />
           ))}
         </div>
@@ -109,18 +164,19 @@ export function MatchEntry({ match, className }: MatchEntryProps) {
         {/* Team 200 (Red Side) */}
         <div className="space-y-2">
           <TeamHeader
-            team={team200}
-            isWinning={team200Won}
-            goldEarned={team200Data.goldEarned}
-            totalKills={team200Data.totalKills}
-            totalDeaths={team200Data.totalDeaths}
-            totalAssists={team200Data.totalAssists}
+            team={processedData.team200}
+            isWinning={processedData.team200Won}
+            goldEarned={processedData.team200Data.goldEarned}
+            totalKills={processedData.team200Data.totalKills}
+            totalDeaths={processedData.team200Data.totalDeaths}
+            totalAssists={processedData.team200Data.totalAssists}
           />
-          {team200Data.sortedParticipants.map((participant) => (
+          {processedData.team200Data.sortedParticipants.map((participant) => (
             <PlayerDisplay
               key={participant.participantId}
               participant={participant}
-              totalKills={team200Data.totalKills}
+              totalKills={processedData.team200Data.totalKills}
+              priority={priority}
             />
           ))}
         </div>
@@ -128,3 +184,5 @@ export function MatchEntry({ match, className }: MatchEntryProps) {
     </div>
   );
 }
+
+export default memo(MatchEntry);

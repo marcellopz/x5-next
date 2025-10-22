@@ -8,15 +8,12 @@ interface MatchesContainerProps {
 }
 
 export function MatchesContainer({ matches }: MatchesContainerProps) {
-  // TODO: Add filter functionality here in the future
   return (
-    <div className="h-full flex flex-col">
+    <div className="h-full">
       {/* Future: Filter controls will go here */}
 
-      {/* Matches list with virtualization */}
-      <div className="flex-1">
-        <MatchesList matches={matches} />
-      </div>
+      {/* Virtualized matches list with infinite scroll */}
+      <MatchesList matches={matches} />
     </div>
   );
 }
