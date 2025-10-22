@@ -2,7 +2,6 @@ import { getAllReducedData } from "@/lib/endpoints";
 import { MatchesContainer } from "@/components/history/matches-container";
 
 export default async function History() {
-  // Fetch data server-side (already sorted by date with matchId included)
   const matches = await getAllReducedData();
 
   return (

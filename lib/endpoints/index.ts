@@ -115,7 +115,7 @@ export async function getAllReducedData(): Promise<MatchWithId[]> {
   const data = await fetchFromFirebase<AllReducedData>(
     "pre-processed-data/all-reduced",
     {
-      cache: "no-store",
+      cache: "force-cache",
     }
   );
 

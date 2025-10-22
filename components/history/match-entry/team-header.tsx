@@ -24,7 +24,6 @@ export function TeamHeader({
 }: TeamHeaderProps) {
   // Icon sizes
   const ICON_SIZE = 16;
-  // const GOLD_ICON_SIZE = 20;
 
   // CSS filters for coloring icons
   const winningFilter =
@@ -85,9 +84,9 @@ export function TeamHeader({
           <Image
             src="/game-entities/icon-gold.svg"
             alt="Gold Earned"
-            width={ICON_SIZE * 1.3}
-            height={ICON_SIZE * 1.3}
-            className="brightness-0 saturate-100"
+            width={ICON_SIZE}
+            height={ICON_SIZE}
+            className="brightness-0 saturate-100 mr-1.5"
             style={{ filter: iconFilter }}
             title="Gold Earned"
           />

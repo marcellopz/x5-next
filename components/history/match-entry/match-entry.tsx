@@ -185,4 +185,6 @@ export function MatchEntry({
   );
 }
 
-export default memo(MatchEntry);
+export default memo(MatchEntry, (prevProps, nextProps) => {
+  return prevProps.match.gameId === nextProps.match.gameId;
+});

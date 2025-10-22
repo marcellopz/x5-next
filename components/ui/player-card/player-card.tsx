@@ -1,4 +1,3 @@
-import { Card } from "@/components/ui/card";
 import type { Player } from "@/lib/types";
 
 interface PlayerCardProps {
@@ -7,9 +6,9 @@ interface PlayerCardProps {
 
 export function PlayerCard({ player }: PlayerCardProps) {
   return (
-    <Card className="w-[216px] h-[300px] flex flex-col overflow-hidden">
+    <div className="w-[250px] h-[340px] flex flex-col overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-sm">
       {/* Image placeholder */}
-      <div className="w-full h-[140px] bg-muted flex items-center justify-center">
+      <div className="w-full h-[180px] bg-muted flex items-center justify-center">
         <span className="text-xs text-muted-foreground">Player Image</span>
       </div>
 
@@ -42,6 +41,6 @@ export function PlayerCard({ player }: PlayerCardProps) {
           </div>
         </div>
       </div>
-    </Card>
+    </div>
   );
 }
