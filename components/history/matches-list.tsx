@@ -10,7 +10,7 @@ const MemoizedMatchEntry = memo(MatchEntry);
 // Constants for configuration
 const INITIAL_ITEMS = 10;
 const ITEMS_PER_LOAD = 5;
-const SCROLL_THRESHOLD = 1500; // pixels from bottom to trigger loading
+const SCROLL_THRESHOLD = 800; // pixels from bottom to trigger loading
 
 interface MatchesListProps {
   matches: MatchWithId[];
