@@ -65,7 +65,6 @@ export function PlayerCarousel({
           <Carousel3D
             items={carouselItems}
             autoRotate={!searchQuery}
-            autoRotateDelay={6000}
             className="w-full h-full"
             initialIndex={index}
           />

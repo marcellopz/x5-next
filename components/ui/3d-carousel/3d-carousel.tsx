@@ -26,7 +26,7 @@ interface Carousel3DProps {
 export function Carousel3D({
   items,
   autoRotate = true,
-  autoRotateDelay = 3000,
+  autoRotateDelay = 4000,
   className,
   initialIndex = 0,
 }: Carousel3DProps) {
