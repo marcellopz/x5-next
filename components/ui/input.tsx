@@ -15,7 +15,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
     if (hasStartIcon || hasEndIcon) {
       return (
-        <div className="relative w-full">
+        <div className="relative">
           {hasStartIcon && (
             <div
               className={cn(

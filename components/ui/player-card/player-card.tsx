@@ -1,10 +1,11 @@
 import type { Player } from "@/lib/types";
+import { memo } from "react";
 
 interface PlayerCardProps {
   player: Player;
 }
 
-export function PlayerCard({ player }: PlayerCardProps) {
+function PlayerCardComponent({ player }: PlayerCardProps) {
   return (
     <div className="w-[250px] h-[340px] flex flex-col overflow-hidden rounded-lg border border-border bg-card text-card-foreground shadow-sm">
       {/* Image placeholder */}
@@ -44,3 +45,7 @@ export function PlayerCard({ player }: PlayerCardProps) {
     </div>
   );
 }
+
+export const PlayerCard = memo(PlayerCardComponent, (prevProps, nextProps) => {
+  return prevProps.player.account_id === nextProps.player.account_id;
+});

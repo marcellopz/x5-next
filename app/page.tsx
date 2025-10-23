@@ -15,17 +15,21 @@ import {
 import { PageHeader } from "@/components/ui/page-header";
 import { getPlayerByAccountId } from "@/lib/utils";
 import { getRoleLeaderboardData } from "@/lib/endpoints";
+import { Player } from "@/lib/types";
 
 export default async function Home() {
-  const playerList = await getPlayerList();
+  const allPlayersObject = await getPlayerList();
   const rankChangeLog = await getRankChangeLog();
   const summarizedOverallData = await getSummarizedOverallData();
   const initialRankChangeLog = await getInitialRankChangeLog();
 
   const roleLeaderboard = await getRoleLeaderboardData();
 
+  const playerList: Player[] = allPlayersObject
+    ? Object.values(allPlayersObject).filter((player) => !player.hide)
+    : [];
   // Calculate some basic stats for the cards
-  const totalPlayers = playerList ? Object.keys(playerList).length : 0;
+  const totalPlayers = playerList ? playerList.length : 0;
 
   // Get the recent MVP player by account_id
   const recentMVP = summarizedOverallData?.topRecentPlayer
@@ -42,6 +46,7 @@ export default async function Home() {
       <HeroSection
         initialRankChangeLog={initialRankChangeLog}
         rankChangeLog={rankChangeLog}
+        playerList={playerList}
       />
 
       <StatsCardsSection

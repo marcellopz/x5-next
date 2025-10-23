@@ -1,6 +1,5 @@
 import type {
   Player,
-  PlayerList,
   RankChangeLog,
   InitialRankPlayer,
   InitialRanksData,
@@ -14,13 +13,13 @@ export function cn(...classes: (string | undefined | null | boolean)[]) {
 
 // Finds a player by their account_id from the player list
 export function getPlayerByAccountId(
-  playerList: PlayerList | null,
+  playerList: Player[] | null,
   accountId: number
 ): Player | null {
   if (!playerList) return null;
 
   // Search through all players to find one with matching account_id
-  for (const player of Object.values(playerList)) {
+  for (const player of playerList) {
     if (player.account_id === accountId) {
       return player;
     }

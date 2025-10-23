@@ -19,7 +19,6 @@ interface MatchesListProps {
 export function MatchesList({ matches }: MatchesListProps) {
   const [visibleItems, setVisibleItems] = useState(INITIAL_ITEMS);
   const canLoadMoreRef = useRef(true);
-  console.log("visibleItems", visibleItems);
 
   // Get the subset of matches to display
   const displayedMatches = matches.slice(0, visibleItems);
@@ -45,13 +44,11 @@ export function MatchesList({ matches }: MatchesListProps) {
         visibleItems < matches.length &&
         canLoadMoreRef.current
       ) {
-        console.log("Loading more items...");
         canLoadMoreRef.current = false; // Prevent multiple loads
 
         // Load items instantly
         setVisibleItems((prev) => {
           const newCount = Math.min(prev + ITEMS_PER_LOAD, matches.length);
-          console.log("Updated visible items:", newCount);
           return newCount;
         });
 
