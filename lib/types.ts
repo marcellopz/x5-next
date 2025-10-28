@@ -1,7 +1,7 @@
 // TypeScript Types for Firebase Data
 
 export interface Player {
-  account_id: number;
+  account_id: number | string; // Can be number or string for wildcard IDs
   name: string;
   name_id: string;
   adc: number;
@@ -10,6 +10,7 @@ export interface Player {
   support: number;
   top: number;
   hide?: boolean; // Some players have this field
+  isWildcard?: boolean; // Indicates if this is a wildcard player
 }
 
 export interface PlayerList {

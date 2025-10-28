@@ -2,7 +2,7 @@ import { BrandLogo } from "./brand-logo";
 import { NavigationMenu } from "./navigation-menu";
 import { LanguageToggle } from "./language-toggle";
 import { MobileMenuButton } from "./mobile-menu";
-import { Button } from "../button";
+import CreateMatchButton from "./create-match-button";
 
 export function Navbar() {
   return (
@@ -10,9 +10,7 @@ export function Navbar() {
       <div className="container mx-auto flex h-14 w-full items-center gap-4 px-4">
         <BrandLogo />
         <NavigationMenu />
-        <Button variant="highlight" size="xs">
-          Create Match
-        </Button>
+        <CreateMatchButton />
         <div className="ml-auto flex items-center gap-2">
           <LanguageToggle />
           <MobileMenuButton />
