@@ -245,7 +245,7 @@ export const ManyItems: Story = {
       ...mockPlayers,
       ...mockPlayers.map((player, index) => ({
         ...player,
-        account_id: player.account_id + 10,
+        account_id: Number(player.account_id) + 10,
         name: `${player.name} ${index + 1}`,
         name_id: `${player.name_id}_${index + 1}`,
       })),
