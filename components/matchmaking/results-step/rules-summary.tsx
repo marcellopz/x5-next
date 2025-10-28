@@ -15,7 +15,8 @@ export function RulesSummary() {
     );
 
   const hasAvoidRoles =
-    config.avoidRoles.enabled && config.avoidRoles.rules.length > 0;
+    config.avoidRoles.enabled &&
+    config.avoidRoles.rules.filter((rule) => rule.playerId !== "").length > 0;
 
   const hasPlayerCombos =
     config.playerCombos.enabled &&

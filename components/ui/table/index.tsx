@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import { cn } from "@/lib/utils";
+import { Checkbox } from "@/components/ui/checkbox";
 
 type SortDirection = "asc" | "desc" | "none";
 
@@ -14,14 +15,26 @@ interface TableProps<T = unknown>
     column: string;
     direction: SortDirection;
   };
+  checkboxConfig?: {
+    enabled: boolean;
+    selectedItems?: Set<string | number>;
+    onSelectionChange?: (selectedItems: Set<string | number>) => void;
+    getItemId?: (item: T) => string | number;
+  };
 }
 
-interface TableContextType<T = unknown> {
+interface TableContextType {
   compact: boolean;
   sortColumn?: string;
   sortDirection?: SortDirection;
   onSort?: (column: string) => void;
-  sortedData?: T[];
+  sortedData?: unknown[];
+  checkboxConfig?: {
+    enabled: boolean;
+    selectedItems?: Set<string | number>;
+    onSelectionChange?: (selectedItems: Set<string | number>) => void;
+    getItemId?: (item: unknown) => string | number;
+  };
 }
 
 const TableContext = React.createContext<TableContextType>({
@@ -34,96 +47,89 @@ export const useTableData = () => {
   return context.sortedData || [];
 };
 
-const Table = React.forwardRef<HTMLTableElement, TableProps<unknown>>(
-  (
-    {
-      className,
-      compact = false,
-      data = [],
-      sortConfig = {},
-      initialSort,
-      children,
-      ...props
-    },
-    ref
-  ) => {
-    const [sortColumn, setSortColumn] = React.useState<string>(
-      initialSort?.column || ""
-    );
-    const [sortDirection, setSortDirection] = React.useState<SortDirection>(
-      initialSort?.direction || "none"
-    );
+const Table = <T extends object>({
+  className,
+  compact = false,
+  data = [],
+  sortConfig = {},
+  initialSort,
+  checkboxConfig,
+  children,
+  ...props
+}: TableProps<T>) => {
+  const [sortColumn, setSortColumn] = React.useState<string>(
+    initialSort?.column || ""
+  );
+  const [sortDirection, setSortDirection] = React.useState<SortDirection>(
+    initialSort?.direction || "none"
+  );
 
-    // Sorting logic
-    const sortedData = React.useMemo(() => {
-      if (sortDirection === "none" || !sortColumn || !sortConfig[sortColumn]) {
-        return data;
+  // Sorting logic
+  const sortedData = React.useMemo(() => {
+    if (sortDirection === "none" || !sortColumn || !sortConfig[sortColumn]) {
+      return data;
+    }
+
+    return [...data].sort((a, b) => {
+      const aValue = sortConfig[sortColumn](a);
+      const bValue = sortConfig[sortColumn](b);
+
+      // Handle string vs number comparison
+      if (typeof aValue === "string" && typeof bValue === "string") {
+        const comparison = aValue
+          .toLowerCase()
+          .localeCompare(bValue.toLowerCase());
+        return sortDirection === "asc" ? comparison : -comparison;
+      } else {
+        const comparison = (aValue as number) - (bValue as number);
+        return sortDirection === "asc" ? comparison : -comparison;
       }
+    });
+  }, [data, sortColumn, sortDirection, sortConfig]);
 
-      return [...data].sort((a, b) => {
-        const aValue = sortConfig[sortColumn](a);
-        const bValue = sortConfig[sortColumn](b);
-
-        // Handle string vs number comparison
-        if (typeof aValue === "string" && typeof bValue === "string") {
-          const comparison = aValue
-            .toLowerCase()
-            .localeCompare(bValue.toLowerCase());
-          return sortDirection === "asc" ? comparison : -comparison;
-        } else {
-          const comparison = (aValue as number) - (bValue as number);
-          return sortDirection === "asc" ? comparison : -comparison;
+  // Handle sort click
+  const handleSort = (column: string) => {
+    if (sortColumn === column) {
+      // Cycle through: asc -> desc -> none
+      setSortDirection((prev) => {
+        switch (prev) {
+          case "none":
+            return "asc";
+          case "asc":
+            return "desc";
+          case "desc":
+            return "none";
+          default:
+            return "asc";
         }
       });
-    }, [data, sortColumn, sortDirection, sortConfig]);
+    } else {
+      setSortColumn(column);
+      setSortDirection("asc");
+    }
+  };
 
-    // Handle sort click
-    const handleSort = (column: string) => {
-      if (sortColumn === column) {
-        // Cycle through: asc -> desc -> none
-        setSortDirection((prev) => {
-          switch (prev) {
-            case "none":
-              return "asc";
-            case "asc":
-              return "desc";
-            case "desc":
-              return "none";
-            default:
-              return "asc";
-          }
-        });
-      } else {
-        setSortColumn(column);
-        setSortDirection("asc");
-      }
-    };
-
-    return (
-      <TableContext.Provider
-        value={{
-          compact,
-          sortColumn,
-          sortDirection,
-          onSort: handleSort,
-          sortedData,
-        }}
-      >
-        <div className="relative w-full">
-          <div className="overflow-auto border border-border rounded-lg">
-            <table
-              ref={ref}
-              className={cn("w-full text-sm", className)}
-              {...props}
-            >
-              {children}
-            </table>
-          </div>
+  return (
+    <TableContext.Provider
+      value={{
+        compact,
+        sortColumn,
+        sortDirection,
+        onSort: handleSort,
+        sortedData,
+        checkboxConfig: checkboxConfig as TableContextType["checkboxConfig"],
+      }}
+    >
+      <div className="relative w-full">
+        <div className="overflow-auto border border-border rounded-lg">
+          <table className={cn("w-full text-sm", className)} {...props}>
+            {children}
+          </table>
         </div>
-      </TableContext.Provider>
-    );
-  }
-);
+      </div>
+    </TableContext.Provider>
+  );
+};
 Table.displayName = "Table";
 
 const TableHeader = React.forwardRef<
@@ -168,19 +174,59 @@ const TableFooter = React.forwardRef<
 ));
 TableFooter.displayName = "TableFooter";
 
-const TableRow = React.forwardRef<
-  HTMLTableRowElement,
-  React.HTMLAttributes<HTMLTableRowElement>
->(({ className, ...props }, ref) => (
-  <tr
-    ref={ref}
-    className={cn(
-      "border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
-      className
-    )}
-    {...props}
-  />
-));
+interface TableRowProps extends React.HTMLAttributes<HTMLTableRowElement> {
+  selectable?: boolean;
+  itemId?: string | number;
+}
+
+const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
+  ({ className, selectable = false, itemId, onClick, ...props }, ref) => {
+    const { checkboxConfig } = React.useContext(TableContext);
+
+    const handleRowClick = (e: React.MouseEvent<HTMLTableRowElement>) => {
+      // Don't trigger row selection if clicking on a checkbox or button
+      if (
+        (e.target as HTMLElement).closest('input[type="checkbox"]') ||
+        (e.target as HTMLElement).closest("button")
+      ) {
+        return;
+      }
+
+      if (
+        selectable &&
+        checkboxConfig?.enabled &&
+        itemId &&
+        checkboxConfig.onSelectionChange
+      ) {
+        const isChecked = checkboxConfig.selectedItems?.has(itemId) || false;
+        const newSelection = new Set(checkboxConfig.selectedItems);
+
+        if (isChecked) {
+          newSelection.delete(itemId);
+        } else {
+          newSelection.add(itemId);
+        }
+
+        checkboxConfig.onSelectionChange(newSelection);
+      }
+
+      onClick?.(e);
+    };
+
+    return (
+      <tr
+        ref={ref}
+        className={cn(
+          "border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
+          selectable && checkboxConfig?.enabled && "cursor-pointer",
+          className
+        )}
+        onClick={handleRowClick}
+        {...props}
+      />
+    );
+  }
+);
 TableRow.displayName = "TableRow";
 
 interface TableHeadProps extends React.ThHTMLAttributes<HTMLTableCellElement> {
@@ -263,6 +309,119 @@ const TableCell = React.forwardRef<HTMLTableCellElement, TableCellProps>(
 );
 TableCell.displayName = "TableCell";
 
+// Checkbox-specific components
+const CheckboxTableHead = React.forwardRef<
+  HTMLTableCellElement,
+  React.ThHTMLAttributes<HTMLTableCellElement>
+>(({ className, ...props }, ref) => {
+  const { checkboxConfig, sortedData, compact } =
+    React.useContext(TableContext);
+
+  if (!checkboxConfig?.enabled) return null;
+
+  const allSelected =
+    sortedData &&
+    sortedData.length > 0 &&
+    sortedData.every((item) => {
+      const id = checkboxConfig.getItemId?.(item);
+      return id && checkboxConfig.selectedItems?.has(id);
+    });
+
+  const someSelected =
+    sortedData &&
+    sortedData.length > 0 &&
+    sortedData.some((item) => {
+      const id = checkboxConfig.getItemId?.(item);
+      return id && checkboxConfig.selectedItems?.has(id);
+    });
+
+  const handleSelectAll = () => {
+    if (!checkboxConfig.onSelectionChange || !sortedData) return;
+
+    const newSelection = new Set(checkboxConfig.selectedItems);
+
+    if (allSelected) {
+      // Deselect all
+      sortedData.forEach((item) => {
+        const id = checkboxConfig.getItemId?.(item);
+        if (id) newSelection.delete(id);
+      });
+    } else {
+      // Select all
+      sortedData.forEach((item) => {
+        const id = checkboxConfig.getItemId?.(item);
+        if (id) newSelection.add(id);
+      });
+    }
+
+    checkboxConfig.onSelectionChange(newSelection);
+  };
+
+  return (
+    <th
+      ref={ref}
+      className={cn(
+        compact
+          ? "h-8 w-8 px-2 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0"
+          : "h-12 w-12 px-4 text-left align-middle font-medium text-muted-foreground [&:has([role=checkbox])]:pr-0",
+        className
+      )}
+      {...props}
+    >
+      <Checkbox
+        checked={allSelected}
+        ref={(el) => {
+          if (el) el.indeterminate = Boolean(someSelected && !allSelected);
+        }}
+        onChange={handleSelectAll}
+      />
+    </th>
+  );
+});
+CheckboxTableHead.displayName = "CheckboxTableHead";
+
+const CheckboxTableCell = React.forwardRef<
+  HTMLTableCellElement,
+  React.TdHTMLAttributes<HTMLTableCellElement> & {
+    itemId: string | number;
+  }
+>(({ className, itemId, ...props }, ref) => {
+  const { checkboxConfig, compact } = React.useContext(TableContext);
+
+  if (!checkboxConfig?.enabled) return null;
+
+  const isChecked = checkboxConfig.selectedItems?.has(itemId) || false;
+
+  const handleChange = () => {
+    if (!checkboxConfig.onSelectionChange) return;
+
+    const newSelection = new Set(checkboxConfig.selectedItems);
+    if (isChecked) {
+      newSelection.delete(itemId);
+    } else {
+      newSelection.add(itemId);
+    }
+
+    checkboxConfig.onSelectionChange(newSelection);
+  };
+
+  return (
+    <td
+      ref={ref}
+      className={cn(
+        compact
+          ? "h-8 w-8 px-4 text-left align-middle [&:has([role=checkbox])]:pr-0"
+          : "h-12 w-12 px-4 text-left align-middle [&:has([role=checkbox])]:pr-0",
+        className
+      )}
+      {...props}
+    >
+      <Checkbox checked={isChecked} onChange={handleChange} />
+    </td>
+  );
+});
+CheckboxTableCell.displayName = "CheckboxTableCell";
+
 export {
   Table,
   TableHeader,
@@ -271,4 +430,6 @@ export {
   TableHead,
   TableRow,
   TableCell,
+  CheckboxTableHead,
+  CheckboxTableCell,
 };

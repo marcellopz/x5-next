@@ -16,7 +16,7 @@ export function ResultsStep({
   onFinish,
 }: ResultsStepProps) {
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 mt-2">
       <RulesSummary />
 
       {/* Results content will go here */}
