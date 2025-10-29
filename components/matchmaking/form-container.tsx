@@ -6,8 +6,7 @@ import { PlayerSelectionStep } from "./player-selection-step";
 import { AlgoConfigStep } from "./algo-config-step";
 import { ResultsStep } from "./results-step";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MatchmakingProvider, useMatchmaking } from "./matchmaking-context";
-import { generateMatches } from "@/lib/matchmaking-algorithm";
+import { MatchmakingProvider } from "./matchmaking-context";
 import type { Player } from "@/lib/types";
 
 interface FormContainerProps {
@@ -31,7 +30,6 @@ const steps = [
 
 function FormContent() {
   const [currentStep, setCurrentStep] = useState(1);
-  const { selectedPlayers, config, setMatchResults } = useMatchmaking();
 
   const handleNext = () => {
     if (currentStep < steps.length) {
@@ -43,20 +41,6 @@ function FormContent() {
     if (currentStep > 1) {
       setCurrentStep((prev) => prev - 1);
     }
-  };
-
-  const handleRegenerate = () => {
-    if (selectedPlayers.length === 10) {
-      const results = generateMatches(selectedPlayers, config);
-      setMatchResults(results);
-    } else {
-      console.error("Need exactly 10 players to generate matches");
-    }
-  };
-
-  const handleFinish = () => {
-    // TODO: Implement finish logic (save to database, etc.)
-    console.log("Finishing matchmaking...");
   };
 
   return (
@@ -74,13 +58,7 @@ function FormContent() {
             <AlgoConfigStep onPrevious={handlePrevious} onNext={handleNext} />
           )}
 
-          {currentStep === 3 && (
-            <ResultsStep
-              onPrevious={handlePrevious}
-              onRegenerate={handleRegenerate}
-              onFinish={handleFinish}
-            />
-          )}
+          {currentStep === 3 && <ResultsStep onPrevious={handlePrevious} />}
         </CardContent>
       </Card>
     </div>

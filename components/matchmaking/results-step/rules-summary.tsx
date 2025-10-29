@@ -1,13 +1,15 @@
 "use client";
 
+import { memo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, Settings, Shield, Target } from "lucide-react";
 import { useMatchmaking } from "../matchmaking-context";
 
-export function RulesSummary() {
-  const { selectedPlayers, config } = useMatchmaking();
+export const RulesSummary = memo(function RulesSummary() {
+  const { selectedPlayers, config, matchResults } = useMatchmaking();
 
+  // Derived boolean values
   const hasPresetLanes =
     config.presetLanes.usePresetLanes &&
     Object.values(config.presetLanes.lanes).some(
@@ -22,6 +24,11 @@ export function RulesSummary() {
     config.playerCombos.enabled &&
     config.playerCombos.combos.length > 0 &&
     config.playerCombos.combos[0].players.length > 0;
+
+  // Filtered avoid roles for display
+  const validAvoidRoleRules = config.avoidRoles.rules.filter(
+    (rule) => rule.playerId !== ""
+  );
 
   return (
     <Card>
@@ -62,6 +69,29 @@ export function RulesSummary() {
             <Badge variant="secondary">Tolerance: {config.tolerance}</Badge>
           </div>
         </div>
+
+        {/* Match Generation Stats */}
+        {matchResults && (
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium text-muted-foreground">
+              Match Generation
+            </h4>
+            <div className="flex flex-wrap gap-2">
+              <Badge variant="outline">
+                {matchResults.allMatches.length} matches meet tolerance
+              </Badge>
+              <Badge
+                variant={
+                  matchResults.filteredMatches.length > 0
+                    ? "default"
+                    : "destructive"
+                }
+              >
+                {matchResults.filteredMatches.length} matches meet constraints
+              </Badge>
+            </div>
+          </div>
+        )}
 
         {/* Preset Lanes */}
         {hasPresetLanes && (
@@ -111,7 +141,7 @@ export function RulesSummary() {
               Avoid Roles
             </h4>
             <div className="space-y-1">
-              {config.avoidRoles.rules.map((rule, index) => {
+              {validAvoidRoleRules.map((rule, index) => {
                 const player = selectedPlayers.find(
                   (p) => p.account_id === Number(rule.playerId)
                 );
@@ -162,4 +192,4 @@ export function RulesSummary() {
       </CardContent>
     </Card>
   );
-}
+});

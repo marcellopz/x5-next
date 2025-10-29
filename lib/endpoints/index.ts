@@ -49,24 +49,21 @@ async function fetchFromFirebase<T>(
 // Fetches all players from the "players" collection
 export async function getPlayerList(): Promise<PlayerList | null> {
   return fetchFromFirebase<PlayerList>("players", {
-    cache: "force-cache",
-    next: { revalidate: 300 },
+    cache: "no-store",
   });
 }
 
 // Fetches all rank change history from "player-rank-change-log" collection
 export async function getRankChangeLog(): Promise<RankChangeLog | null> {
   return fetchFromFirebase<RankChangeLog>("player-rank-change-log", {
-    cache: "force-cache",
-    next: { revalidate: 300 },
+    cache: "no-store",
   });
 }
 
 // Fetches a single player by their name_id (e.g., "grilha", "pedro")
 export async function getPlayer(nameId: string): Promise<Player | null> {
   return fetchFromFirebase<Player>(`players/${nameId}`, {
-    cache: "force-cache",
-    next: { revalidate: 300 },
+    cache: "no-store",
   });
 }
 
@@ -77,8 +74,7 @@ export async function getPlayerRankChanges(
   return fetchFromFirebase<PlayerRankChanges>(
     `player-rank-change-log/${nameId}`,
     {
-      cache: "force-cache",
-      next: { revalidate: 300 },
+      cache: "no-store",
     }
   );
 }
@@ -88,8 +84,7 @@ export async function getSummarizedOverallData(): Promise<SummarizedOverallData 
   return fetchFromFirebase<SummarizedOverallData>(
     "pre-processed-data/overall-stats",
     {
-      cache: "force-cache",
-      next: { revalidate: 600 },
+      cache: "no-store",
     }
   );
 }
@@ -97,16 +92,14 @@ export async function getSummarizedOverallData(): Promise<SummarizedOverallData 
 // Fetches initial rank change log
 export async function getInitialRankChangeLog(): Promise<InitialRanksData | null> {
   return fetchFromFirebase<InitialRanksData>("player-initial-ranks", {
-    cache: "force-cache",
-    next: { revalidate: 3600 },
+    cache: "no-store",
   });
 }
 
 // Fetches player summary data from pre-processed-data/player-summary
 export async function getPlayerSummary(): Promise<PlayerSummary | null> {
   return fetchFromFirebase<PlayerSummary>("pre-processed-data/player-summary", {
-    cache: "force-cache",
-    next: { revalidate: 300 },
+    cache: "no-store",
   });
 }
 
@@ -115,7 +108,7 @@ export async function getAllReducedData(): Promise<MatchWithId[]> {
   const data = await fetchFromFirebase<AllReducedData>(
     "pre-processed-data/all-reduced",
     {
-      cache: "force-cache",
+      cache: "no-store",
     }
   );
 
@@ -142,8 +135,7 @@ export async function getRoleLeaderboardData(): Promise<RoleLeaderboardData | nu
   return fetchFromFirebase<RoleLeaderboardData>(
     "pre-processed-data/role-leaderboard",
     {
-      cache: "force-cache",
-      next: { revalidate: 300 },
+      cache: "no-store",
     }
   );
 }

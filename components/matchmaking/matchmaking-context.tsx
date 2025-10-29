@@ -119,6 +119,12 @@ export function MatchmakingProvider({
     null
   );
 
+  // Reset all configs to default when player selection changes
+  useEffect(() => {
+    setConfig(initialConfig);
+    setMatchResults(null);
+  }, [selectedPlayers]);
+
   // Remove avoid role rules when players are preset in lanes
   useEffect(() => {
     const presetPlayerIds = new Set<string | number>();

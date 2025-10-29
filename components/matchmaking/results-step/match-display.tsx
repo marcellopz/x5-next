@@ -1,28 +1,74 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo, useCallback, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Copy, Check } from "lucide-react";
-import type { MatchResult } from "@/lib/matchmaking-algorithm";
+import { Copy, Check, RotateCcw } from "lucide-react";
+import type {
+  MatchResult,
+  MatchmakingResult,
+} from "@/lib/matchmaking-algorithm";
+import { useMatchmaking } from "../matchmaking-context";
 
 interface MatchDisplayProps {
-  matches: MatchResult[];
+  matchResults: MatchmakingResult | null;
 }
 
-export function MatchDisplay({ matches }: MatchDisplayProps) {
+export function MatchDisplay({ matchResults }: MatchDisplayProps) {
   const [copied, setCopied] = useState(false);
+  const { config } = useMatchmaking();
 
-  const formatMatchText = (matches: MatchResult[]): string => {
+  // Get the source matches (filteredMatches if available, otherwise allMatches)
+  const sourceMatches = useMemo(() => {
+    if (!matchResults?.success) return [];
+    return matchResults.filteredMatches.length > 0
+      ? matchResults.filteredMatches
+      : matchResults.allMatches;
+  }, [matchResults]);
+
+  // State to hold the currently displayed matches (shuffled selection)
+  const [matches, setMatches] = useState<MatchResult[]>([]);
+
+  // Initialize matches when sourceMatches or config changes
+  useEffect(() => {
+    if (sourceMatches.length > 0) {
+      // Shuffle and select N matches
+      const shuffled = [...sourceMatches].sort(() => Math.random() - 0.5);
+      setMatches(shuffled.slice(0, config.matchOptions));
+    } else {
+      setMatches([]);
+    }
+  }, [sourceMatches, config.matchOptions]);
+
+  // Regenerate/reshuffle the displayed matches
+  const handleRegenerate = useCallback(() => {
+    if (sourceMatches.length > 0) {
+      // Shuffle and select N matches
+      const shuffled = [...sourceMatches].sort(() => Math.random() - 0.5);
+      setMatches(shuffled.slice(0, config.matchOptions));
+    }
+  }, [sourceMatches, config.matchOptions]);
+
+  // Memoize the formatted match text since it's expensive to compute
+  const matchText = useMemo(() => {
+    const roleOrder = ["Top", "Jungle", "Mid", "Adc", "Support"];
+    const roleLabels = ["Top:", "Jng:", "Mid:", "Adc:", "Sup:"];
+    const biggestNameLength = Math.max(
+      ...matches.map((match) =>
+        Math.max(
+          ...Object.values(match.pairingsRoles).flatMap((role) =>
+            role.map((player) => player.name.length)
+          )
+        )
+      )
+    );
+
     return matches
       .map((match, index) => {
-        const roleOrder = ["Top", "Jungle", "Mid", "Adc", "Support"];
-        const roleLabels = ["Top:", "Jng:", "Mid:", "Adc:", "Sup:"];
-
         const roleLines = roleOrder.map((role, roleIndex) => {
           const [player1, player2] = match.pairingsRoles[role];
-          return `${roleLabels[roleIndex].padEnd(6)} ${player1.name.padEnd(
-            10
+          return `${roleLabels[roleIndex].padEnd(5)} ${player1.name.padStart(
+            biggestNameLength + 1
           )} (${player1.rank}) x (${player2.rank}) ${player2.name}`;
         });
 
@@ -32,33 +78,39 @@ export function MatchDisplay({ matches }: MatchDisplayProps) {
         return `Match ${index + 1}:\n${roleLines.join("\n")}\n${scoreLine}`;
       })
       .join("\n\n");
-  };
+  }, [matches]);
 
-  const copyToClipboard = async () => {
+  // Memoize the copy function to avoid recreating it on every render
+  const copyToClipboard = useCallback(async () => {
     try {
-      await navigator.clipboard.writeText(formatMatchText(matches));
+      await navigator.clipboard.writeText(matchText);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Failed to copy text: ", err);
     }
-  };
+  }, [matchText]);
 
-  const matchText = formatMatchText(matches);
+  // Memoize textarea height calculation
+  const textareaHeight = useMemo(
+    () => Math.max(200, matchText.split("\n").length * 20 + 20),
+    [matchText]
+  );
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-      {/* Match Cards */}
-      <div className="space-y-2">
-        {matches.map((match, index) => (
-          <MatchCard key={index} match={match} matchNumber={index + 1} />
-        ))}
-      </div>
-
-      {/* Text Output */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h3 className="text-base font-semibold">Match Text Output</h3>
+    <div className="flex flex-col items-center space-y-3 w-full max-w-[370px] mx-auto">
+      <div className="flex items-center justify-between w-full">
+        <h3 className="text-base font-semibold">Match Results</h3>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleRegenerate}
+            className="flex items-center gap-2"
+          >
+            <RotateCcw className="h-4 w-4" />
+            Rebola
+          </Button>
           <Button
             variant="outline"
             size="sm"
@@ -78,87 +130,19 @@ export function MatchDisplay({ matches }: MatchDisplayProps) {
             )}
           </Button>
         </div>
-
-        <Card className="p-3">
-          <textarea
-            value={matchText}
-            readOnly
-            className="w-full font-mono text-sm bg-muted/50 border-0"
-            style={{
-              fontFamily: "monospace",
-              height: `${Math.max(
-                200,
-                matchText.split("\n").length * 23 + 20
-              )}px`,
-            }}
-          />
-        </Card>
       </div>
+
+      <Card className="p-3 w-full">
+        <textarea
+          value={matchText}
+          readOnly
+          className="w-full font-mono text-sm bg-muted/50 border-0"
+          style={{
+            fontFamily: "monospace",
+            height: `${textareaHeight}px`,
+          }}
+        />
+      </Card>
     </div>
-  );
-}
-
-interface MatchCardProps {
-  match: MatchResult;
-  matchNumber: number;
-}
-
-function MatchCard({ match, matchNumber }: MatchCardProps) {
-  const roleOrder = ["Top", "Jungle", "Mid", "Adc", "Support"];
-  const roleLabels = ["Top", "Jng", "Mid", "Adc", "Sup"];
-
-  return (
-    <Card className="p-3">
-      <div className="flex items-center justify-between mb-2">
-        <h3 className="text-sm font-semibold">Match {matchNumber}</h3>
-        <div className="text-xs text-muted-foreground">
-          {match.matchScore.blue} vs {match.matchScore.red}
-        </div>
-      </div>
-
-      <table className="w-full text-xs table-fixed">
-        <colgroup>
-          <col className="w-[15%]" />
-          <col className="w-[35%]" />
-          <col className="w-[10%]" />
-          <col className="w-[40%]" />
-        </colgroup>
-        <tbody>
-          {roleOrder.map((role, index) => {
-            const [player1, player2] = match.pairingsRoles[role];
-            return (
-              <tr
-                key={role}
-                className="border-b border-border/50 last:border-b-0"
-              >
-                <td className="py-1 font-medium">{roleLabels[index]}</td>
-                <td className="py-1 text-right pr-2">
-                  <span className="font-medium">
-                    ({player1.rank}) {player1.name}
-                  </span>
-                </td>
-                <td className="py-1 text-center">
-                  <span className="text-muted-foreground font-bold">vs</span>
-                </td>
-                <td className="py-1 text-left pl-2">
-                  <span className="font-medium">
-                    {player2.name} ({player2.rank})
-                  </span>
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
-
-      <div className="mt-2 pt-1 border-t border-border">
-        <div className="flex justify-between items-center">
-          <span className="text-xs text-muted-foreground">Total</span>
-          <span className="font-semibold text-xs">
-            {match.matchScore.blue + match.matchScore.red}
-          </span>
-        </div>
-      </div>
-    </Card>
   );
 }
