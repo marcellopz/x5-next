@@ -229,10 +229,6 @@ export function AlgoConfigStep({ onPrevious, onNext }: AlgoConfigStepProps) {
               </div>
             )}
           </div>
-
-          <p className="text-xs text-muted-foreground italic">
-            These options will be implemented in future updates
-          </p>
         </CardContent>
       </Card>
 
