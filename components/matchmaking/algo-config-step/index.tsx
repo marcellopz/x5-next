@@ -83,9 +83,7 @@ export function AlgoConfigStep({ onPrevious, onNext }: AlgoConfigStepProps) {
       <Card>
         <CardHeader>
           <CardTitle>Advanced Options</CardTitle>
-          <CardDescription>
-            Additional configuration settings (coming soon)
-          </CardDescription>
+          <CardDescription>Additional configuration settings</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Use Pre-set Lanes */}
