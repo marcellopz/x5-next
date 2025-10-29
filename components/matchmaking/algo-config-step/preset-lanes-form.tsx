@@ -1,6 +1,7 @@
 "use client";
 
 import { Select } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { useMatchmaking } from "../matchmaking-context";
 import type { Lane } from "../matchmaking-context";
 
@@ -17,7 +18,8 @@ const laneLabels: Record<Lane, string> = {
 };
 
 export function PresetLanesForm({ enabled }: PresetLanesFormProps) {
-  const { selectedPlayers, config, updatePresetLane } = useMatchmaking();
+  const { selectedPlayers, config, updatePresetLane, updatePresetLanesConfig } =
+    useMatchmaking();
 
   // Get available players for a specific lane and side
   const getAvailablePlayers = (currentLane: Lane) => {
@@ -92,6 +94,22 @@ export function PresetLanesForm({ enabled }: PresetLanesFormProps) {
           </div>
         );
       })}
+
+      <div className="flex items-center gap-2 pt-2 border-t border-border">
+        <Checkbox
+          id="randomize-sides"
+          checked={config.presetLanes.randomizeSides}
+          onChange={(e) =>
+            updatePresetLanesConfig({ randomizeSides: e.target.checked })
+          }
+        />
+        <label
+          htmlFor="randomize-sides"
+          className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+        >
+          Randomize sides
+        </label>
+      </div>
     </div>
   );
 }

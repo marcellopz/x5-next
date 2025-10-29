@@ -8,11 +8,13 @@ import {
   useEffect,
 } from "react";
 import type { Player } from "@/lib/types";
+import type { MatchmakingResult } from "@/lib/matchmaking-algorithm";
 
 export type Lane = "top" | "jungle" | "mid" | "adc" | "support";
 
 export interface PresetLanesConfig {
   usePresetLanes: boolean;
+  randomizeSides: boolean;
   lanes: {
     [key in Lane]: {
       player1: Player | null;
@@ -64,15 +66,42 @@ interface MatchmakingContextType {
     side: "player1" | "player2",
     player: Player | null
   ) => void;
+  updatePresetLanesConfig: (config: Partial<PresetLanesConfig>) => void;
   expandedSections: string[];
   setExpandedSections: (
     sections: string[] | ((prev: string[]) => string[])
   ) => void;
+  matchResults: MatchmakingResult | null;
+  setMatchResults: (results: MatchmakingResult | null) => void;
 }
 
 const MatchmakingContext = createContext<MatchmakingContextType | undefined>(
   undefined
 );
+
+const initialConfig: MatchmakingConfig = {
+  matchOptions: 5,
+  tolerance: 1,
+  presetLanes: {
+    usePresetLanes: false,
+    randomizeSides: true,
+    lanes: {
+      top: { player1: null, player2: null },
+      jungle: { player1: null, player2: null },
+      mid: { player1: null, player2: null },
+      adc: { player1: null, player2: null },
+      support: { player1: null, player2: null },
+    },
+  },
+  avoidRoles: {
+    enabled: false,
+    rules: [],
+  },
+  playerCombos: {
+    enabled: false,
+    combos: [],
+  },
+};
 
 interface MatchmakingProviderProps {
   children: ReactNode;
@@ -84,29 +113,11 @@ export function MatchmakingProvider({
   players,
 }: MatchmakingProviderProps) {
   const [selectedPlayers, setSelectedPlayers] = useState<Player[]>([]);
-  const [config, setConfig] = useState<MatchmakingConfig>({
-    matchOptions: 5,
-    tolerance: 1,
-    presetLanes: {
-      usePresetLanes: false,
-      lanes: {
-        top: { player1: null, player2: null },
-        jungle: { player1: null, player2: null },
-        mid: { player1: null, player2: null },
-        adc: { player1: null, player2: null },
-        support: { player1: null, player2: null },
-      },
-    },
-    avoidRoles: {
-      enabled: false,
-      rules: [],
-    },
-    playerCombos: {
-      enabled: false,
-      combos: [],
-    },
-  });
+  const [config, setConfig] = useState<MatchmakingConfig>(initialConfig);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [matchResults, setMatchResults] = useState<MatchmakingResult | null>(
+    null
+  );
 
   // Remove avoid role rules when players are preset in lanes
   useEffect(() => {
@@ -167,6 +178,16 @@ export function MatchmakingProvider({
     }));
   };
 
+  const updatePresetLanesConfig = (config: Partial<PresetLanesConfig>) => {
+    setConfig((prev) => ({
+      ...prev,
+      presetLanes: {
+        ...prev.presetLanes,
+        ...config,
+      },
+    }));
+  };
+
   return (
     <MatchmakingContext.Provider
       value={{
@@ -178,8 +199,11 @@ export function MatchmakingProvider({
         config,
         setConfig,
         updatePresetLane,
+        updatePresetLanesConfig,
         expandedSections,
         setExpandedSections,
+        matchResults,
+        setMatchResults,
       }}
     >
       {children}

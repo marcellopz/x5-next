@@ -9,7 +9,15 @@
     "start": "next start",
     "lint": "eslint",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "test": "vitest",
+    "test:matchmaking": "tsx scripts/test-matchmaking-algorithm.ts",
+    "test:matchmaking:comprehensive": "tsx scripts/comprehensive-test-runner.ts",
+    "test:matchmaking:watch": "vitest --watch __tests__/matchmaking-algorithm.test.ts",
+    "test:role-variety": "tsx scripts/test-role-variety.ts",
+    "test:match-display": "tsx scripts/test-match-display.ts",
+    "test:randomize-sides": "tsx scripts/test-randomize-sides.ts",
+    "demo:matchmaking": "tsx scripts/matchmaking-demo.ts"
   },
   "dependencies": {
     "firebase-admin": "^13.5.0",
@@ -39,6 +47,7 @@
     "playwright": "^1.55.1",
     "storybook": "^9.1.9",
     "tailwindcss": "^4",
+    "tsx": "^4.19.2",
     "typescript": "^5",
     "vitest": "^3.2.4"
   }
