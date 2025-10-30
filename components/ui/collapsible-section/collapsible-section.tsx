@@ -9,6 +9,7 @@ interface CollapsibleSectionProps {
   defaultExpanded?: boolean;
   expanded?: boolean;
   onExpandedChange?: (expanded: boolean) => void;
+  small?: boolean;
 }
 
 export function CollapsibleSection({
@@ -17,6 +18,7 @@ export function CollapsibleSection({
   defaultExpanded = true,
   expanded: controlledExpanded,
   onExpandedChange,
+  small = false,
 }: CollapsibleSectionProps) {
   const [internalExpanded, setInternalExpanded] = useState(defaultExpanded);
 
@@ -40,11 +42,17 @@ export function CollapsibleSection({
         className="flex items-center gap-2 group cursor-pointer w-full"
       >
         <ChevronDown
-          className={`h-5 w-5 text-muted-foreground group-hover:text-foreground transition-all duration-300 ${
+          className={`${
+            small ? "h-4 w-4" : "h-5 w-5"
+          } text-muted-foreground group-hover:text-foreground transition-all duration-300 ${
             expanded ? "" : "-rotate-90"
           }`}
         />
-        <h2 className="text-xl font-bold tracking-tight group-hover:text-primary transition-colors">
+        <h2
+          className={`${
+            small ? "text-base font-medium" : "text-lg font-semibold"
+          } tracking-tight group-hover:text-primary transition-colors`}
+        >
           {title}
         </h2>
       </button>
@@ -52,7 +60,7 @@ export function CollapsibleSection({
       <div
         className={`grid transition-all duration-300 ease-in-out ${
           expanded
-            ? "grid-rows-[1fr] opacity-100 mt-5"
+            ? "grid-rows-[1fr] opacity-100 mt-3"
             : "grid-rows-[0fr] opacity-0"
         }`}
       >

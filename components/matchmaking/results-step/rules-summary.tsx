@@ -1,10 +1,12 @@
 "use client";
 
-import { memo } from "react";
+import { memo, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Users, Settings, Shield, Target } from "lucide-react";
 import { useMatchmaking } from "../matchmaking-context";
+import { CollapsibleSection } from "@/components/ui/collapsible-section";
+import { RoleBadge } from "./role-badge";
 
 export const RulesSummary = memo(function RulesSummary() {
   const { selectedPlayers, config, matchResults } = useMatchmaking();
@@ -29,6 +31,48 @@ export const RulesSummary = memo(function RulesSummary() {
   const validAvoidRoleRules = config.avoidRoles.rules.filter(
     (rule) => rule.playerId !== ""
   );
+
+  // Player role breakdown calculation (memoized)
+  const { countsByPlayer, totalMatches } = useMemo(() => {
+    const resolvedMatches = matchResults
+      ? matchResults.filteredMatches.length > 0
+        ? matchResults.filteredMatches
+        : matchResults.allMatches
+      : [];
+
+    const nameToIdLocal = new Map<string, string>();
+    selectedPlayers.forEach((p) =>
+      nameToIdLocal.set(p.name, String(p.account_id))
+    );
+
+    type RoleKey = "Top" | "Jungle" | "Mid" | "Adc" | "Support";
+    const counts: Record<string, Record<RoleKey, number>> = {};
+
+    selectedPlayers.forEach((p) => {
+      counts[String(p.account_id)] = {
+        Top: 0,
+        Jungle: 0,
+        Mid: 0,
+        Adc: 0,
+        Support: 0,
+      };
+    });
+
+    resolvedMatches.forEach((m) => {
+      const entries = Object.entries(m.pairingsRoles || {});
+      entries.forEach(([role, duo]) => {
+        const roleKey = role as RoleKey;
+        duo.forEach((pl) => {
+          const id = nameToIdLocal.get(pl.name);
+          if (!id) return;
+          if (!counts[id]) return;
+          counts[id][roleKey] += 1;
+        });
+      });
+    });
+
+    return { countsByPlayer: counts, totalMatches: resolvedMatches.length };
+  }, [matchResults, selectedPlayers]);
 
   return (
     <Card>
@@ -189,6 +233,55 @@ export const RulesSummary = memo(function RulesSummary() {
             No advanced rules configured
           </div>
         )}
+
+        {/* Player Role Breakdown (Accordion skeleton) */}
+        <CollapsibleSection
+          title="Player role breakdown"
+          defaultExpanded={false}
+          small
+        >
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">
+            {selectedPlayers.map((player) => (
+              <div
+                key={player.account_id}
+                className="rounded-md border p-3 space-y-2 border-border"
+              >
+                <div className="text-sm font-medium">{player.name}</div>
+                <div className="grid grid-cols-5 gap-2 text-xs">
+                  <RoleBadge
+                    role="Top"
+                    count={countsByPlayer[String(player.account_id)]?.Top ?? 0}
+                    totalMatches={totalMatches}
+                  />
+                  <RoleBadge
+                    role="Jng"
+                    count={
+                      countsByPlayer[String(player.account_id)]?.Jungle ?? 0
+                    }
+                    totalMatches={totalMatches}
+                  />
+                  <RoleBadge
+                    role="Mid"
+                    count={countsByPlayer[String(player.account_id)]?.Mid ?? 0}
+                    totalMatches={totalMatches}
+                  />
+                  <RoleBadge
+                    role="Adc"
+                    count={countsByPlayer[String(player.account_id)]?.Adc ?? 0}
+                    totalMatches={totalMatches}
+                  />
+                  <RoleBadge
+                    role="Sup"
+                    count={
+                      countsByPlayer[String(player.account_id)]?.Support ?? 0
+                    }
+                    totalMatches={totalMatches}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </CollapsibleSection>
       </CardContent>
     </Card>
   );
