@@ -90,7 +90,10 @@ export async function getPlayerSummary(): Promise<PlayerSummary | null> {
 // Fetches all reduced data from pre-processed-data/all-reduced
 export async function getAllReducedData(): Promise<MatchWithId[]> {
   const data = await fetchFromFirebase<AllReducedData>(
-    "pre-processed-data/all-reduced"
+    "pre-processed-data/all-reduced",
+    {
+      cache: "no-store",
+    }
   );
 
   if (!data) return [];
