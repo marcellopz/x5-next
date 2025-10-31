@@ -16,7 +16,7 @@ export function RoleBadge({ role, count, totalMatches }: RoleBadgeProps) {
       <span className="text-muted-foreground">{role}</span>
       <Badge
         variant="secondary"
-        className="justify-center gap-1 text-center flex-col rounded-sm !px-1"
+        className="justify-center gap-1 text-center flex-col rounded-sm px-1!"
       >
         <span>{count}</span>
         <span className="text-muted-foreground">{percentage}%</span>

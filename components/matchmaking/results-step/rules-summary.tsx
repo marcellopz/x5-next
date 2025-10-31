@@ -27,6 +27,11 @@ export const RulesSummary = memo(function RulesSummary() {
     config.playerCombos.combos.length > 0 &&
     config.playerCombos.combos[0].players.length > 0;
 
+  const filteredMatchesSuccess =
+    matchResults &&
+    matchResults?.filteredMatches?.length &&
+    matchResults?.filteredMatches?.length > 0;
+
   // Filtered avoid roles for display
   const validAvoidRoleRules = config.avoidRoles.rules.filter(
     (rule) => rule.playerId !== ""
@@ -34,11 +39,9 @@ export const RulesSummary = memo(function RulesSummary() {
 
   // Player role breakdown calculation (memoized)
   const { countsByPlayer, totalMatches } = useMemo(() => {
-    const resolvedMatches = matchResults
-      ? matchResults.filteredMatches.length > 0
-        ? matchResults.filteredMatches
-        : matchResults.allMatches
-      : [];
+    const resolvedMatches = filteredMatchesSuccess
+      ? matchResults.filteredMatches
+      : matchResults?.allMatches ?? [];
 
     const nameToIdLocal = new Map<string, string>();
     selectedPlayers.forEach((p) =>
@@ -72,7 +75,7 @@ export const RulesSummary = memo(function RulesSummary() {
     });
 
     return { countsByPlayer: counts, totalMatches: resolvedMatches.length };
-  }, [matchResults, selectedPlayers]);
+  }, [filteredMatchesSuccess, matchResults, selectedPlayers]);
 
   return (
     <Card>
@@ -100,7 +103,6 @@ export const RulesSummary = memo(function RulesSummary() {
             ))}
           </div>
         </div>
-
         {/* Basic Configuration */}
         <div className="space-y-2">
           <h4 className="text-sm font-medium text-muted-foreground">
@@ -113,7 +115,6 @@ export const RulesSummary = memo(function RulesSummary() {
             <Badge variant="secondary">Tolerance: {config.tolerance}</Badge>
           </div>
         </div>
-
         {/* Match Generation Stats */}
         {matchResults && (
           <div className="space-y-2">
@@ -136,7 +137,6 @@ export const RulesSummary = memo(function RulesSummary() {
             </div>
           </div>
         )}
-
         {/* Preset Lanes */}
         {hasPresetLanes && (
           <div className="space-y-2">
@@ -176,7 +176,6 @@ export const RulesSummary = memo(function RulesSummary() {
             </div>
           </div>
         )}
-
         {/* Avoid Roles */}
         {hasAvoidRoles && (
           <div className="space-y-2">
@@ -205,7 +204,6 @@ export const RulesSummary = memo(function RulesSummary() {
             </div>
           </div>
         )}
-
         {/* Player Combos */}
         {hasPlayerCombos && (
           <div className="space-y-2">
@@ -226,17 +224,22 @@ export const RulesSummary = memo(function RulesSummary() {
             </div>
           </div>
         )}
-
         {/* No Advanced Rules */}
         {!hasPresetLanes && !hasAvoidRoles && !hasPlayerCombos && (
           <div className="text-sm text-muted-foreground italic">
             No advanced rules configured
           </div>
         )}
-
         {/* Player Role Breakdown (Accordion skeleton) */}
+        {!filteredMatchesSuccess && (
+          <div className="text-sm text-muted-foreground italic">
+            No filtered matches found
+          </div>
+        )}
         <CollapsibleSection
-          title="Player role breakdown"
+          title={`${
+            filteredMatchesSuccess ? "Filtered" : "All"
+          } matches: Player role breakdown`}
           defaultExpanded={false}
           small
         >

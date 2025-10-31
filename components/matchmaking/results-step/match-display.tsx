@@ -23,7 +23,7 @@ export function MatchDisplay({ matchResults }: MatchDisplayProps) {
     if (!matchResults?.success) return [];
     return matchResults.filteredMatches.length > 0
       ? matchResults.filteredMatches
-      : matchResults.allMatches;
+      : [];
   }, [matchResults]);
 
   // State to hold the currently displayed matches (shuffled selection)
@@ -133,15 +133,21 @@ export function MatchDisplay({ matchResults }: MatchDisplayProps) {
       </div>
 
       <Card className="p-3 w-full">
-        <textarea
-          value={matchText}
-          readOnly
-          className="w-full font-mono text-sm bg-muted/50 border-0"
-          style={{
-            fontFamily: "monospace",
-            height: `${textareaHeight}px`,
-          }}
-        />
+        {matches.length > 0 ? (
+          <textarea
+            value={matchText}
+            readOnly
+            className="w-full font-mono text-sm bg-muted/50 border-0"
+            style={{
+              fontFamily: "monospace",
+              height: `${textareaHeight}px`,
+            }}
+          />
+        ) : (
+          <div className="text-sm text-muted-foreground italic">
+            No matches found
+          </div>
+        )}
       </Card>
     </div>
   );
