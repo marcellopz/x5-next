@@ -28,8 +28,8 @@ async function fetchFromFirebase<T>(
     const url = `${FIREBASE_DATABASE_URL}/${path}.json`;
 
     const response = await fetch(url, {
-      ...options,
       next: { revalidate: 1 },
+      ...options,
     });
 
     if (!response.ok) {
@@ -93,6 +93,7 @@ export async function getAllReducedData(): Promise<MatchWithId[]> {
     "pre-processed-data/all-reduced",
     {
       cache: "no-store",
+      next: { revalidate: undefined },
     }
   );
 
