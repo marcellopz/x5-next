@@ -37,16 +37,11 @@
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
     "eslint-plugin-storybook": "^9.1.9",
-    "lightningcss": "^1.30.2",
-    "lightningcss-linux-x64-gnu": "^1.30.2",
     "playwright": "^1.55.1",
     "storybook": "^9.1.9",
     "tailwindcss": "4.1.16",
     "tsx": "^4.19.2",
     "typescript": "^5",
     "vitest": "^3.2.4"
-  },
-  "overrides": {
-    "lightningcss": "^1.30.2"
   }
 }
