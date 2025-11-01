@@ -42,7 +42,7 @@ export function RolesSection({
     <CollapsibleSection title="Role Specific Stats">
       <Card>
         <CardContent className="pt-6">
-          <div className="grid grid-cols-1 gap-6 lg:[grid-template-columns:minmax(450px,auto)_1fr_1fr] items-stretch">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(450px,auto)_1fr_1fr] items-stretch">
             <MapWithRoleTabs activeRole={activeRole} onSelect={handleSelect} />
 
             <div className="lg:col-span-2 h-full">

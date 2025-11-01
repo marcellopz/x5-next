@@ -53,6 +53,7 @@ export interface MatchmakingConfig {
 
 interface MatchmakingContextType {
   players: Player[];
+  setPlayers: (players: Player[]) => void;
   selectedPlayers: Player[];
   setSelectedPlayers: (players: Player[]) => void;
   addPlayer: (player: Player) => void;
@@ -110,8 +111,9 @@ interface MatchmakingProviderProps {
 
 export function MatchmakingProvider({
   children,
-  players,
+  players: players_,
 }: MatchmakingProviderProps) {
+  const [players, setPlayers] = useState<Player[]>(players_);
   const [selectedPlayers, setSelectedPlayers] = useState<Player[]>([]);
   const [config, setConfig] = useState<MatchmakingConfig>(initialConfig);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
@@ -198,6 +200,7 @@ export function MatchmakingProvider({
     <MatchmakingContext.Provider
       value={{
         players,
+        setPlayers,
         selectedPlayers,
         setSelectedPlayers,
         addPlayer,

@@ -28,7 +28,7 @@ export function ChampionCard({
       </CardHeader>
       <CardContent>
         <div className="flex items-center gap-3">
-          <div className="relative w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-muted border-2 border-border">
+          <div className="relative w-12 h-12 rounded-lg overflow-hidden shrink-0 bg-muted border-2 border-border">
             <Image
               src={`${CHAMPIONICONURL}${championId}.png`}
               alt={championName}
@@ -40,7 +40,7 @@ export function ChampionCard({
           <div className="space-y-1 flex-1 min-w-0">
             <div className="flex items-baseline gap-2 justify-between">
               <span className="text-md font-bold truncate">{championName}</span>
-              <span className="text-lg font-semibold text-primary flex-shrink-0">
+              <span className="text-lg font-semibold text-primary shrink-0">
                 {value}
               </span>
             </div>

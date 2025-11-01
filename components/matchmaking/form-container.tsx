@@ -6,8 +6,11 @@ import { PlayerSelectionStep } from "./player-selection-step";
 import { AlgoConfigStep } from "./algo-config-step";
 import { ResultsStep } from "./results-step";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { MatchmakingProvider } from "./matchmaking-context";
+import { MatchmakingProvider, useMatchmaking } from "./matchmaking-context";
 import type { Player } from "@/lib/types";
+import { Button } from "../ui/button";
+import { RefreshCcwIcon } from "lucide-react";
+import { getPlayerList } from "@/lib/endpoints";
 
 interface FormContainerProps {
   players: Player[];
@@ -28,8 +31,44 @@ const steps = [
   },
 ];
 
+const buttonText = (isRefreshing: number) => {
+  switch (isRefreshing) {
+    case 0:
+      return "Refresh Players";
+    case 1:
+      return "Refreshing...";
+    case 2:
+      return "Refreshed";
+    default:
+      return "Refresh Players";
+  }
+};
+
 function FormContent() {
   const [currentStep, setCurrentStep] = useState(1);
+  const [isRefreshing, setIsRefreshing] = useState(0); // 0: not refreshing, 1: refreshing, 2: error, 3: refreshed
+  const { setPlayers } = useMatchmaking();
+
+  const handleRefresh = () => {
+    setIsRefreshing(1);
+    getPlayerList()
+      .then((newPlayers) => {
+        if (newPlayers) {
+          setPlayers(Object.values(newPlayers));
+          setIsRefreshing(3);
+        } else {
+          setIsRefreshing(2); // Error
+        }
+      })
+      .catch(() => {
+        setIsRefreshing(2); // Error
+      })
+      .finally(() => {
+        setTimeout(() => {
+          setIsRefreshing(0);
+        }, 1000);
+      });
+  };
 
   const handleNext = () => {
     if (currentStep < steps.length) {
@@ -49,7 +88,20 @@ function FormContent() {
 
       <Card>
         <CardHeader>
-          <CardTitle>{steps[currentStep - 1].title}</CardTitle>
+          <CardTitle>
+            <div className="flex items-center justify-between">
+              <h3>{steps[currentStep - 1].title}</h3>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleRefresh}
+                disabled={isRefreshing === 1}
+              >
+                <RefreshCcwIcon className="h-4 w-4" />
+                {buttonText(isRefreshing)}
+              </Button>
+            </div>
+          </CardTitle>
         </CardHeader>
         <CardContent className="py-8">
           {currentStep === 1 && <PlayerSelectionStep onNext={handleNext} />}

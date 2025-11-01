@@ -44,7 +44,7 @@ export function PlayerDisplay({
       {/* Champion Icon & Player Info */}
       <div className="flex items-center gap-2 xl:gap-3 min-w-0 overflow-hidden">
         {/* Champion Icon */}
-        <div className="relative flex-shrink-0 w-8 h-8 xl:w-10 xl:h-10">
+        <div className="relative shrink-0 w-8 h-8 xl:w-10 xl:h-10">
           <Image
             src={championIconUrl}
             alt={championName || "Champion"}

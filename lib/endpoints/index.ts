@@ -11,7 +11,9 @@ import type {
   SummarizedOverallData,
 } from "../types";
 
-const FIREBASE_DATABASE_URL = process.env.FIREBASE_DATABASE_URL;
+const FIREBASE_DATABASE_URL =
+  process.env.FIREBASE_DATABASE_URL ??
+  "https://x5-season-2-default-rtdb.firebaseio.com";
 
 if (!FIREBASE_DATABASE_URL) {
   throw new Error(
@@ -28,7 +30,8 @@ async function fetchFromFirebase<T>(
     const url = `${FIREBASE_DATABASE_URL}/${path}.json`;
 
     const response = await fetch(url, {
-      next: { revalidate: 1 },
+      // next: { revalidate: 1 },
+      cache: "no-store",
       ...options,
     });
 

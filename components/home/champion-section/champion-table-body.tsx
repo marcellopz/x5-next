@@ -56,7 +56,7 @@ export function ChampionTableBody({
           </TableCell>
           <TableCell>
             <div className="flex items-center gap-2 whitespace-nowrap">
-              <div className="relative w-8 h-8 rounded-md overflow-hidden flex-shrink-0 bg-muted border-2 border-border">
+              <div className="relative w-8 h-8 rounded-md overflow-hidden shrink-0 bg-muted border-2 border-border">
                 <Image
                   src={`${CHAMPIONICONURL}${champion.championId}.png`}
                   alt={champion.championName}
