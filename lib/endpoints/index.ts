@@ -124,3 +124,9 @@ export async function getRoleLeaderboardData(): Promise<RoleLeaderboardData | nu
     "pre-processed-data/role-leaderboard"
   );
 }
+
+export async function getPlayerPhoto(
+  accountId: string
+): Promise<string | null> {
+  return fetchFromFirebase<string>(`player-data/${accountId}/photo`);
+}
