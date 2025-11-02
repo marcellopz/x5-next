@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import type { Player } from "@/lib/types";
 import { Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface PlayerCarouselProps {
   playerList: Player[] | null;
@@ -18,6 +19,7 @@ export function PlayerCarousel({
 }: PlayerCarouselProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [index, setIndex] = useState(initialIndex);
+  const router = useRouter();
 
   useEffect(() => {
     if (searchQuery) {
@@ -40,10 +42,15 @@ export function PlayerCarousel({
             })
             .map((player) => ({
               id: player.account_id,
-              content: <PlayerCard player={player} />,
+              content: (
+                <PlayerCard
+                  player={player}
+                  onClick={() => router.push(`/player/${player.name_id}`)}
+                />
+              ),
             }))
         : [],
-    [playerList, searchQuery]
+    [playerList, searchQuery, router]
   );
 
   return (

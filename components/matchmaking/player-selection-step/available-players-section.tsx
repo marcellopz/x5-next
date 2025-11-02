@@ -51,12 +51,11 @@ export function AvailablePlayersSection() {
     newSelectedPlayers.forEach((player) => addPlayer(player));
   };
 
-  const filteredPlayers = players.filter((player) => {
-    const matchesSearch = player.name
-      .toLowerCase()
-      .includes(searchTerm.toLowerCase());
-    return matchesSearch;
-  });
+  const isPlayerFiltered = (player: (typeof players)[0]) => {
+    return !player.name.toLowerCase().includes(searchTerm.toLowerCase());
+  };
+
+  const filteredPlayers = players.filter((player) => !isPlayerFiltered(player));
 
   return (
     <Card>
@@ -108,33 +107,45 @@ export function AvailablePlayersSection() {
         </div>
       </CardHeader>
       <CardContent>
-        {filteredPlayers.length > 0 ? (
+        {players.length > 0 ? (
           viewMode === "cards" ? (
-            <div
-              className="grid gap-6 justify-items-center mt-4"
-              style={{
-                gridTemplateColumns: "repeat(auto-fill, minmax(188px, 188px))",
-                justifyContent: "center",
-              }}
-            >
-              {filteredPlayers.map((player) => {
-                const isSelected = selectedPlayers.some(
-                  (selected) => selected.account_id === player.account_id
-                );
+            <>
+              <div
+                className="grid gap-6 justify-items-center mt-4"
+                style={{
+                  gridTemplateColumns:
+                    "repeat(auto-fill, minmax(188px, 188px))",
+                  justifyContent: "center",
+                }}
+              >
+                {players.map((player) => {
+                  const isSelected = selectedPlayers.some(
+                    (selected) => selected.account_id === player.account_id
+                  );
+                  const isFiltered = isPlayerFiltered(player);
 
-                return (
-                  <CompactPlayerCard
-                    key={player.account_id}
-                    player={player}
-                    selected={isSelected}
-                    onClick={() =>
-                      isSelected ? removePlayer(player) : addPlayer(player)
-                    }
-                    className="hover:scale-100"
-                  />
-                );
-              })}
-            </div>
+                  return (
+                    <CompactPlayerCard
+                      key={player.account_id}
+                      player={player}
+                      selected={isSelected}
+                      onClick={() =>
+                        isSelected ? removePlayer(player) : addPlayer(player)
+                      }
+                      style={{ display: isFiltered ? "none" : undefined }}
+                    />
+                  );
+                })}
+              </div>
+              {filteredPlayers.length === 0 && searchTerm && (
+                <div className="text-center py-8">
+                  <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                  <p className="text-muted-foreground">
+                    No players found matching your criteria
+                  </p>
+                </div>
+              )}
+            </>
           ) : (
             <PlayersTable
               players={filteredPlayers}
@@ -146,9 +157,7 @@ export function AvailablePlayersSection() {
           <div className="text-center py-8">
             <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
             <p className="text-muted-foreground">
-              {searchTerm
-                ? "No players found matching your criteria"
-                : "No available players to select"}
+              No available players to select
             </p>
           </div>
         )}

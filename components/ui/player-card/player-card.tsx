@@ -13,9 +13,10 @@ const paletaDestaque = [
 
 interface PlayerCardProps {
   player: Player;
+  onClick?: () => void;
 }
 
-function PlayerCardComponent({ player }: PlayerCardProps) {
+function PlayerCardComponent({ player, onClick }: PlayerCardProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const goldColor = "#cab47d";
   const [photoSrc, setPhotoSrc] = useState<string | null>(null);
@@ -126,9 +127,15 @@ function PlayerCardComponent({ player }: PlayerCardProps) {
   }, [player, goldColor, photoSrc]);
 
   return (
-    <div className="relative w-[250px] h-[340px]">
+    <div
+      className="relative w-[250px] h-[340px]"
+      style={{
+        cursor: onClick ? "pointer" : "none",
+      }}
+    >
       {isLoading && <PlayerCardSkeleton />}
       <canvas
+        onClick={() => onClick?.()}
         ref={canvasRef}
         className={`w-[250px] h-[340px] rounded-lg ${
           isLoading ? "opacity-0" : "opacity-100"

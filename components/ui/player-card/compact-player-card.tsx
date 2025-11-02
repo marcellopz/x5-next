@@ -12,6 +12,7 @@ interface CompactPlayerCardProps {
   className?: string;
   onClick?: () => void;
   selected?: boolean;
+  style?: React.CSSProperties;
 }
 
 export function CompactPlayerCard({
@@ -19,9 +20,10 @@ export function CompactPlayerCard({
   className = "",
   onClick,
   selected = false,
+  style,
 }: CompactPlayerCardProps) {
   return (
-    <div className="relative">
+    <div className="relative" style={style}>
       <div
         className={`cursor-pointer transition-transform ${className}`}
         style={{
