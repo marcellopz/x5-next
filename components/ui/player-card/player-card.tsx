@@ -54,7 +54,7 @@ function PlayerCardComponent({ player, onClick }: PlayerCardProps) {
 
     // Load both images
     const templateImg = new Image();
-    templateImg.src = "/template_card2.png";
+    templateImg.src = "/template_card.png";
     templateImg.crossOrigin = "anonymous";
 
     const photoImg = new Image();
