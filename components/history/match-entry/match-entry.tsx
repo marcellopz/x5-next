@@ -13,7 +13,7 @@ interface MatchEntryProps {
   match: ReducedMatchData;
   className?: string;
   priority?: boolean;
-  filteringBy: FilterIdentifier | null;
+  filteringBy?: FilterIdentifier | null;
 }
 
 interface ProcessedTeamData {

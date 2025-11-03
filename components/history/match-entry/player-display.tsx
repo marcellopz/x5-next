@@ -12,7 +12,7 @@ export interface PlayerDisplayProps {
   participant: ReducedMatchData["participants"][0];
   totalKills: number;
   priority?: boolean;
-  filteringBy: FilterIdentifier | null;
+  filteringBy?: FilterIdentifier | null;
 }
 
 export function PlayerDisplay({
