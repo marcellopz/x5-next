@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, memo } from "react";
 import type { MatchWithId } from "@/lib/types";
 import { MatchEntry } from "./match-entry";
+import { FilterIdentifier } from "./matches-container";
 
 // Memoized MatchEntry to prevent unnecessary re-renders
 const MemoizedMatchEntry = memo(MatchEntry);
@@ -14,11 +15,17 @@ const SCROLL_THRESHOLD = 800; // pixels from bottom to trigger loading
 
 interface MatchesListProps {
   matches: MatchWithId[];
+  filteringBy: FilterIdentifier | null;
 }
 
-export function MatchesList({ matches }: MatchesListProps) {
+export function MatchesList({ matches, filteringBy }: MatchesListProps) {
   const [visibleItems, setVisibleItems] = useState(INITIAL_ITEMS);
   const canLoadMoreRef = useRef(true);
+
+  // Reset visible items when matches change (e.g., when filter is applied)
+  useEffect(() => {
+    setVisibleItems(INITIAL_ITEMS);
+  }, [matches.length]);
 
   // Get the subset of matches to display
   const displayedMatches = matches.slice(0, visibleItems);
@@ -85,6 +92,7 @@ export function MatchesList({ matches }: MatchesListProps) {
         <MemoizedMatchEntry
           key={match.matchId}
           match={match}
+          filteringBy={filteringBy}
           priority={index < 5} // Prioritize first 5 items
         />
       ))}

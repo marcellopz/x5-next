@@ -18,12 +18,19 @@ import { getRoleLeaderboardData } from "@/lib/endpoints";
 import { Player } from "@/lib/types";
 
 export default async function Home() {
-  const allPlayersObject = await getPlayerList();
-  const rankChangeLog = await getRankChangeLog();
-  const summarizedOverallData = await getSummarizedOverallData();
-  const initialRankChangeLog = await getInitialRankChangeLog();
-
-  const roleLeaderboard = await getRoleLeaderboardData();
+  const [
+    allPlayersObject,
+    rankChangeLog,
+    summarizedOverallData,
+    initialRankChangeLog,
+    roleLeaderboard,
+  ] = await Promise.all([
+    getPlayerList(),
+    getRankChangeLog(),
+    getSummarizedOverallData(),
+    getInitialRankChangeLog(),
+    getRoleLeaderboardData(),
+  ]);
 
   const playerList: Player[] = allPlayersObject
     ? Object.values(allPlayersObject).filter((player) => !player.hide)

@@ -130,7 +130,7 @@ function PlayerCardComponent({ player, onClick }: PlayerCardProps) {
     <div
       className="relative w-[250px] h-[340px]"
       style={{
-        cursor: onClick ? "pointer" : "none",
+        cursor: onClick ? "pointer" : "unset",
       }}
     >
       {isLoading && <PlayerCardSkeleton />}

@@ -7,11 +7,13 @@ import { MatchHeader } from "./match-header";
 import { MatchEntrySkeleton } from "./match-entry-skeleton";
 import type { ReducedMatchData } from "@/lib/types";
 import { sortParticipantsByRole } from "./match-utils";
+import { FilterIdentifier } from "../matches-container";
 
 interface MatchEntryProps {
   match: ReducedMatchData;
   className?: string;
   priority?: boolean;
+  filteringBy: FilterIdentifier | null;
 }
 
 interface ProcessedTeamData {
@@ -36,6 +38,7 @@ export function MatchEntry({
   match,
   className,
   priority = false,
+  filteringBy,
 }: MatchEntryProps) {
   const [isProcessing, setIsProcessing] = useState(!priority);
 
@@ -157,6 +160,7 @@ export function MatchEntry({
               participant={participant}
               totalKills={processedData.team100Data.totalKills}
               priority={priority}
+              filteringBy={filteringBy}
             />
           ))}
         </div>
@@ -177,6 +181,7 @@ export function MatchEntry({
               participant={participant}
               totalKills={processedData.team200Data.totalKills}
               priority={priority}
+              filteringBy={filteringBy}
             />
           ))}
         </div>

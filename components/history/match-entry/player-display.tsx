@@ -6,21 +6,33 @@ import Image from "next/image";
 import Link from "next/link";
 import { championIds, CHAMPIONICONURL, ITEMICONURL } from "@/lib/resources";
 import type { ReducedMatchData } from "@/lib/types";
+import { FilterIdentifier } from "../matches-container";
 
 export interface PlayerDisplayProps {
   participant: ReducedMatchData["participants"][0];
   totalKills: number;
   priority?: boolean;
+  filteringBy: FilterIdentifier | null;
 }
 
 export function PlayerDisplay({
   participant,
   totalKills,
   priority = false,
+  filteringBy,
 }: PlayerDisplayProps) {
   const championName =
     championIds[participant.championId as keyof typeof championIds];
   const championIconUrl = `${CHAMPIONICONURL}${participant.championId}.png`;
+
+  // Check if this participant matches the current filter
+  const isPlayerMatch =
+    filteringBy?.type === "player" &&
+    participant.summonerId === Number(filteringBy.accountId);
+  const isChampionMatch =
+    filteringBy?.type === "champion" &&
+    championName?.toLowerCase() === filteringBy.championName.toLowerCase();
+  const isHighlighted = isPlayerMatch || isChampionMatch;
 
   const items = [
     participant.stats.item0,
@@ -40,7 +52,11 @@ export function PlayerDisplay({
       : 0;
 
   return (
-    <div className="grid grid-cols-[minmax(0,1fr)_auto] sm:grid-cols-[minmax(0,1fr)_auto_auto] md:grid-cols-[minmax(0,1fr)_auto_auto_auto] lg:grid-cols-[minmax(0,1fr)_150px_auto_auto_auto] xl:grid-cols-[minmax(0,1fr)_200px_auto_auto_auto] gap-2 xl:gap-5 2xl:gap-10 items-center overflow-hidden lg:mr-1">
+    <div
+      className={`grid grid-cols-[minmax(0,1fr)_auto] sm:grid-cols-[minmax(0,1fr)_auto_auto] md:grid-cols-[minmax(0,1fr)_auto_auto_auto] lg:grid-cols-[minmax(0,1fr)_150px_auto_auto_auto] xl:grid-cols-[minmax(0,1fr)_200px_auto_auto_auto] gap-2 xl:gap-5 2xl:gap-10 items-center overflow-hidden lg:mr-1 ${
+        isHighlighted ? "bg-primary/35" : ""
+      }`}
+    >
       {/* Champion Icon & Player Info */}
       <div className="flex items-center gap-2 xl:gap-3 min-w-0 overflow-hidden">
         {/* Champion Icon */}
@@ -70,12 +86,28 @@ export function PlayerDisplay({
         <div className="flex flex-col min-w-0 overflow-hidden">
           <Link
             href={`/player/${participant.summonerId}`}
-            className="text-xs xl:text-sm font-medium truncate hover:text-primary transition-colors block"
+            className="text-xs xl:text-sm font-medium hover:text-primary transition-colors block truncate"
           >
-            {participant.summonerName}
+            <span
+              className={`${
+                isPlayerMatch
+                  ? "bg-primary px-0.5 py-0.5 rounded-sm text-primary-foreground"
+                  : ""
+              }`}
+            >
+              {participant.summonerName}
+            </span>
           </Link>
           <div className="text-xs xl:text-sm text-muted-foreground truncate">
-            {championName || `Champion ${participant.championId}`}
+            <span
+              className={`${
+                isChampionMatch
+                  ? "bg-primary px-0.5 py-0.5 rounded-sm text-primary-foreground"
+                  : ""
+              }`}
+            >
+              {championName || `Champion ${participant.championId}`}
+            </span>
           </div>
         </div>
       </div>

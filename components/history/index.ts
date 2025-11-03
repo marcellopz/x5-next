@@ -6,3 +6,4 @@ export {
 } from "./match-entry";
 export { MatchesList } from "./matches-list";
 export { MatchesContainer } from "./matches-container";
+export { MatchesFilter } from "./matches-filter";

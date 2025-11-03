@@ -1,21 +1,15 @@
-import { getAllReducedData } from "@/lib/endpoints";
+import { getAllReducedData, getPlayerList } from "@/lib/endpoints";
 import { MatchesContainer } from "@/components/history/matches-container";
+import { Player } from "@/lib/types";
 
 export default async function History() {
-  const matches = await getAllReducedData();
+  const [matches, allPlayersObject] = await Promise.all([
+    getAllReducedData(),
+    getPlayerList(),
+  ]);
+  const playerList: Player[] = allPlayersObject
+    ? Object.values(allPlayersObject)
+    : [];
 
-  return (
-    <div className="flex flex-col">
-      <div className="container mx-auto px-4 py-8">
-        <h1 className="text-2xl font-bold tracking-tight">Match History</h1>
-        <p className="text-sm text-muted-foreground">
-          {matches.length} matches total
-        </p>
-      </div>
-
-      <div className="container mx-auto px-4 flex-1">
-        <MatchesContainer matches={matches} />
-      </div>
-    </div>
-  );
+  return <MatchesContainer matches={matches} playerList={playerList} />;
 }

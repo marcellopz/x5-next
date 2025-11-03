@@ -1,7 +1,3 @@
-"use client";
-
-import * as React from "react";
-
 interface MatchEntrySkeletonProps {
   className?: string;
 }
@@ -9,15 +5,18 @@ interface MatchEntrySkeletonProps {
 export function MatchEntrySkeleton({ className }: MatchEntrySkeletonProps) {
   return (
     <div
-      className={`rounded-lg border border-border bg-card text-card-foreground shadow-sm p-3 sm:p-4 animate-pulse ${
+      className={`rounded-lg border border-border bg-card text-card-foreground shadow-sm transition-shadow duration-200 p-3 sm:p-4 animate-pulse ${
         className || ""
       }`}
     >
       {/* Match header skeleton */}
-      <div className="flex justify-between items-center mb-4">
-        <div className="h-4 bg-muted rounded w-24"></div>
-        <div className="h-4 bg-muted rounded w-16"></div>
-        <div className="h-4 bg-muted rounded w-20"></div>
+      <div className="flex items-center justify-between mb-2">
+        <div className="flex items-center gap-1">
+          <div className="h-4 bg-muted rounded w-20"></div>
+          <div className="h-4 bg-muted rounded w-1"></div>
+          <div className="h-4 bg-muted rounded w-12"></div>
+        </div>
+        <div className="h-7 bg-muted rounded w-32"></div>
       </div>
 
       <div className="grid grid-cols-2 gap-2 md:gap-3">
