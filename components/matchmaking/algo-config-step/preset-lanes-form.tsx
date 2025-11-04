@@ -29,9 +29,9 @@ export function PresetLanesForm({ enabled }: PresetLanesFormProps) {
     (Object.keys(config.presetLanes.lanes) as Lane[]).forEach((lane) => {
       if (lane !== currentLane) {
         if (config.presetLanes.lanes[lane].player1)
-          usedPlayerIds.add(config.presetLanes.lanes[lane].player1!.account_id);
+          usedPlayerIds.add(config.presetLanes.lanes[lane].player1!);
         if (config.presetLanes.lanes[lane].player2)
-          usedPlayerIds.add(config.presetLanes.lanes[lane].player2!.account_id);
+          usedPlayerIds.add(config.presetLanes.lanes[lane].player2!);
       }
     });
 
@@ -41,11 +41,9 @@ export function PresetLanesForm({ enabled }: PresetLanesFormProps) {
   const handlePlayerSelect = (
     lane: Lane,
     side: "player1" | "player2",
-    playerId: string
+    playerNameId: string
   ) => {
-    const player =
-      selectedPlayers.find((p) => p.account_id === Number(playerId)) || null;
-    updatePresetLane(lane, side, player);
+    updatePresetLane(lane, side, playerNameId);
   };
 
   if (!enabled) return null;
@@ -62,7 +60,7 @@ export function PresetLanesForm({ enabled }: PresetLanesFormProps) {
             </p>
             <div className="flex items-center gap-2 flex-1">
               <Select
-                value={config.presetLanes.lanes[lane].player1?.account_id || ""}
+                value={config.presetLanes.lanes[lane].player1 || ""}
                 onChange={(e) =>
                   handlePlayerSelect(lane, "player1", e.target.value)
                 }
@@ -70,14 +68,14 @@ export function PresetLanesForm({ enabled }: PresetLanesFormProps) {
               >
                 <option value="">-</option>
                 {availablePlayers.map((player) => (
-                  <option key={player.account_id} value={player.account_id}>
+                  <option key={player.name_id} value={player.name_id}>
                     {player.name}
                   </option>
                 ))}
               </Select>
               <span className="text-muted-foreground">vs</span>
               <Select
-                value={config.presetLanes.lanes[lane].player2?.account_id || ""}
+                value={config.presetLanes.lanes[lane].player2 || ""}
                 onChange={(e) =>
                   handlePlayerSelect(lane, "player2", e.target.value)
                 }
@@ -85,7 +83,7 @@ export function PresetLanesForm({ enabled }: PresetLanesFormProps) {
               >
                 <option value="">-</option>
                 {availablePlayers.map((player) => (
-                  <option key={player.account_id} value={player.account_id}>
+                  <option key={player.name_id} value={player.name_id}>
                     {player.name}
                   </option>
                 ))}

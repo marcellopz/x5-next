@@ -13,8 +13,14 @@ interface ResultsStepProps {
 }
 
 export function ResultsStep({ onPrevious }: ResultsStepProps) {
-  const { matchResults, config, selectedPlayers, setMatchResults } =
-    useMatchmaking();
+  const {
+    matchResults,
+    config,
+    selectedPlayers,
+    setMatchResults,
+    players: allPlayers,
+    refreshIndex,
+  } = useMatchmaking();
 
   // Auto-generate matches when entering this step or when relevant data changes
   // Memoize hash calculations for dependency tracking
@@ -37,7 +43,7 @@ export function ResultsStep({ onPrevious }: ResultsStepProps) {
 
   useEffect(() => {
     if (selectedPlayers.length === 10) {
-      const results = generateMatches(selectedPlayers, config);
+      const results = generateMatches(selectedPlayers, config, allPlayers);
       setMatchResults(results);
     } else {
       // Clear results if we don't have 10 players
@@ -52,6 +58,7 @@ export function ResultsStep({ onPrevious }: ResultsStepProps) {
     avoidRolesHash,
     playerCombosHash,
     setMatchResults,
+    refreshIndex,
   ]);
 
   return (

@@ -1,5 +1,8 @@
 import type { Player } from "@/lib/types";
-import type { MatchmakingConfig } from "@/components/matchmaking/matchmaking-context";
+import type {
+  MatchmakingConfig,
+  Lane,
+} from "@/components/matchmaking/matchmaking-context";
 
 export interface MatchResult {
   pairingsRoles: {
@@ -19,15 +22,139 @@ export interface MatchmakingResult {
   error?: string;
 }
 
+type ParsedConfig = {
+  matchOptions: number;
+  tolerance: number;
+  presetLanes: {
+    usePresetLanes: boolean;
+    randomizeSides: boolean;
+    lanes: {
+      [key in Lane]: {
+        player1: Player | null;
+        player2: Player | null;
+      };
+    };
+  };
+  avoidRoles: MatchmakingConfig["avoidRoles"];
+  playerCombos: {
+    enabled: boolean;
+    combos: Array<{
+      id: string;
+      players: Player[];
+    }>;
+  };
+};
+
 const roles = ["Top", "Jungle", "Mid", "Adc", "Support"] as const;
+
+/**
+ * Parse config by resolving name_ids to Player objects
+ */
+function parseConfig(
+  config: MatchmakingConfig,
+  allPlayers: Player[]
+): ParsedConfig {
+  // Parse preset lanes
+  const parsedLanes: ParsedConfig["presetLanes"]["lanes"] = {
+    top: {
+      player1: config.presetLanes.lanes.top.player1
+        ? allPlayers.find(
+            (p) => p.name_id === config.presetLanes.lanes.top.player1
+          ) || null
+        : null,
+      player2: config.presetLanes.lanes.top.player2
+        ? allPlayers.find(
+            (p) => p.name_id === config.presetLanes.lanes.top.player2
+          ) || null
+        : null,
+    },
+    jungle: {
+      player1: config.presetLanes.lanes.jungle.player1
+        ? allPlayers.find(
+            (p) => p.name_id === config.presetLanes.lanes.jungle.player1
+          ) || null
+        : null,
+      player2: config.presetLanes.lanes.jungle.player2
+        ? allPlayers.find(
+            (p) => p.name_id === config.presetLanes.lanes.jungle.player2
+          ) || null
+        : null,
+    },
+    mid: {
+      player1: config.presetLanes.lanes.mid.player1
+        ? allPlayers.find(
+            (p) => p.name_id === config.presetLanes.lanes.mid.player1
+          ) || null
+        : null,
+      player2: config.presetLanes.lanes.mid.player2
+        ? allPlayers.find(
+            (p) => p.name_id === config.presetLanes.lanes.mid.player2
+          ) || null
+        : null,
+    },
+    adc: {
+      player1: config.presetLanes.lanes.adc.player1
+        ? allPlayers.find(
+            (p) => p.name_id === config.presetLanes.lanes.adc.player1
+          ) || null
+        : null,
+      player2: config.presetLanes.lanes.adc.player2
+        ? allPlayers.find(
+            (p) => p.name_id === config.presetLanes.lanes.adc.player2
+          ) || null
+        : null,
+    },
+    support: {
+      player1: config.presetLanes.lanes.support.player1
+        ? allPlayers.find(
+            (p) => p.name_id === config.presetLanes.lanes.support.player1
+          ) || null
+        : null,
+      player2: config.presetLanes.lanes.support.player2
+        ? allPlayers.find(
+            (p) => p.name_id === config.presetLanes.lanes.support.player2
+          ) || null
+        : null,
+    },
+  };
+
+  // Parse player combos
+  const parsedCombos = config.playerCombos.combos.map((combo) => ({
+    id: combo.id,
+    players: combo.players
+      .map((nameId) => allPlayers.find((p) => p.name_id === nameId))
+      .filter((p): p is Player => p !== undefined),
+  }));
+
+  return {
+    matchOptions: config.matchOptions,
+    tolerance: config.tolerance,
+    presetLanes: {
+      usePresetLanes: config.presetLanes.usePresetLanes,
+      randomizeSides: config.presetLanes.randomizeSides,
+      lanes: parsedLanes,
+    },
+    avoidRoles: config.avoidRoles,
+    playerCombos: {
+      enabled: config.playerCombos.enabled,
+      combos: parsedCombos,
+    },
+  };
+}
 
 /**
  * Main matchmaking algorithm that generates all valid matches
  */
 export function generateMatches(
   players: Player[],
-  config: MatchmakingConfig
+  config_withIds: MatchmakingConfig,
+  allPlayers: Player[]
 ): MatchmakingResult {
+  console.log("config_withIds", config_withIds);
+  // Parse config to resolve name_ids to Player objects
+  const config = parseConfig(config_withIds, allPlayers);
+  console.log(config);
+
   try {
     // Validate input
     if (players.length !== 10) {
@@ -224,7 +351,7 @@ function createMatchFromRoleAssignment(
  */
 function checkPresetLanesToleranceViolation(
   players: Player[],
-  config: MatchmakingConfig
+  config: ParsedConfig
 ): boolean {
   if (!config.presetLanes.usePresetLanes) {
     return false;
@@ -278,7 +405,7 @@ function checkPresetLanesToleranceViolation(
  */
 function generateMatchesWithPresetLanesTolerance(
   players: Player[],
-  config: MatchmakingConfig
+  config: ParsedConfig
 ): MatchResult[] {
   const matches: MatchResult[] = [];
 
@@ -511,7 +638,7 @@ function generateMatchesWithPresetLanesTolerance(
  */
 function filterMatchesByConstraints(
   matches: MatchResult[],
-  config: MatchmakingConfig
+  config: ParsedConfig
 ): MatchResult[] {
   return matches.filter((match) => {
     // Check preset lanes constraint
@@ -544,7 +671,7 @@ function filterMatchesByConstraints(
  */
 function matchesPresetLanes(
   match: MatchResult,
-  presetLanesConfig: MatchmakingConfig["presetLanes"]
+  presetLanesConfig: ParsedConfig["presetLanes"]
 ): boolean {
   const roleIndexMap: Record<string, number> = {
     top: 0,
@@ -628,7 +755,7 @@ function matchesPresetLanes(
  */
 function matchesAvoidRoles(
   match: MatchResult,
-  avoidRolesConfig: MatchmakingConfig["avoidRoles"]
+  avoidRolesConfig: ParsedConfig["avoidRoles"]
 ): boolean {
   const roleIndexMap: Record<string, number> = {
     top: 0,
@@ -668,7 +795,7 @@ function matchesAvoidRoles(
  */
 function matchesPlayerCombos(
   match: MatchResult,
-  playerCombosConfig: MatchmakingConfig["playerCombos"]
+  playerCombosConfig: ParsedConfig["playerCombos"]
 ): boolean {
   if (playerCombosConfig.combos.length === 0) {
     return true;

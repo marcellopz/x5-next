@@ -17,14 +17,14 @@ export interface PresetLanesConfig {
   randomizeSides: boolean;
   lanes: {
     [key in Lane]: {
-      player1: Player | null;
-      player2: Player | null;
+      player1: string | null; // name_id
+      player2: string | null; // name_id
     };
   };
 }
 
 export interface AvoidRoleRule {
-  playerId: string | number;
+  playerId: string;
   lane: Lane;
 }
 
@@ -35,7 +35,7 @@ export interface AvoidRolesConfig {
 
 export interface PlayerCombo {
   id: string;
-  players: Player[];
+  players: string[]; // name_ids
 }
 
 export interface PlayerCombosConfig {
@@ -65,7 +65,7 @@ interface MatchmakingContextType {
   updatePresetLane: (
     lane: Lane,
     side: "player1" | "player2",
-    player: Player | null
+    player: string | null // name_id
   ) => void;
   updatePresetLanesConfig: (config: Partial<PresetLanesConfig>) => void;
   expandedSections: string[];
@@ -74,6 +74,8 @@ interface MatchmakingContextType {
   ) => void;
   matchResults: MatchmakingResult | null;
   setMatchResults: (results: MatchmakingResult | null) => void;
+  refreshIndex: number;
+  setRefreshIndex: (index: number | ((prev: number) => number)) => void;
 }
 
 const MatchmakingContext = createContext<MatchmakingContextType | undefined>(
@@ -114,27 +116,46 @@ export function MatchmakingProvider({
   players: players_,
 }: MatchmakingProviderProps) {
   const [players, setPlayers] = useState<Player[]>(players_);
+  const [selectedPlayerIds, setSelectedPlayerIds] = useState<string[]>([]);
   const [selectedPlayers, setSelectedPlayers] = useState<Player[]>([]);
   const [config, setConfig] = useState<MatchmakingConfig>(initialConfig);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
+  const [refreshIndex, setRefreshIndex] = useState<number>(0);
   const [matchResults, setMatchResults] = useState<MatchmakingResult | null>(
     null
   );
+
+  // Sync selectedPlayers based on selectedPlayerIds and players array
+  useEffect(() => {
+    const availableNameIds = new Set(players.map((p) => p.name_id));
+
+    // Filter out IDs that no longer exist in players array
+    const validIds = selectedPlayerIds.filter((id) => availableNameIds.has(id));
+    if (validIds.length !== selectedPlayerIds.length) {
+      setSelectedPlayerIds(validIds);
+    }
+
+    // Update selectedPlayers with current player data
+    const updated = players.filter((p) =>
+      selectedPlayerIds.includes(p.name_id)
+    );
+    setSelectedPlayers(updated);
+  }, [selectedPlayerIds, players]);
 
   // Reset all configs to default when player selection changes
   useEffect(() => {
     setConfig(initialConfig);
     setMatchResults(null);
-  }, [selectedPlayers]);
+  }, [selectedPlayerIds]);
 
   // Remove avoid role rules when players are preset in lanes
   useEffect(() => {
-    const presetPlayerIds = new Set<string | number>();
+    const presetPlayerIds = new Set<string>();
 
     // Collect all players already assigned in preset lanes
     Object.values(config.presetLanes.lanes).forEach((lane) => {
-      if (lane.player1) presetPlayerIds.add(lane.player1.account_id);
-      if (lane.player2) presetPlayerIds.add(lane.player2.account_id);
+      if (lane.player1) presetPlayerIds.add(lane.player1);
+      if (lane.player2) presetPlayerIds.add(lane.player2);
     });
 
     // Remove rules where the player is now in preset lanes
@@ -144,7 +165,7 @@ export function MatchmakingProvider({
         avoidRoles: {
           ...prev.avoidRoles,
           rules: prev.avoidRoles.rules.filter(
-            (rule) => !presetPlayerIds.has(Number(rule.playerId))
+            (rule) => !presetPlayerIds.has(rule.playerId)
           ),
         },
       }));
@@ -152,24 +173,22 @@ export function MatchmakingProvider({
   }, [config.presetLanes]);
 
   const addPlayer = (player: Player) => {
-    setSelectedPlayers((prev) => {
-      if (prev.some((p) => p.account_id === player.account_id)) {
+    setSelectedPlayerIds((prev) => {
+      if (prev.includes(player.name_id)) {
         return prev; // Player already selected
       }
-      return [...prev, player];
+      return [...prev, player.name_id];
     });
   };
 
   const removePlayer = (player: Player) => {
-    setSelectedPlayers((prev) =>
-      prev.filter((p) => p.account_id !== player.account_id)
-    );
+    setSelectedPlayerIds((prev) => prev.filter((id) => id !== player.name_id));
   };
 
   const updatePresetLane = (
     lane: Lane,
     side: "player1" | "player2",
-    player: Player | null
+    player: string | null // name_id
   ) => {
     setConfig((prev) => ({
       ...prev,
@@ -213,6 +232,8 @@ export function MatchmakingProvider({
         setExpandedSections,
         matchResults,
         setMatchResults,
+        refreshIndex,
+        setRefreshIndex,
       }}
     >
       {children}

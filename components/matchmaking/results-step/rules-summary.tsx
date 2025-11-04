@@ -9,7 +9,12 @@ import { CollapsibleSection } from "@/components/ui/collapsible-section";
 import { RoleBadge } from "./role-badge";
 
 export const RulesSummary = memo(function RulesSummary() {
-  const { selectedPlayers, config, matchResults } = useMatchmaking();
+  const {
+    selectedPlayers,
+    config,
+    matchResults,
+    players: allPlayers,
+  } = useMatchmaking();
 
   // Derived boolean values
   const hasPresetLanes =
@@ -157,7 +162,11 @@ export const RulesSummary = memo(function RulesSummary() {
                       <div className="flex items-center gap-2">
                         {players.player1 && (
                           <Badge variant="outline" className="text-xs">
-                            {players.player1.name}
+                            {
+                              allPlayers.find(
+                                (p) => p.name_id === players.player1
+                              )?.name
+                            }
                           </Badge>
                         )}
                         {players.player1 && players.player2 && (
@@ -165,7 +174,11 @@ export const RulesSummary = memo(function RulesSummary() {
                         )}
                         {players.player2 && (
                           <Badge variant="outline" className="text-xs">
-                            {players.player2.name}
+                            {
+                              allPlayers.find(
+                                (p) => p.name_id === players.player2
+                              )?.name
+                            }
                           </Badge>
                         )}
                       </div>
@@ -213,12 +226,8 @@ export const RulesSummary = memo(function RulesSummary() {
             </h4>
             <div className="flex flex-wrap gap-2">
               {config.playerCombos.combos[0].players.map((player) => (
-                <Badge
-                  key={player.account_id}
-                  variant="outline"
-                  className="text-xs"
-                >
-                  {player.name}
+                <Badge key={player} variant="outline" className="text-xs">
+                  {allPlayers.find((p) => p.name_id === player)?.name}
                 </Badge>
               ))}
             </div>

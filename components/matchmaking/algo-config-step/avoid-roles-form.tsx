@@ -23,15 +23,15 @@ export function AvoidRolesForm({ enabled }: AvoidRolesFormProps) {
 
   // Get players that are NOT assigned in preset lanes
   const getAvailablePlayers = () => {
-    const presetPlayerIds = new Set<string | number>();
+    const presetPlayerIds = new Set<string>();
 
     // Collect all players already assigned in preset lanes
     Object.values(config.presetLanes.lanes).forEach((lane) => {
-      if (lane.player1) presetPlayerIds.add(lane.player1.account_id);
-      if (lane.player2) presetPlayerIds.add(lane.player2.account_id);
+      if (lane.player1) presetPlayerIds.add(lane.player1);
+      if (lane.player2) presetPlayerIds.add(lane.player2);
     });
 
-    return selectedPlayers.filter((p) => !presetPlayerIds.has(p.account_id));
+    return selectedPlayers.filter((p) => !presetPlayerIds.has(p.name_id));
   };
 
   const availablePlayers = getAvailablePlayers();

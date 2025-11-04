@@ -47,9 +47,10 @@ const buttonText = (isRefreshing: number) => {
 function FormContent() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isRefreshing, setIsRefreshing] = useState(0); // 0: not refreshing, 1: refreshing, 2: error, 3: refreshed
-  const { setPlayers } = useMatchmaking();
+  const { setPlayers, setRefreshIndex } = useMatchmaking();
 
   const handleRefresh = () => {
+    setRefreshIndex((prev: number) => prev + 1);
     setIsRefreshing(1);
     getPlayerList()
       .then((newPlayers) => {
