@@ -9,7 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MatchmakingProvider, useMatchmaking } from "./matchmaking-context";
 import type { Player } from "@/lib/types";
 import { Button } from "../ui/button";
-import { RefreshCcwIcon } from "lucide-react";
+import { RefreshCcwIcon, ChevronLeft } from "lucide-react";
 import { getPlayerList } from "@/lib/endpoints";
 
 interface FormContainerProps {
@@ -91,7 +91,14 @@ function FormContent() {
         <CardHeader>
           <CardTitle>
             <div className="flex items-center justify-between">
-              <h3>{steps[currentStep - 1].title}</h3>
+              <div className="flex items-center gap-2">
+                {currentStep > 1 && (
+                  <Button variant="ghost" size="icon" onClick={handlePrevious}>
+                    <ChevronLeft className="h-6 w-6" />
+                  </Button>
+                )}
+                <h3>{steps[currentStep - 1].title}</h3>
+              </div>
               <Button
                 variant="outline"
                 size="sm"
