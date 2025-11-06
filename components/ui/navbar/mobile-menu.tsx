@@ -76,7 +76,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       {/* Backdrop */}
       <div
         className={cn(
-          "fixed inset-0 bg-black/50 z-[9998] transition-opacity duration-150",
+          "fixed inset-0 bg-black/50 z-9998 transition-opacity duration-150",
           isAnimating ? "opacity-100" : "opacity-0"
         )}
         onClick={onClose}
@@ -85,7 +85,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       {/* Sidebar */}
       <div
         className={cn(
-          "fixed inset-y-0 right-0 w-full bg-background z-[9999] flex flex-col shadow-xl transition-transform duration-150 ease-out",
+          "fixed inset-y-0 right-0 w-full bg-background z-9999 flex flex-col shadow-xl transition-transform duration-150 ease-out",
           isAnimating ? "translate-x-0" : "translate-x-full"
         )}
       >

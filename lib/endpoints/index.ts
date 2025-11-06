@@ -3,7 +3,9 @@ import type {
   InitialRanksData,
   MatchWithId,
   Player,
+  PlayerInfo,
   PlayerList,
+  PlayerPairs,
   PlayerRankChanges,
   PlayerSummary,
   RankChangeLog,
@@ -129,4 +131,22 @@ export async function getPlayerPhoto(
   accountId: string
 ): Promise<string | null> {
   return fetchFromFirebase<string>(`player-data/${accountId}/photo`);
+}
+
+// Fetches player info by account_id
+export async function getPlayerInfo(
+  accountId: string | number
+): Promise<PlayerInfo | null> {
+  return fetchFromFirebase<PlayerInfo>(
+    `pre-processed-data/players/${accountId}`
+  );
+}
+
+// Fetches player pairs by summonerId
+export async function getPlayerPairs(
+  summonerId: string | number
+): Promise<PlayerPairs | null> {
+  return fetchFromFirebase<PlayerPairs>(
+    `pre-processed-data/pairs/${summonerId}`
+  );
 }

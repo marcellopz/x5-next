@@ -12,6 +12,7 @@ import {
   useTableData,
 } from "@/components/ui/table";
 import type { PlayerList, PlayerSummary } from "@/lib/types";
+import { useRouter } from "next/navigation";
 
 // Define sort configuration for each column
 type PlayerWithNameId = {
@@ -127,7 +128,7 @@ function PlayerTableContent({
   playerSummary: PlayerSummary | null;
 }) {
   const sortedPlayers = useTableData() as PlayerWithNameId[];
-
+  const router = useRouter();
   return (
     <>
       <TableHeader>
@@ -219,7 +220,12 @@ function PlayerTableContent({
             const summaryData = playerSummary?.[player.account_id.toString()];
 
             return (
-              <TableRow key={player.nameId}>
+              <TableRow
+                key={player.nameId}
+                onClick={() => {
+                  router.push(`/player/${player.nameId}`);
+                }}
+              >
                 <TableCell className="font-medium">
                   {player.name || player.nameId}
                 </TableCell>

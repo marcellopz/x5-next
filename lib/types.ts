@@ -69,6 +69,24 @@ export interface ChampionStats {
   kills: number;
   picks: number;
   wins: number;
+  numberOfMatches?: number;
+  winRate?: number;
+  kda?: number;
+  AveragePerMatch?: {
+    assists: number;
+    creepScore: number;
+    damageSelfMitigates: number;
+    damageTaken: number;
+    damageToChampions: number;
+    damageToTurrets: number;
+    deaths: number;
+    goldEarned: number;
+    kills: number;
+    visionScore: number;
+    visionWardsBought: number;
+    [key: string]: unknown;
+  };
+  [key: string]: unknown; // Allow other properties
 }
 
 export interface GameDurationHistogram {
@@ -330,4 +348,68 @@ export interface AllReducedData {
 
 export interface MatchWithId extends ReducedMatchData {
   matchId: string;
+}
+
+// Player Info Types
+export interface PlayerInfo {
+  championStats: {
+    [championId: string]: ChampionStats;
+  };
+  summonerId: string | number;
+  summonerName?: string;
+  tagLine?: string;
+  numberOfMatches?: number;
+  winRate?: number;
+  playerMatchesIds?: string[];
+  firstBloods?: number;
+  winsArray?: number[];
+  matches?: {
+    [matchId: string]: unknown; // Match structure - can be defined later
+  };
+  roleMatches?: {
+    [role: string]: {
+      games: number;
+      wins: number;
+    };
+  };
+  statsPerSide?: {
+    blueSide: {
+      games: number;
+      wins: number;
+    };
+    redSide: {
+      games: number;
+      wins: number;
+    };
+  };
+  records?: PlayerRecords;
+  [key: string]: unknown; // Allow other properties
+}
+
+// Player Records Types
+export interface RecordEntry {
+  gameId: string;
+  n: number;
+  win: boolean;
+}
+
+export interface PlayerRecords {
+  assists?: RecordEntry;
+  cs?: RecordEntry;
+  csPerMin?: RecordEntry;
+  damage?: RecordEntry;
+  damageTaken?: RecordEntry;
+  deaths?: RecordEntry;
+  killingSpree?: RecordEntry;
+  kills?: RecordEntry;
+  longestGame?: RecordEntry;
+  multiKill?: RecordEntry;
+  shortestGame?: RecordEntry;
+  visionScore?: RecordEntry;
+  [key: string]: RecordEntry | undefined; // Allow other properties
+}
+
+// Player Pairs Types
+export interface PlayerPairs {
+  [playerId: string]: unknown;
 }
