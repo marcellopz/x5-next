@@ -218,7 +218,8 @@ const TableRow = React.forwardRef<HTMLTableRowElement, TableRowProps>(
         ref={ref}
         className={cn(
           "border-b border-border transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted",
-          selectable && checkboxConfig?.enabled && "cursor-pointer",
+          ((selectable && checkboxConfig?.enabled) || onClick) &&
+            "cursor-pointer",
           className
         )}
         onClick={handleRowClick}

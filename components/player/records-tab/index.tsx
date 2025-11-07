@@ -1,12 +1,11 @@
 "use client";
 
-import type { PlayerRecords } from "@/lib/types";
+import { usePlayerData } from "../player-data-context";
 
-interface PlayerRecordsTabProps {
-  records?: PlayerRecords;
-}
+export function PlayerRecordsTab() {
+  const { playerInfo } = usePlayerData();
+  const records = playerInfo.records;
 
-export function PlayerRecordsTab({ records }: PlayerRecordsTabProps) {
   return (
     <div className="space-y-4">
       <p className="text-muted-foreground">Records tab content - Coming soon</p>
@@ -14,4 +13,3 @@ export function PlayerRecordsTab({ records }: PlayerRecordsTabProps) {
     </div>
   );
 }
-

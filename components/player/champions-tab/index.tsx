@@ -1,12 +1,10 @@
 "use client";
 
-import type { ChampionStats } from "@/lib/types";
+import { usePlayerData } from "../player-data-context";
 
-interface PlayerChampionsTabProps {
-  champs: ChampionStats[];
-}
+export function PlayerChampionsTab() {
+  const { champs } = usePlayerData();
 
-export function PlayerChampionsTab({ champs }: PlayerChampionsTabProps) {
   return (
     <div className="space-y-4">
       <p className="text-muted-foreground">
@@ -16,4 +14,3 @@ export function PlayerChampionsTab({ champs }: PlayerChampionsTabProps) {
     </div>
   );
 }
-

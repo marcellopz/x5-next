@@ -1,18 +1,10 @@
 "use client";
 
-import type { PlayerInfo, PlayerPairs, PlayerSummary } from "@/lib/types";
+import { usePlayerData } from "../player-data-context";
 
-interface PlayerStatsTabProps {
-  playerInfo: PlayerInfo;
-  playerPairs: PlayerPairs | null;
-  playerSummary: PlayerSummary | null;
-}
+export function PlayerStatsTab() {
+  const { playerInfo, playerPairs, playerSummary } = usePlayerData();
 
-export function PlayerStatsTab({
-  playerInfo,
-  playerPairs,
-  playerSummary,
-}: PlayerStatsTabProps) {
   return (
     <div className="space-y-4">
       <p className="text-muted-foreground">Stats tab content - Coming soon</p>
@@ -20,4 +12,3 @@ export function PlayerStatsTab({
     </div>
   );
 }
-

@@ -162,3 +162,7 @@ body {
 .scrollbar-thin::-webkit-scrollbar-button:end:increment {
   display: none;
 }
+
+button {
+  cursor: pointer;
+}
