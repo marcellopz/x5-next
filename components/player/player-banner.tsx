@@ -129,12 +129,42 @@ function PlayerInfoSection({
 // Win Rate Display Component
 interface WinRateDisplayProps {
   winRate: number;
+  numberOfMatches?: number;
+  roleMatches?: {
+    [role: string]: {
+      games: number;
+      wins: number;
+    };
+  };
 }
 
-function WinRateDisplay({ winRate }: WinRateDisplayProps) {
+function WinRateDisplay({
+  winRate,
+  numberOfMatches,
+  roleMatches,
+}: WinRateDisplayProps) {
+  // Calculate total matches from roleMatches if numberOfMatches is undefined
+  const totalMatches =
+    numberOfMatches ??
+    (roleMatches
+      ? Object.values(roleMatches).reduce((sum, role) => sum + role.games, 0)
+      : undefined);
+
+  const wins =
+    totalMatches !== undefined ? Math.round(totalMatches * winRate) : undefined;
+  const losses =
+    totalMatches !== undefined && wins !== undefined
+      ? totalMatches - wins
+      : undefined;
+
   return (
     <div className="flex items-center justify-center rounded-lg border-2 border-border/50 bg-[hsl(220,60%,7%)]/50 p-4">
-      <WinRateCircularProgress value={winRate} size={176} />
+      <WinRateCircularProgress
+        value={winRate}
+        size={176}
+        wins={wins}
+        losses={losses}
+      />
     </div>
   );
 }
@@ -247,7 +277,11 @@ export function PlayerBanner({
             />
           </div>
           {playerInfo.winRate !== undefined && (
-            <WinRateDisplay winRate={playerInfo.winRate} />
+            <WinRateDisplay
+              winRate={playerInfo.winRate}
+              numberOfMatches={playerInfo.numberOfMatches}
+              roleMatches={playerInfo.roleMatches}
+            />
           )}
           <RoleStatsList
             playerInfo={playerInfo}
@@ -270,7 +304,10 @@ export function PlayerBanner({
           </div>
           <div className="flex flex-row gap-3 items-center justify-center">
             {playerInfo.winRate !== undefined && (
-              <WinRateDisplay winRate={playerInfo.winRate} />
+              <WinRateDisplay
+                winRate={playerInfo.winRate}
+                numberOfMatches={playerInfo.numberOfMatches}
+              />
             )}
             <RoleStatsList
               playerInfo={playerInfo}
@@ -293,7 +330,10 @@ export function PlayerBanner({
           </div>
           <div className="flex flex-row gap-3 xl:gap-6 items-center ml-auto">
             {playerInfo.winRate !== undefined && (
-              <WinRateDisplay winRate={playerInfo.winRate} />
+              <WinRateDisplay
+                winRate={playerInfo.winRate}
+                numberOfMatches={playerInfo.numberOfMatches}
+              />
             )}
             <RoleStatsList
               playerInfo={playerInfo}

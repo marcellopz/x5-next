@@ -4,12 +4,16 @@ interface WinRateCircularProgressProps {
   value: number; // 0-1 range
   size?: number;
   labelFontSize?: number;
+  wins?: number;
+  losses?: number;
 }
 
 export function WinRateCircularProgress({
   value,
   size = 176,
   labelFontSize = 25,
+  wins,
+  losses,
 }: WinRateCircularProgressProps) {
   const percentage = Math.min(Math.max(value * 100, 0), 100);
   const strokeWidth = 18;
@@ -53,14 +57,19 @@ export function WinRateCircularProgress({
       </svg>
       <div className="absolute inset-0 flex items-center justify-center flex-col z-10">
         <span
-          className="text-white font-bold text-center leading-none mb-1"
+          className="text-foreground font-bold text-center leading-none mb-1"
           style={{ fontSize: `${labelFontSize}px` }}
         >
           {percentage.toFixed(1)}%
         </span>
-        <span className="text-white/80 text-sm font-normal text-center">
+        <span className="text-muted-foreground text-sm font-normal text-center">
           Win rate
         </span>
+        {(wins !== undefined || losses !== undefined) && (
+          <span className="text-muted-foreground text-sm font-normal text-center mt-0.5">
+            {wins ?? 0}W {losses ?? 0}L
+          </span>
+        )}
       </div>
     </div>
   );
