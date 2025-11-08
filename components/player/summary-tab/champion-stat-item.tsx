@@ -12,9 +12,9 @@ function floatToPercentageString(value: number): string {
   return `${(value * 100).toFixed(1)}%`;
 }
 
-function formatKDA(champion: ChampionStats): string {
-  if (champion.kda !== undefined) {
-    return champion.kda.toFixed(2);
+function getKDAValue(champion: ChampionStats): number {
+  if (champion.kda !== undefined && isFinite(champion.kda)) {
+    return champion.kda;
   }
 
   // Calculate KDA if not provided
@@ -22,7 +22,36 @@ function formatKDA(champion: ChampionStats): string {
   const deaths = champion.deaths ?? 0;
   const assists = champion.assists ?? 0;
   const kda = deaths > 0 ? (kills + assists) / deaths : kills + assists;
-  return kda.toFixed(2);
+
+  return isFinite(kda) ? kda : Infinity;
+}
+
+function formatKDA(champion: ChampionStats): string {
+  const kdaValue = getKDAValue(champion);
+
+  if (!isFinite(kdaValue)) {
+    return "Perfect";
+  }
+
+  return kdaValue.toFixed(2);
+}
+
+function getKDAColorClass(champion: ChampionStats): string {
+  const kdaValue = getKDAValue(champion);
+
+  if (!isFinite(kdaValue)) {
+    return "text-primary";
+  }
+
+  if (kdaValue < 3) {
+    return "text-muted-foreground";
+  } else if (kdaValue < 4) {
+    return "text-green-500";
+  } else if (kdaValue < 5) {
+    return "text-blue-500";
+  } else {
+    return "text-primary";
+  }
 }
 
 export function ChampionStatItem({ champion }: ChampionStatItemProps) {
@@ -54,7 +83,9 @@ export function ChampionStatItem({ champion }: ChampionStatItemProps) {
           <p className="text-foreground font-semibold truncate">
             {champion.championName || `Champion ${championId}`}
           </p>
-          <p className="text-muted-foreground text-sm">{formatKDA(champion)}</p>
+          <p className={`text-sm ${getKDAColorClass(champion)}`}>
+            {formatKDA(champion)}
+          </p>
         </div>
 
         {/* Win Rate and Number of Games */}
