@@ -2,7 +2,7 @@ export const patch = "15.11.1";
 
 export const GAMEENTITIESURL = "public/game-entities";
 
-export const ITEMICONURL = `http://ddragon.leagueoflegends.com/cdn/${patch}/img/item/`;
+export const ITEMICONURL = `https://ddragon.leagueoflegends.com/cdn/${patch}/img/item/`;
 export const PROFILEPICONURL =
   "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/profile-icons/";
 export const CHAMPIONICONURL =
