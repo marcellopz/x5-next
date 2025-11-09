@@ -150,3 +150,17 @@ export async function getPlayerPairs(
     `pre-processed-data/pairs/${summonerId}`
   );
 }
+
+// Fetches full match data by match ID
+// The matchId should be in format "match{number}" (e.g., "match123")
+export async function getFullMatch(matchId: string): Promise<unknown | null> {
+  return fetchFromFirebase<unknown>(`full-json-matches/${matchId}`);
+}
+
+// Fetches match roles by match ID
+// The matchId should be in format "match{number}" (e.g., "match123")
+export async function getMatchRoles(matchId: string): Promise<Record<string, string> | null> {
+  return fetchFromFirebase<Record<string, string>>(
+    `pre-processed-data/match-roles/${matchId}`
+  );
+}
