@@ -49,9 +49,9 @@ export function RoleDistributionChart({
       <h3 className="text-sm font-semibold text-foreground mb-2">
         Role Distribution
       </h3>
-      <div className="flex items-center flex-1 gap-4">
+      <div className="flex items-center flex-1 gap-6">
         {/* Pie Chart */}
-        <div className="shrink-0" style={{ width: "140px", height: "140px" }}>
+        <div className="shrink-0" style={{ width: "112px", height: "114px" }}>
           <ResponsiveContainer width="100%" height="100%">
             <PieChart>
               <Tooltip
@@ -71,8 +71,8 @@ export function RoleDistributionChart({
                 data={roleData}
                 cx="50%"
                 cy="50%"
-                innerRadius={40}
-                outerRadius={60}
+                innerRadius={35}
+                outerRadius={50}
                 paddingAngle={5}
                 dataKey="value"
                 stroke="#181D27"
@@ -87,7 +87,7 @@ export function RoleDistributionChart({
           </ResponsiveContainer>
         </div>
         {/* Legend */}
-        <div className="flex-1 flex flex-col justify-center gap-1.5">
+        <div className="flex-1 flex flex-col justify-center gap-0.5">
           {roleData.map((item) => (
             <div key={item.name} className="flex items-center gap-2 text-sm">
               <div

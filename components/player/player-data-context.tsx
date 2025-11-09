@@ -7,6 +7,8 @@ import type {
   PlayerPairs,
   PlayerSummary,
   ChampionStats,
+  MatchWithId,
+  PlayerRankChanges,
 } from "@/lib/types";
 
 interface PlayerDataContextType {
@@ -15,6 +17,8 @@ interface PlayerDataContextType {
   playerPairs: PlayerPairs | null;
   playerSummary: PlayerSummary | null;
   champs: ChampionStats[];
+  matches: MatchWithId[];
+  rankChanges: PlayerRankChanges | null;
   filteredRole: string;
   setFilteredRole: (role: string) => void;
 }
@@ -38,6 +42,8 @@ interface PlayerDataProviderProps {
   playerPairs: PlayerPairs | null;
   playerSummary: PlayerSummary | null;
   champs: ChampionStats[];
+  matches: MatchWithId[];
+  rankChanges: PlayerRankChanges | null;
 }
 
 export function PlayerDataProvider({
@@ -47,6 +53,8 @@ export function PlayerDataProvider({
   playerPairs,
   playerSummary,
   champs,
+  matches,
+  rankChanges,
 }: PlayerDataProviderProps) {
   const [filteredRole, setFilteredRole] = useState("");
 
@@ -58,6 +66,8 @@ export function PlayerDataProvider({
         playerPairs,
         playerSummary,
         champs,
+        matches,
+        rankChanges,
         filteredRole,
         setFilteredRole,
       }}

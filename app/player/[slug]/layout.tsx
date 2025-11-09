@@ -5,6 +5,8 @@ import {
   getPlayerInfo,
   getPlayerPairs,
   getPlayerSummary,
+  getAllReducedData,
+  getPlayerRankChanges,
 } from "@/lib/endpoints";
 import { getPlayerByAccountId } from "@/lib/utils";
 import { PlayerDataProvider } from "@/components/player/player-data-context";
@@ -60,10 +62,24 @@ async function fetchPlayerData(slug: string) {
   const playerInfo = await getPlayerInfo(accountId);
 
   // Fetch all remaining data in parallel
-  const [playerPairs, playerSummary] = await Promise.all([
-    playerInfo?.summonerId ? getPlayerPairs(playerInfo.summonerId) : null,
-    getPlayerSummary(),
-  ]);
+  const [playerPairs, playerSummary, allMatches, rankChanges] =
+    await Promise.all([
+      playerInfo?.summonerId ? getPlayerPairs(playerInfo.summonerId) : null,
+      getPlayerSummary(),
+      getAllReducedData(),
+      getPlayerRankChanges(playerKey),
+    ]);
+
+  // Filter matches for this player using playerMatchesIds or summonerId
+  const playerMatches = playerInfo?.playerMatchesIds
+    ? allMatches.filter((match) =>
+        playerInfo.playerMatchesIds!.includes(match.matchId)
+      )
+    : playerInfo?.summonerId
+    ? allMatches.filter((match) =>
+        match.participants.some((p) => p.summonerId === playerInfo.summonerId)
+      )
+    : [];
 
   // Prepare champion stats array
   const champs = playerInfo?.championStats
@@ -86,6 +102,8 @@ async function fetchPlayerData(slug: string) {
     playerPairs,
     playerSummary,
     champs,
+    matches: playerMatches,
+    rankChanges,
   };
 }
 
@@ -131,6 +149,8 @@ export default async function PlayerLayout({
       playerPairs={data.playerPairs}
       playerSummary={data.playerSummary}
       champs={data.champs}
+      matches={data.matches}
+      rankChanges={data.rankChanges}
     >
       <div className="container mx-auto px-4 py-8">
         <Card className="overflow-clip">

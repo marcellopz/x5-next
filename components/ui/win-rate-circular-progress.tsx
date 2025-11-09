@@ -6,6 +6,8 @@ interface WinRateCircularProgressProps {
   labelFontSize?: number;
   wins?: number;
   losses?: number;
+  showWinsLossesInside?: boolean; // If false, wins/losses won't be shown inside the circle
+  showLabel?: boolean; // If false, "Win rate" label won't be shown
 }
 
 export function WinRateCircularProgress({
@@ -14,6 +16,8 @@ export function WinRateCircularProgress({
   labelFontSize = 25,
   wins,
   losses,
+  showWinsLossesInside = true,
+  showLabel = true,
 }: WinRateCircularProgressProps) {
   const percentage = Math.min(Math.max(value * 100, 0), 100);
   const strokeWidth = 18;
@@ -57,19 +61,22 @@ export function WinRateCircularProgress({
       </svg>
       <div className="absolute inset-0 flex items-center justify-center flex-col z-10">
         <span
-          className="text-foreground font-bold text-center leading-none mb-1"
+          className="text-foreground font-bold text-center leading-none"
           style={{ fontSize: `${labelFontSize}px` }}
         >
           {percentage.toFixed(1)}%
         </span>
-        <span className="text-muted-foreground text-sm font-normal text-center">
-          Win rate
-        </span>
-        {(wins !== undefined || losses !== undefined) && (
-          <span className="text-muted-foreground text-sm font-normal text-center mt-0.5">
-            {wins ?? 0}W {losses ?? 0}L
+        {showLabel && (
+          <span className="text-muted-foreground text-sm font-normal text-center mt-1">
+            Win rate
           </span>
         )}
+        {showWinsLossesInside &&
+          (wins !== undefined || losses !== undefined) && (
+            <span className="text-muted-foreground text-sm font-normal text-center mt-0.5">
+              {wins ?? 0}W {losses ?? 0}L
+            </span>
+          )}
       </div>
     </div>
   );
