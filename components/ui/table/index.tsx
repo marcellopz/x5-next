@@ -263,20 +263,25 @@ const TableHead = React.forwardRef<HTMLTableCellElement, TableHeadProps>(
       }
     };
 
+    const isCentered = className?.includes("text-center");
+
     return (
       <th
         ref={ref}
         className={cn(
           compact
-            ? "h-8 px-2 text-left align-middle font-medium text-muted-foreground whitespace-nowrap [&:has([role=checkbox])]:pr-0"
-            : "h-12 px-4 text-left align-middle font-medium text-muted-foreground whitespace-nowrap [&:has([role=checkbox])]:pr-0",
+            ? "h-8 px-2 align-middle font-medium text-muted-foreground whitespace-nowrap [&:has([role=checkbox])]:pr-0"
+            : "h-12 px-4 align-middle font-medium text-muted-foreground whitespace-nowrap [&:has([role=checkbox])]:pr-0",
+          isCentered ? "text-center" : "text-left",
           sortable && "cursor-pointer hover:bg-muted/50 select-none",
           className
         )}
         onClick={handleClick}
         {...props}
       >
-        <div className="flex items-center">
+        <div
+          className={cn("flex items-center", isCentered && "justify-center")}
+        >
           {children}
           {getSortIcon()}
         </div>

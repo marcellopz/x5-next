@@ -28,7 +28,7 @@ type PlayerWithNameId = {
 };
 
 // Function to get win rate color based on percentage
-function getWinRateColor(winRate: number): string {
+export function getWinRateColor(winRate: number): string {
   const percentage = winRate * 100;
 
   if (percentage >= 50) {
