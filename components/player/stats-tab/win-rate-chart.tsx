@@ -7,6 +7,7 @@ import {
   YAxis,
   ResponsiveContainer,
   Tooltip,
+  CartesianGrid,
 } from "recharts";
 import { chartTheme } from "@/components/home/activity-section/chart-theme";
 
@@ -65,7 +66,7 @@ export function WinRateChart({ winsArray }: WinRateChartProps) {
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
             data={chartData}
-            margin={{ top: 10, right: 10, left: 10, bottom: 10 }}
+            margin={{ top: 10, right: 10, left: -15, bottom: 0 }}
           >
             <defs>
               <linearGradient
@@ -87,6 +88,11 @@ export function WinRateChart({ winsArray }: WinRateChartProps) {
                 />
               </linearGradient>
             </defs>
+            <CartesianGrid
+              strokeDasharray="3 3"
+              stroke={chartTheme.grid}
+              opacity={chartTheme.gridOpacity}
+            />
             <XAxis
               dataKey="game"
               tick={{ fill: chartTheme.text, fontSize: 12 }}

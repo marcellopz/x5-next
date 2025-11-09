@@ -95,7 +95,9 @@ function RecordBox({ title, value, win, gameId }: RecordBoxProps) {
         </Link>
       </div>
       <div className="flex items-end justify-between mt-auto">
-        <p className="text-xs text-muted-foreground/30">
+        <p
+          className={`text-sm ${win ? "text-green-500/60" : "text-red-500/60"}`}
+        >
           {win ? "Win" : "Loss"}
         </p>
         <p className="text-3xl font-semibold text-foreground">{value}</p>
