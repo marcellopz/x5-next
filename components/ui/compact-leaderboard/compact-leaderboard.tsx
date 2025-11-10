@@ -31,7 +31,7 @@ interface CompactLeaderboardProps {
 }
 
 export function CompactLeaderboard({
-  items,
+  items = [],
   title,
   initialCount = 3,
   maxCount = 6,
@@ -56,8 +56,8 @@ export function CompactLeaderboard({
     }
   };
 
-  const hasMore = items.length > initialCount;
-  const allItems = items.slice(0, maxCount);
+  const hasMore = items?.length && items?.length > initialCount;
+  const allItems = items?.slice(0, maxCount) || [];
 
   const getPositionNumber = (index: number) => {
     return `${index + 1}.`;

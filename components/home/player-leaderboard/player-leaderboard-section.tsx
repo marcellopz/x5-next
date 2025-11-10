@@ -24,46 +24,46 @@ export function PlayerOverallLeaderboard({
   // Transform leaderboard data to CompactLeaderboard format
   const winRateData: LeaderboardItem[] = useMemo(
     () =>
-      leaderboard.winRate.slice(0, 10).map((entry) => ({
+      leaderboard?.winRate?.slice(0, 10).map((entry) => ({
         id: entry.summonerId,
         label: entry.legend_name,
         value: `${(entry.value * 100).toFixed(1)}%`,
         subtitle: `Overall`,
       })),
-    [leaderboard.winRate]
+    [leaderboard?.winRate]
   );
 
   const recentWinRateData: LeaderboardItem[] = useMemo(
     () =>
-      leaderboard.winRateLast20Games.slice(0, 10).map((entry) => ({
+      leaderboard?.winRateLast20Games?.slice(0, 10).map((entry) => ({
         id: entry.summonerId,
         label: entry.legend_name,
         value: `${(entry.value * 100).toFixed(1)}%`,
         subtitle: `Last 20 games`,
       })),
-    [leaderboard.winRateLast20Games]
+    [leaderboard?.winRateLast20Games]
   );
 
   const championsPlayedData: LeaderboardItem[] = useMemo(
     () =>
-      leaderboard.numberOfChampionsPlayed.slice(0, 10).map((entry) => ({
+      leaderboard?.numberOfChampionsPlayed?.slice(0, 10).map((entry) => ({
         id: entry.summonerId,
         label: entry.legend_name,
         value: entry.value.toString(),
         subtitle: `Champions`,
       })),
-    [leaderboard.numberOfChampionsPlayed]
+    [leaderboard?.numberOfChampionsPlayed]
   );
 
   const gamesPlayedData: LeaderboardItem[] = useMemo(
     () =>
-      leaderboard.numberOfGames.slice(0, 10).map((entry) => ({
+      leaderboard?.numberOfGames?.slice(0, 10).map((entry) => ({
         id: entry.summonerId,
         label: entry.legend_name,
         value: entry.value.toString(),
         subtitle: `Games`,
       })),
-    [leaderboard.numberOfGames]
+    [leaderboard?.numberOfGames]
   );
 
   return (
