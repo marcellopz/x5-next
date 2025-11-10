@@ -71,15 +71,18 @@ export function PlayerListTable({
             // Filter out hidden players
             if (player.hide === true) return false;
 
-            // Get summary data to check for 0 games
-            const summaryData =
-              playerSummary?.[player.account_id?.toString() || ""];
+            return true;
 
-            // Filter out players with 0 games
-            return (summaryData?.numberOfMatches || 0) > 0;
+            // TODO: Uncomment this when we have a way to get the number of games
+            // Get summary data to check for 0 games
+            // const summaryData =
+            //   playerSummary?.[player.account_id?.toString() || ""];
+
+            // // Filter out players with 0 games
+            // return (summaryData?.numberOfMatches || 0) > 0;
           })
       : [];
-  }, [playerList, playerSummary]);
+  }, [playerList]);
 
   const sortConfig = React.useMemo(
     () => ({
