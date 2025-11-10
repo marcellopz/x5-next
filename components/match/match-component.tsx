@@ -443,7 +443,7 @@ export function MatchComponent({ matchData, matchRoles }: MatchComponentProps) {
 
   return (
     <div className="mt-4 border border-border rounded-lg overflow-hidden">
-      <div className="flex flex-col lg:flex-row">
+      <div className="flex flex-col xl:flex-row">
         <div className="flex-1 border-b lg:border-b-0 lg:border-r border-border">
           <TeamMatch team={blueTeam} matchRoles={matchRoles} />
         </div>
