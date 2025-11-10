@@ -13,13 +13,16 @@ import type {
   SummarizedOverallData,
 } from "../types";
 
+// For client-side access, use NEXT_PUBLIC_ prefix
+// For server-side only, use regular env variable (without NEXT_PUBLIC_)
 const FIREBASE_DATABASE_URL =
+  process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ??
   process.env.FIREBASE_DATABASE_URL ??
   "https://x5-season-2-default-rtdb.firebaseio.com";
 
 if (!FIREBASE_DATABASE_URL) {
   throw new Error(
-    "FIREBASE_DATABASE_URL is not defined in environment variables"
+    "FIREBASE_DATABASE_URL or NEXT_PUBLIC_FIREBASE_DATABASE_URL is not defined in environment variables"
   );
 }
 
@@ -159,7 +162,9 @@ export async function getFullMatch(matchId: string): Promise<unknown | null> {
 
 // Fetches match roles by match ID
 // The matchId should be in format "match{number}" (e.g., "match123")
-export async function getMatchRoles(matchId: string): Promise<Record<string, string> | null> {
+export async function getMatchRoles(
+  matchId: string
+): Promise<Record<string, string> | null> {
   return fetchFromFirebase<Record<string, string>>(
     `pre-processed-data/match-roles/${matchId}`
   );

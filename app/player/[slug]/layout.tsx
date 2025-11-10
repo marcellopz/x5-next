@@ -139,7 +139,7 @@ export default async function PlayerLayout({
   }
 
   const playerSlug =
-    data.player?.name_id || data.player?.account_id.toString() || slug;
+    data.player?.name_id || data.player?.account_id?.toString() || slug;
 
   return (
     <PlayerDataProvider

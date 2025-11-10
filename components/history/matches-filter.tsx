@@ -43,7 +43,7 @@ export function MatchesFilter({
     const options: FilterOption[] = [];
     playerList.forEach((player) => {
       options.push({
-        id: player.account_id.toString(),
+        id: player.account_id?.toString() ?? "",
         name: player.name,
         type: "player",
       });
