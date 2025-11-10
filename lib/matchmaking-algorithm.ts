@@ -150,10 +150,8 @@ export function generateMatches(
   config_withIds: MatchmakingConfig,
   allPlayers: Player[]
 ): MatchmakingResult {
-  console.log("config_withIds", config_withIds);
   // Parse config to resolve name_ids to Player objects
   const config = parseConfig(config_withIds, allPlayers);
-  console.log(config);
 
   try {
     // Validate input

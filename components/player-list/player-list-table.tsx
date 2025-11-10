@@ -72,7 +72,8 @@ export function PlayerListTable({
             if (player.hide === true) return false;
 
             // Get summary data to check for 0 games
-            const summaryData = playerSummary?.[player.account_id.toString()];
+            const summaryData =
+              playerSummary?.[player.account_id?.toString() || ""];
 
             // Filter out players with 0 games
             return (summaryData?.numberOfMatches || 0) > 0;
@@ -84,15 +85,18 @@ export function PlayerListTable({
     () => ({
       name: (player: PlayerWithNameId) => player.name || player.nameId,
       winRate: (player: PlayerWithNameId) => {
-        const summaryData = playerSummary?.[player.account_id.toString()];
+        const summaryData =
+          playerSummary?.[player.account_id?.toString() || ""];
         return summaryData?.winRate || 0;
       },
       summonerName: (player: PlayerWithNameId) => {
-        const summaryData = playerSummary?.[player.account_id.toString()];
+        const summaryData =
+          playerSummary?.[player.account_id?.toString() || ""];
         return summaryData?.summonerName || "";
       },
       matches: (player: PlayerWithNameId) => {
-        const summaryData = playerSummary?.[player.account_id.toString()];
+        const summaryData =
+          playerSummary?.[player.account_id?.toString() || ""];
         return summaryData?.numberOfMatches || 0;
       },
       top: (player: PlayerWithNameId) => player.top,
@@ -217,7 +221,8 @@ function PlayerTableContent({
         {sortedPlayers.length > 0 ? (
           sortedPlayers.map((player) => {
             // Get summary data for this player using account_id as key
-            const summaryData = playerSummary?.[player.account_id.toString()];
+            const summaryData =
+              playerSummary?.[player.account_id?.toString() || ""];
 
             return (
               <TableRow
