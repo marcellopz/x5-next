@@ -26,6 +26,7 @@ async function fetchPlayerData(slug: string) {
 
   let playerKey: string;
   let player: Player | null = null;
+  let accountId: string;
 
   if (isAccountId) {
     // If it's a number, try to find the player by account_id
@@ -40,25 +41,22 @@ async function fetchPlayerData(slug: string) {
     }
     // If not found, use the slug as-is
     playerKey = slug;
+    accountId = slug;
   } else {
     // It's a name_id
     playerKey = slug;
+    // Fetch player data first to get account_id
+    player = await getPlayer(playerKey);
+    if (!player) {
+      return null;
+    }
+    accountId =
+      typeof player.account_id === "number"
+        ? player.account_id.toString()
+        : player.account_id;
   }
 
-  // Fetch player data
-  player = await getPlayer(playerKey);
-
-  if (!player) {
-    return null;
-  }
-
-  // Determine account_id for fetching player info
-  const accountId =
-    typeof player.account_id === "number"
-      ? player.account_id.toString()
-      : player.account_id;
-
-  // Fetch player info first, then fetch pairs and summary
+  // Fetch player info first (needed for both registered and unregistered players)
   const playerInfo = await getPlayerInfo(accountId);
 
   // Fetch all remaining data in parallel
@@ -140,7 +138,8 @@ export default async function PlayerLayout({
     );
   }
 
-  const playerSlug = data.player.name_id || data.player.account_id.toString();
+  const playerSlug =
+    data.player?.name_id || data.player?.account_id.toString() || slug;
 
   return (
     <PlayerDataProvider

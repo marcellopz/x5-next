@@ -12,7 +12,7 @@ import type {
 } from "@/lib/types";
 
 interface PlayerDataContextType {
-  player: Player;
+  player: Player | null;
   playerInfo: PlayerInfo;
   playerPairs: PlayerPairs | null;
   playerSummary: PlayerSummary | null;
@@ -37,7 +37,7 @@ export function usePlayerData() {
 
 interface PlayerDataProviderProps {
   children: ReactNode;
-  player: Player;
+  player: Player | null;
   playerInfo: PlayerInfo;
   playerPairs: PlayerPairs | null;
   playerSummary: PlayerSummary | null;

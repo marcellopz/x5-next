@@ -6,7 +6,7 @@ import { ChampionStatItem } from "./champion-stat-item";
 
 interface ChampionStatsListProps {
   champs: ChampionStats[];
-  player: Player;
+  player: Player | null;
   numberOfChampionsToShow?: number;
 }
 
@@ -16,7 +16,7 @@ export function ChampionStatsList({
   numberOfChampionsToShow = 5,
 }: ChampionStatsListProps) {
   const router = useRouter();
-  const slug = player.name_id || player.account_id.toString();
+  const slug = player?.name_id || player?.account_id?.toString() || "";
 
   return (
     <div className="border border-border rounded-lg overflow-hidden">
@@ -30,7 +30,7 @@ export function ChampionStatsList({
       </div>
 
       {/* See All Champions Button */}
-      {champs.length > numberOfChampionsToShow && (
+      {champs.length > numberOfChampionsToShow && slug && (
         <div className="flex pb-2">
           <button
             onClick={() => router.push(`/player/${slug}/champions`)}

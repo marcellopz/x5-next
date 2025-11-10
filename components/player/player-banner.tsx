@@ -11,7 +11,7 @@ import { usePlayerData } from "./player-data-context";
 interface PlayerBannerProps {
   champs: ChampionStats[];
   playerInfo: PlayerInfo;
-  player: Player;
+  player: Player | null;
 }
 
 const roles = ["top", "jungle", "mid", "adc", "support"];
@@ -64,7 +64,7 @@ const sizeConfigs: Record<SizeVariant, SizeConfig> = {
 // Player Info Component
 interface PlayerInfoSectionProps {
   playerInfo: PlayerInfo;
-  player: Player;
+  player: Player | null;
   onOpggClick: () => void;
   variant: SizeVariant;
 }
@@ -81,7 +81,7 @@ function PlayerInfoSection({
       <div className="flex items-center gap-3 bg-background/30 py-1 px-2 rounded-lg">
         <div className="flex gap-1">
           <h1 className={cn("font-bold text-foreground", config.nameSize)}>
-            {playerInfo.summonerName || player.name}
+            {playerInfo.summonerName || player?.name || "Unknown Player"}
           </h1>
           {playerInfo.tagLine && (
             <p

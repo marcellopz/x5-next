@@ -12,7 +12,7 @@ const paletaDestaque = [
 ];
 
 interface PlayerCardProps {
-  player: Player;
+  player: Player | null;
   onClick?: () => void;
 }
 
@@ -23,6 +23,11 @@ function PlayerCardComponent({ player, onClick }: PlayerCardProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    if (!player) {
+      setIsLoading(false);
+      return;
+    }
+
     setIsLoading(true);
     const fetchPhoto = async () => {
       const photo = await getPlayerPhoto(player.name_id);
@@ -37,9 +42,11 @@ function PlayerCardComponent({ player, onClick }: PlayerCardProps) {
       }
     };
     fetchPhoto();
-  }, [player.account_id, player.name_id]);
+  }, [player]);
 
   useEffect(() => {
+    if (!player) return;
+
     const canvas = canvasRef.current;
     if (!canvas || !photoSrc) return;
 
@@ -84,6 +91,8 @@ function PlayerCardComponent({ player, onClick }: PlayerCardProps) {
       ctx.fillStyle = goldColor;
       ctx.font = "bold 18px sans-serif";
 
+      if (!player) return;
+
       // Draw player name (centered)
       ctx.textAlign = "center";
       ctx.textBaseline = "top";
@@ -126,6 +135,10 @@ function PlayerCardComponent({ player, onClick }: PlayerCardProps) {
     };
   }, [player, goldColor, photoSrc]);
 
+  if (!player) {
+    return null;
+  }
+
   return (
     <div
       className="relative w-[250px] h-[340px]"
@@ -147,6 +160,9 @@ function PlayerCardComponent({ player, onClick }: PlayerCardProps) {
 }
 
 export const PlayerCard = memo(PlayerCardComponent, (prevProps, nextProps) => {
+  if (!prevProps.player || !nextProps.player) {
+    return prevProps.player === nextProps.player;
+  }
   return (
     prevProps.player.account_id === nextProps.player.account_id &&
     prevProps.player.top === nextProps.player.top &&
