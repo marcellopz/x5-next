@@ -1,5 +1,5 @@
 import { getPlayerList, getPlayerSummary } from "@/lib/endpoints";
-import { PlayerListTable } from "@/components/player-list/player-list-table";
+import { PlayerListPageContent } from "@/components/player-list/player-list-page-content";
 
 export default async function PlayerListPage() {
   const [playerList, playerSummary] = await Promise.all([
@@ -8,20 +8,9 @@ export default async function PlayerListPage() {
   ]);
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="space-y-6">
-        <div>
-          <h1 className="text-2xl font-bold tracking-tight">Player List</h1>
-          <p className="text-sm text-muted-foreground">
-            Overview of all registered players and their statistics
-          </p>
-        </div>
-
-        <PlayerListTable
-          playerList={playerList}
-          playerSummary={playerSummary}
-        />
-      </div>
-    </div>
+    <PlayerListPageContent
+      playerList={playerList}
+      playerSummary={playerSummary}
+    />
   );
 }

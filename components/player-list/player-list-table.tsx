@@ -53,11 +53,13 @@ export function getWinRateColor(winRate: number): string {
 interface PlayerListTableProps {
   playerList: PlayerList | null;
   playerSummary: PlayerSummary | null;
+  searchQuery?: string;
 }
 
 export function PlayerListTable({
   playerList,
   playerSummary,
+  searchQuery = "",
 }: PlayerListTableProps) {
   // Convert playerList object to array for easier processing
   const filteredPlayers = React.useMemo(() => {
@@ -71,6 +73,13 @@ export function PlayerListTable({
             // Filter out hidden players
             if (player.hide === true) return false;
 
+            // Filter by name if search query exists
+            if (searchQuery.trim()) {
+              const playerName = (player.name || player.nameId).toLowerCase();
+              const query = searchQuery.trim().toLowerCase();
+              if (!playerName.includes(query)) return false;
+            }
+
             return true;
 
             // TODO: Uncomment this when we have a way to get the number of games
@@ -82,7 +91,7 @@ export function PlayerListTable({
             // return (summaryData?.numberOfMatches || 0) > 0;
           })
       : [];
-  }, [playerList]);
+  }, [playerList, searchQuery]);
 
   const sortConfig = React.useMemo(
     () => ({

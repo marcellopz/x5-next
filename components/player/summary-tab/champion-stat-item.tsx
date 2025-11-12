@@ -12,22 +12,8 @@ function floatToPercentageString(value: number): string {
   return `${(value * 100).toFixed(1)}%`;
 }
 
-function getKDAValue(champion: ChampionStats): number {
-  if (champion.kda !== undefined && isFinite(champion.kda)) {
-    return champion.kda;
-  }
-
-  // Calculate KDA if not provided
-  const kills = champion.kills ?? 0;
-  const deaths = champion.deaths ?? 0;
-  const assists = champion.assists ?? 0;
-  const kda = deaths > 0 ? (kills + assists) / deaths : kills + assists;
-
-  return isFinite(kda) ? kda : Infinity;
-}
-
 function formatKDA(champion: ChampionStats): string {
-  const kdaValue = getKDAValue(champion);
+  const kdaValue = champion.kda ?? 0;
 
   if (!isFinite(kdaValue)) {
     return "Perfect";
@@ -37,7 +23,7 @@ function formatKDA(champion: ChampionStats): string {
 }
 
 function getKDAColorClass(champion: ChampionStats): string {
-  const kdaValue = getKDAValue(champion);
+  const kdaValue = champion.kda ?? 0;
 
   if (!isFinite(kdaValue)) {
     return "text-primary";
