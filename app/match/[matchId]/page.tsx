@@ -4,9 +4,18 @@ import { MatchDetails } from "@/components/match/match-details";
 import { MatchComponent } from "@/components/match/match-component";
 import { DamageChart } from "@/components/match/damage-chart";
 import { PlayerTabs } from "@/components/match/player-tabs";
+import { generatePageMetadata } from "@/lib/metadata";
 
 interface MatchPageProps {
   params: Promise<{ matchId: string }>;
+}
+
+export async function generateMetadata({ params }: MatchPageProps) {
+  const { matchId } = await params;
+  return generatePageMetadata(
+    `Match ${matchId}`,
+    `Detailed match analysis with player performance and statistics`
+  );
 }
 
 export default async function MatchPage({ params }: MatchPageProps) {

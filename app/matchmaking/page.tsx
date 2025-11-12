@@ -1,5 +1,11 @@
 import { getPlayerList } from "@/lib/endpoints";
 import FormContainer from "@/components/matchmaking/form-container";
+import { generatePageMetadata } from "@/lib/metadata";
+
+export const metadata = generatePageMetadata(
+  "Matchmaking",
+  "Create balanced teams with advanced algorithms"
+);
 
 export default async function MatchmakingPage() {
   const playerList = await getPlayerList();

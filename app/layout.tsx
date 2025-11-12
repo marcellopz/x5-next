@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/ui/navbar";
+import { getSeasonPrefix } from "@/lib/metadata";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "x5 next",
-  description: "x5 next project",
+  title: getSeasonPrefix() === "x5s3" ? "x5 Season 3" : "x5 Season 2",
+  description: "Custom league of legends analytics dashboard",
 };
 
 export default function RootLayout({
