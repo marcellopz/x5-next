@@ -166,6 +166,7 @@ export function PatchNotesPageContent({
                 onBlur={handleInputBlur}
                 startIcon={<Search className="h-4 w-4" />}
                 className="w-full"
+                autoFocus
               />
 
               {/* Autocomplete Dropdown */}

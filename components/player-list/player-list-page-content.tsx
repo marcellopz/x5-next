@@ -54,6 +54,7 @@ export function PlayerListPageContent({
               onChange={(e) => setSearchQuery(e.target.value)}
               startIcon={<Search className="h-4 w-4" />}
               className="w-full"
+              autoFocus
             />
           </div>
         </div>
