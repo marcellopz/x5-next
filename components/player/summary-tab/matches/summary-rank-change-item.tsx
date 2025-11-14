@@ -34,6 +34,11 @@ export function SummaryRankChangeItem({ change }: SummaryRankChangeItemProps) {
         <span className="capitalize font-semibold text-primary">
           {change.role} {change.oldRank} → {change.newRank}
         </span>
+        {change.batch_description && (
+          <span className="text-muted-foreground">
+            • {change.batch_description}
+          </span>
+        )}
         <span className="ml-auto">
           {dateStr} ({daysSince}d ago)
         </span>

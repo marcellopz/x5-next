@@ -128,8 +128,8 @@ export function PlayerListTable({
         sortConfig as Record<string, (item: unknown) => string | number>
       }
       initialSort={{
-        column: "matches",
-        direction: "desc",
+        column: "name",
+        direction: "asc",
       }}
     >
       <PlayerTableContent playerSummary={playerSummary} />

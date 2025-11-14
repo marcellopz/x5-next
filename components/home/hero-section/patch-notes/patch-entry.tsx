@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { GroupedChangesByDate, sortPatchChanges } from "@/lib/utils";
 
 interface PatchEntryProps {
@@ -15,6 +16,11 @@ export function PatchEntry({
     month: "short",
     day: "numeric",
     year: "numeric",
+  });
+
+  console.log({
+    date,
+    changes,
   });
 
   // Sort changes using the helper function
@@ -46,15 +52,16 @@ export function PatchEntry({
                     <span className="inline-flex items-center justify-center rounded bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-medium text-emerald-400 ring-1 ring-emerald-500/30">
                       NEW
                     </span>
-                    <span
-                      className={`font-medium ${
+                    <Link
+                      href={`/player/${change.name_id}`}
+                      className={`font-medium hover:text-primary ${
                         isHighlighted
                           ? "bg-primary px-0.5 py-0.5 rounded-sm text-primary-foreground"
                           : ""
                       }`}
                     >
                       {change.name}
-                    </span>
+                    </Link>
                     <span className="text-muted-foreground">joined</span>
                   </>
                 ) : (
@@ -62,15 +69,16 @@ export function PatchEntry({
                     <span className="inline-flex items-center justify-center rounded bg-primary/20 px-1.5 py-0.5 text-[10px] font-medium text-primary ring-1 ring-primary/30 uppercase">
                       {change.role}
                     </span>
-                    <span
-                      className={`font-medium ${
+                    <Link
+                      href={`/player/${change.name_id}`}
+                      className={`font-medium hover:text-primary ${
                         isHighlighted
                           ? "bg-primary px-0.5 py-0.5 rounded-sm text-primary-foreground"
                           : ""
                       }`}
                     >
                       {change.player}
-                    </span>
+                    </Link>
                     <span
                       className={`font-medium ${
                         change.newRank > change.oldRank
