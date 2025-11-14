@@ -1,7 +1,7 @@
 // TypeScript Types for Firebase Data
 
 export interface Player {
-  account_id: number | string; // Can be number or string for wildcard IDs
+  account_id?: number | string;
   name: string;
   name_id: string;
   adc: number;
@@ -25,6 +25,7 @@ export interface RankChangeEntry {
   role: "adc" | "jungle" | "mid" | "support" | "top";
   timestamp: number;
   type: "rank_change";
+  batch_description?: string; // Optional description for batch edits
 }
 
 export interface PlayerRankChanges {

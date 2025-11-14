@@ -70,6 +70,7 @@ body {
 
 /* Global custom scrollbar styles */
 * {
+  border-color: var(--border);
   scrollbar-width: thin;
   scrollbar-color: rgba(218, 165, 32, 0.3) transparent;
 }
