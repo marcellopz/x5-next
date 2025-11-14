@@ -62,11 +62,15 @@ export async function getPlayersListAction() {
       return { success: true, players: [] };
     }
 
-    // Convert to array with name_id
+    // Convert to array with name_id and ensure account_id is number | string
     const playersArray = Object.entries(playersData).map(
       ([nameId, player]) => ({
         ...player,
         name_id: nameId, // Ensure name_id is set (may overwrite if player already has it)
+        account_id:
+          player.account_id !== undefined && player.account_id !== null
+            ? player.account_id
+            : "", // Keep as number or string, default to empty string
       })
     );
 
@@ -106,13 +110,11 @@ export async function addPlayerAction(formData: {
       return { error: "Name and name_id are required" };
     }
 
-    // Convert account_id to number if provided
-    let accountId: number | undefined;
+    // Convert account_id to number or string (empty string if not provided)
+    let accountId: number | string = "";
     if (formData.account_id && formData.account_id.trim() !== "") {
-      accountId = parseInt(formData.account_id, 10);
-      if (isNaN(accountId)) {
-        return { error: "Account ID must be a valid number" };
-      }
+      const parsed = parseInt(formData.account_id.trim(), 10);
+      accountId = isNaN(parsed) ? formData.account_id.trim() : parsed;
     }
 
     // Convert role rankings to numbers
@@ -134,6 +136,7 @@ export async function addPlayerAction(formData: {
 
     // Prepare player data
     const playerData: Player = {
+      account_id: accountId,
       name: formData.name,
       name_id: formData.name_id,
       adc,
@@ -142,11 +145,6 @@ export async function addPlayerAction(formData: {
       support,
       top,
     };
-
-    // Only include account_id if it's provided
-    if (accountId !== undefined) {
-      playerData.account_id = accountId;
-    }
 
     if (formData.hide) {
       playerData.hide = true;
@@ -201,11 +199,21 @@ export async function loadPlayerAction(nameId: string) {
     // Get player data
     const playerRef = db.ref(`players/${nameId}`);
     const playerSnapshot = await playerRef.once("value");
-    const playerData = playerSnapshot.val() as Player | null;
+    const rawPlayerData = playerSnapshot.val() as Player | null;
 
-    if (!playerData) {
+    if (!rawPlayerData) {
       return { error: "Player not found" };
     }
+
+    // Ensure account_id is number | string (keep as is, default to empty string)
+    const playerData: Player = {
+      ...rawPlayerData,
+      account_id:
+        rawPlayerData.account_id !== undefined &&
+        rawPlayerData.account_id !== null
+          ? rawPlayerData.account_id
+          : "",
+    };
 
     // Get photo if it exists
     let photoB64 = "";
@@ -222,7 +230,10 @@ export async function loadPlayerAction(nameId: string) {
       success: true,
       player: {
         ...playerData,
-        account_id: playerData.account_id?.toString() || "",
+        account_id:
+          playerData.account_id !== undefined && playerData.account_id !== null
+            ? String(playerData.account_id)
+            : "",
         adc: playerData.adc.toString(),
         jungle: playerData.jungle.toString(),
         mid: playerData.mid.toString(),
@@ -272,19 +283,27 @@ export async function updatePlayerAction(
     // Load original player data to compare rank changes
     const originalPlayerRef = db.ref(`players/${originalNameId}`);
     const originalPlayerSnapshot = await originalPlayerRef.once("value");
-    const originalPlayer = originalPlayerSnapshot.val() as Player | null;
+    const rawOriginalPlayer = originalPlayerSnapshot.val() as Player | null;
 
-    if (!originalPlayer) {
+    if (!rawOriginalPlayer) {
       return { error: "Original player not found" };
     }
 
-    // Convert account_id to number if provided
-    let accountId: number | undefined;
+    // Ensure account_id is number | string (keep as is, default to empty string)
+    const originalPlayer: Player = {
+      ...rawOriginalPlayer,
+      account_id:
+        rawOriginalPlayer.account_id !== undefined &&
+        rawOriginalPlayer.account_id !== null
+          ? rawOriginalPlayer.account_id
+          : "",
+    };
+
+    // Convert account_id to number or string (empty string if not provided)
+    let accountId: number | string = "";
     if (formData.account_id && formData.account_id.trim() !== "") {
-      accountId = parseInt(formData.account_id, 10);
-      if (isNaN(accountId)) {
-        return { error: "Account ID must be a valid number" };
-      }
+      const parsed = parseInt(formData.account_id.trim(), 10);
+      accountId = isNaN(parsed) ? formData.account_id.trim() : parsed;
     }
 
     // Convert role rankings to numbers
@@ -306,6 +325,7 @@ export async function updatePlayerAction(
 
     // Prepare updated player data
     const playerData: Player = {
+      account_id: accountId,
       name: formData.name,
       name_id: formData.name_id,
       adc,
@@ -314,11 +334,6 @@ export async function updatePlayerAction(
       support,
       top,
     };
-
-    // Only include account_id if it's provided
-    if (accountId !== undefined) {
-      playerData.account_id = accountId;
-    }
 
     if (formData.hide) {
       playerData.hide = true;
@@ -410,12 +425,21 @@ export async function batchRoleEditAction(
       // Load current player data
       const playerRef = db.ref(`players/${update.nameId}`);
       const playerSnapshot = await playerRef.once("value");
-      const player = playerSnapshot.val() as Player | null;
+      const rawPlayer = playerSnapshot.val() as Player | null;
 
-      if (!player) {
+      if (!rawPlayer) {
         console.warn(`Player ${update.nameId} not found, skipping`);
         continue;
       }
+
+      // Ensure account_id is number | string (keep as is, default to empty string)
+      const player: Player = {
+        ...rawPlayer,
+        account_id:
+          rawPlayer.account_id !== undefined && rawPlayer.account_id !== null
+            ? rawPlayer.account_id
+            : "",
+      };
 
       // Get old rank for this role
       const oldRank = player[update.role];

@@ -1,7 +1,7 @@
 // TypeScript Types for Firebase Data
 
 export interface Player {
-  account_id?: number | string;
+  account_id: number | string; // Always a string, empty string "" if not provided
   name: string;
   name_id: string;
   adc: number;
