@@ -13,11 +13,17 @@ export async function revalidateAllRoutes() {
     revalidatePath("/stats");
     revalidatePath("/patch-notes");
     revalidatePath("/matchmaking");
+    revalidatePath("/admin");
 
     // Revalidate dynamic routes
-    // Using 'page' type to revalidate all pages under these paths
-    revalidatePath("/player/[slug]", "page");
-    revalidatePath("/match/[matchId]", "page");
+    // For dynamic routes, revalidate the layout to ensure all pages are updated
+    // Using 'layout' type revalidates all pages under that route segment
+    revalidatePath("/player/[slug]", "layout");
+    revalidatePath("/match/[matchId]", "layout");
+
+    // Also revalidate the parent paths to ensure route handlers are updated
+    revalidatePath("/player");
+    revalidatePath("/match");
 
     return { success: true };
   } catch (error) {
