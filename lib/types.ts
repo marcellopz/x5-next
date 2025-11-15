@@ -414,3 +414,26 @@ export interface PlayerRecords {
 export interface PlayerPairs {
   [playerId: string]: unknown;
 }
+
+// Match Data Types
+export interface MatchParticipantPlayer {
+  summonerId: string | number;
+  gameName: string;
+  tagLine?: string;
+}
+
+export interface MatchParticipantIdentity {
+  participantId: number;
+  player: MatchParticipantPlayer;
+}
+
+export interface MatchMetadata {
+  gameCreationDate?: number;
+  gameDuration?: number;
+  gameId?: string;
+}
+
+export interface FullMatchData extends MatchMetadata {
+  participantIdentities?: MatchParticipantIdentity[];
+  [key: string]: unknown;
+}

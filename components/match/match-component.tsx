@@ -21,10 +21,12 @@ import {
   turretWinUrl,
   turretLoseUrl,
 } from "@/lib/resources";
+import { Role } from "@/lib/types";
 
 interface MatchComponentProps {
   matchData: unknown;
   matchRoles: Record<string, string> | null;
+  playerRanks: Record<string, Record<Role, number | null>>;
 }
 
 interface Participant {
@@ -221,6 +223,7 @@ const ItemsSection = ({ player }: { player: Participant }) => {
 
 const PlayerRow = ({
   player,
+  playerRank,
   role,
   totalKills,
 }: {
@@ -233,6 +236,7 @@ const PlayerRow = ({
       };
     };
   };
+  playerRank: number | null;
   role?: string;
   totalKills: number;
 }) => {
@@ -314,7 +318,9 @@ const PlayerRow = ({
           assists={player.stats.assists}
         />
         {role && (
-          <p className="text-sm opacity-50">{capitalizeFirstLetter(role)}</p>
+          <p className="text-sm opacity-50">
+            {capitalizeFirstLetter(role)} {playerRank ? `(${playerRank})` : ""}
+          </p>
         )}
       </div>
 
@@ -348,9 +354,11 @@ const roles = {
 const TeamMatch = ({
   team,
   matchRoles,
+  playerRanks,
 }: {
   team: ReturnType<typeof useSingleMatchData>["blueTeam"];
   matchRoles: Record<string, string> | null;
+  playerRanks: Record<string, Record<Role, number | null>>;
 }) => {
   const sortedPlayers = useMemo(() => {
     if (!team) return [];
@@ -411,25 +419,40 @@ const TeamMatch = ({
                 };
               };
             }
-          ) => (
-            <PlayerRow
-              key={player.participantId}
-              player={player}
-              role={
-                player.identity?.player.summonerId
-                  ? matchRoles?.[player.identity.player.summonerId.toString()]
-                  : undefined
-              }
-              totalKills={team.stats.kills}
-            />
-          )
+          ) => {
+            const role =
+              matchRoles?.[
+                player.identity?.player.summonerId?.toString() as string
+              ];
+            const playerRank =
+              playerRanks[
+                player.identity?.player.summonerId?.toString() as string
+              ]?.[role as Role];
+            return (
+              <PlayerRow
+                playerRank={playerRank}
+                key={player.participantId}
+                player={player}
+                role={
+                  player.identity?.player.summonerId
+                    ? matchRoles?.[player.identity.player.summonerId.toString()]
+                    : undefined
+                }
+                totalKills={team.stats.kills}
+              />
+            );
+          }
         )}
       </div>
     </div>
   );
 };
 
-export function MatchComponent({ matchData, matchRoles }: MatchComponentProps) {
+export function MatchComponent({
+  matchData,
+  matchRoles,
+  playerRanks,
+}: MatchComponentProps) {
   const match = matchData as MatchData | null | undefined;
   const { blueTeam, redTeam } = useSingleMatchData(match);
 
@@ -445,10 +468,18 @@ export function MatchComponent({ matchData, matchRoles }: MatchComponentProps) {
     <div className="mt-4 border border-border rounded-lg overflow-hidden">
       <div className="flex flex-col xl:flex-row">
         <div className="flex-1 border-b lg:border-b-0 lg:border-r border-border">
-          <TeamMatch team={blueTeam} matchRoles={matchRoles} />
+          <TeamMatch
+            team={blueTeam}
+            matchRoles={matchRoles}
+            playerRanks={playerRanks}
+          />
         </div>
         <div className="flex-1">
-          <TeamMatch team={redTeam} matchRoles={matchRoles} />
+          <TeamMatch
+            team={redTeam}
+            matchRoles={matchRoles}
+            playerRanks={playerRanks}
+          />
         </div>
       </div>
     </div>

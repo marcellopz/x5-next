@@ -1,10 +1,18 @@
 import { redirect } from "next/navigation";
-import { getFullMatch, getMatchRoles } from "@/lib/endpoints";
+import {
+  getFullMatch,
+  getMatchRoles,
+  getInitialRankChangeLog,
+  getRankChangeLog,
+  getPlayerList,
+} from "@/lib/endpoints";
 import { MatchDetails } from "@/components/match/match-details";
 import { MatchComponent } from "@/components/match/match-component";
 import { DamageChart } from "@/components/match/damage-chart";
 import { PlayerTabs } from "@/components/match/player-tabs";
 import { generatePageMetadata } from "@/lib/metadata";
+import { calculateMatchPlayerRanks } from "@/lib/rank-utils";
+import type { MatchMetadata, FullMatchData } from "@/lib/types";
 
 interface MatchPageProps {
   params: Promise<{ matchId: string }>;
@@ -29,10 +37,14 @@ export default async function MatchPage({ params }: MatchPageProps) {
 
   // Fetch match data - need to add "match" prefix for the API call
   const fullMatchId = `match${matchId}`;
-  const [matchData, matchRoles] = await Promise.all([
-    getFullMatch(fullMatchId),
-    getMatchRoles(fullMatchId),
-  ]);
+  const [matchData, matchRoles, initialRanks, rankChangeLog, playerList] =
+    await Promise.all([
+      getFullMatch(fullMatchId),
+      getMatchRoles(fullMatchId),
+      getInitialRankChangeLog(),
+      getRankChangeLog(),
+      getPlayerList(),
+    ]);
 
   if (!matchData) {
     return (
@@ -47,13 +59,8 @@ export default async function MatchPage({ params }: MatchPageProps) {
     );
   }
 
-  // Extract match data (type will be defined later)
-  const match = matchData as {
-    gameCreationDate?: number;
-    gameDuration?: number;
-    gameId?: string;
-    [key: string]: unknown;
-  };
+  // Extract match metadata
+  const match = matchData as MatchMetadata;
 
   const date = match.gameCreationDate
     ? new Date(match.gameCreationDate)
@@ -61,11 +68,29 @@ export default async function MatchPage({ params }: MatchPageProps) {
   const gameDuration = match.gameDuration ?? 0;
   const gameId = match.gameId ?? matchId;
 
+  // Extract participant identities from match data
+  const fullMatchData = matchData as FullMatchData;
+  const participantIdentities = fullMatchData.participantIdentities || [];
+
+  // Calculate player ranks during the match
+  const playerRanks = calculateMatchPlayerRanks(
+    participantIdentities,
+    matchRoles,
+    match.gameCreationDate,
+    initialRanks,
+    rankChangeLog,
+    playerList
+  );
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="space-y-4">
         <MatchDetails date={date} gameDuration={gameDuration} gameId={gameId} />
-        <MatchComponent matchData={matchData} matchRoles={matchRoles} />
+        <MatchComponent
+          matchData={matchData}
+          matchRoles={matchRoles}
+          playerRanks={playerRanks}
+        />
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           <div className="lg:col-span-4">
             <DamageChart matchData={matchData} />
