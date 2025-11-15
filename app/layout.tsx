@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: getSeasonPrefix() === "x5s3" ? "x5 Season 3" : "x5 Season 2",
+  title: getSeasonPrefix() === "x5s3" ? "x5 season 3" : "x5 season 2",
   description: "Custom league of legends analytics dashboard",
 };
 

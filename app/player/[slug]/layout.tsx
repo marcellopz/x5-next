@@ -20,6 +20,33 @@ interface PlayerLayoutProps {
   params: Promise<{ slug: string }>;
 }
 
+/**
+ * Generate static params for all players at build time
+ * This pregenerates player pages for better performance
+ */
+export async function generateStaticParams() {
+  try {
+    const playerList = await getPlayerList();
+
+    if (!playerList) {
+      return [];
+    }
+
+    // Get all player name_ids (excluding hidden players)
+    const params = Object.entries(playerList)
+      .filter(([, player]) => !player.hide)
+      .map(([nameId]) => ({
+        slug: nameId,
+      }));
+
+    return params;
+  } catch (error) {
+    console.error("Error generating static params for players:", error);
+    // Return empty array on error to allow dynamic generation
+    return [];
+  }
+}
+
 async function fetchPlayerData(slug: string) {
   // Check if slug is a number (account_id) or a string (name_id)
   const isAccountId = !isNaN(Number(slug));
@@ -43,9 +70,8 @@ async function fetchPlayerData(slug: string) {
     playerKey = slug;
     accountId = slug;
   } else {
-    // It's a name_id
+    // It's a name_id - fetch player data to get account_id
     playerKey = slug;
-    // Fetch player data first to get account_id
     player = await getPlayer(playerKey);
     if (!player) {
       return null;
@@ -56,17 +82,20 @@ async function fetchPlayerData(slug: string) {
         : player.account_id;
   }
 
-  // Fetch player info first (needed for both registered and unregistered players)
-  const playerInfo = await getPlayerInfo(accountId);
+  // Fetch player info and rank changes in parallel (they don't depend on each other)
+  const [playerInfo, rankChanges] = await Promise.all([
+    getPlayerInfo(accountId),
+    getPlayerRankChanges(playerKey),
+  ]);
 
-  // Fetch all remaining data in parallel
-  const [playerPairs, playerSummary, allMatches, rankChanges] =
-    await Promise.all([
-      playerInfo?.summonerId ? getPlayerPairs(playerInfo.summonerId) : null,
-      getPlayerSummary(),
-      getAllReducedData(),
-      getPlayerRankChanges(playerKey),
-    ]);
+  // Only fetch matches if playerInfo exists and has match data
+  // Fetch other data in parallel
+  const [playerPairs, playerSummary, allMatches] = await Promise.all([
+    playerInfo?.summonerId ? getPlayerPairs(playerInfo.summonerId) : null,
+    getPlayerSummary(),
+    // Only load all matches if we need to filter them (playerInfo exists)
+    playerInfo ? getAllReducedData() : Promise.resolve([]),
+  ]);
 
   // Filter matches for this player using playerMatchesIds or summonerId
   const playerMatches = playerInfo?.playerMatchesIds

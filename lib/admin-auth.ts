@@ -43,3 +43,35 @@ export async function isAdminAuthenticated(): Promise<boolean> {
   const session = cookieStore.get(ADMIN_SESSION_COOKIE);
   return session?.value === ADMIN_SESSION_VALUE;
 }
+
+/**
+ * Verify if the provided API key matches the admin API key
+ */
+export function verifyAdminApiKey(apiKey: string): boolean {
+  const adminApiKey = process.env.ADMIN_API_KEY;
+  if (!adminApiKey) {
+    return false; // If no API key is set, reject all API key auth
+  }
+  return apiKey === adminApiKey;
+}
+
+/**
+ * Check if the request is authenticated via session cookie or API key
+ * For use in API routes where external apps can use API keys
+ */
+export async function isAdminAuthenticatedOrApiKey(
+  apiKey: string | null
+): Promise<boolean> {
+  // Check session cookie first
+  const sessionAuth = await isAdminAuthenticated();
+  if (sessionAuth) {
+    return true;
+  }
+
+  // If no session, check API key
+  if (apiKey) {
+    return verifyAdminApiKey(apiKey);
+  }
+
+  return false;
+}

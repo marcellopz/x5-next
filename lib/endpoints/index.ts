@@ -17,8 +17,7 @@ import type {
 // For server-side only, use regular env variable (without NEXT_PUBLIC_)
 const FIREBASE_DATABASE_URL =
   process.env.NEXT_PUBLIC_FIREBASE_DATABASE_URL ??
-  process.env.FIREBASE_DATABASE_URL ??
-  "https://x5-season-2-default-rtdb.firebaseio.com";
+  process.env.FIREBASE_DATABASE_URL;
 
 if (!FIREBASE_DATABASE_URL) {
   throw new Error(
@@ -35,8 +34,9 @@ async function fetchFromFirebase<T>(
     const url = `${FIREBASE_DATABASE_URL}/${path}.json`;
 
     const response = await fetch(url, {
-      // next: { revalidate: 1 },
-      cache: "no-store",
+      // Use force-cache since we're using on-demand revalidation via /api/revalidate
+      // This provides maximum caching performance while still allowing manual invalidation
+      cache: "force-cache",
       ...options,
     });
 

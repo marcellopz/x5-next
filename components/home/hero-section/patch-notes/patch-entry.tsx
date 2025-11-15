@@ -18,11 +18,6 @@ export function PatchEntry({
     year: "numeric",
   });
 
-  console.log({
-    date,
-    changes,
-  });
-
   // Sort changes using the helper function
   const sortedChanges = sortPatchChanges(changes);
 
