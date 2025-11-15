@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { logoutAction } from "./actions";
 import { Button } from "@/components/ui/button";
 import {
@@ -20,6 +20,39 @@ export default function AdminDashboard() {
   const [editPlayerOpen, setEditPlayerOpen] = useState(false);
   const [batchRoleEditOpen, setBatchRoleEditOpen] = useState(false);
   const [viewMatchesOpen, setViewMatchesOpen] = useState(false);
+  const [isRevalidating, startRevalidation] = useTransition();
+  const [revalidateMessage, setRevalidateMessage] = useState<string | null>(
+    null
+  );
+
+  const handleRevalidate = () => {
+    setRevalidateMessage(null);
+    startRevalidation(async () => {
+      try {
+        const response = await fetch("/api/revalidate", {
+          method: "POST",
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          setRevalidateMessage(
+            `Error: ${data.error || "Failed to revalidate"}`
+          );
+        } else {
+          setRevalidateMessage("All routes revalidated successfully!");
+          // Clear message after 3 seconds
+          setTimeout(() => setRevalidateMessage(null), 3000);
+        }
+      } catch (error) {
+        setRevalidateMessage(
+          `Error: ${
+            error instanceof Error ? error.message : "Failed to revalidate"
+          }`
+        );
+      }
+    });
+  };
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -80,6 +113,37 @@ export default function AdminDashboard() {
             >
               View Matches
             </Button>
+          </CardContent>
+        </Card>
+
+        {/* Cache Management Section */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Cache Management</CardTitle>
+            <CardDescription>
+              Revalidate all routes to refresh cached data
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2">
+            <Button
+              onClick={handleRevalidate}
+              className="w-full"
+              variant="outline"
+              disabled={isRevalidating}
+            >
+              {isRevalidating ? "Revalidating..." : "Revalidate All Paths"}
+            </Button>
+            {revalidateMessage && (
+              <div
+                className={`rounded-md p-3 text-sm ${
+                  revalidateMessage.startsWith("Error")
+                    ? "bg-destructive/10 text-destructive"
+                    : "bg-emerald-500/10 text-emerald-400"
+                }`}
+              >
+                {revalidateMessage}
+              </div>
+            )}
           </CardContent>
         </Card>
       </div>
