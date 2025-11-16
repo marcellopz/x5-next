@@ -62,8 +62,11 @@ export default async function MatchPage({ params }: MatchPageProps) {
   // Extract match metadata
   const match = matchData as MatchMetadata;
 
+  // Use gameCreationDate (ISO string) if available, otherwise convert gameCreation (Unix timestamp) to Date
   const date = match.gameCreationDate
     ? new Date(match.gameCreationDate)
+    : match.gameCreation
+    ? new Date(match.gameCreation)
     : new Date();
   const gameDuration = match.gameDuration ?? 0;
   const gameId = match.gameId ?? matchId;
@@ -72,11 +75,11 @@ export default async function MatchPage({ params }: MatchPageProps) {
   const fullMatchData = matchData as FullMatchData;
   const participantIdentities = fullMatchData.participantIdentities || [];
 
-  // Calculate player ranks during the match
+  // Calculate player ranks during the match using gameCreation (Unix timestamp)
   const playerRanks = calculateMatchPlayerRanks(
     participantIdentities,
     matchRoles,
-    match.gameCreationDate,
+    match.gameCreation,
     initialRanks,
     rankChangeLog,
     playerList

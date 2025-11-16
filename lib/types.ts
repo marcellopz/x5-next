@@ -428,7 +428,8 @@ export interface MatchParticipantIdentity {
 }
 
 export interface MatchMetadata {
-  gameCreationDate?: number;
+  gameCreationDate?: string; // 2025-11-13T02:35:27.503Z
+  gameCreation?: number; // 1731483327503
   gameDuration?: number;
   gameId?: string;
 }
