@@ -110,9 +110,9 @@ const TeamSection = ({
                   className="rounded border border-border/60 shrink-0"
                   unoptimized
                 />
-                <div className="flex-1 px-4 py-3.5">
+                <div className="flex-1 py-3.5">
                   <div
-                    className={`h-5 ${barColor} rounded`}
+                    className={`h-5 ${barColor} rounded-sm`}
                     style={{
                       width: `${percentage}%`,
                     }}
