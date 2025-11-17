@@ -1,5 +1,5 @@
 import { StatsCard } from "./stats-card";
-import { getTimeElapsed } from "@/lib/utils";
+import { TimeSinceLastMatch } from "./time-since-last-match";
 
 interface StatsCardsSectionProps {
   numberOfGames: number;
@@ -14,11 +14,6 @@ export function StatsCardsSection({
   mostRecentGameTimestamp,
   recentMVP,
 }: StatsCardsSectionProps) {
-  // Calculate time since last match
-  const timeSinceLastMatch = mostRecentGameTimestamp
-    ? getTimeElapsed(mostRecentGameTimestamp)
-    : "Unknown";
-
   // Format the date for description
   const lastMatchDescription = mostRecentGameTimestamp
     ? `Last match was on ${new Date(mostRecentGameTimestamp).toLocaleDateString(
@@ -46,9 +41,8 @@ export function StatsCardsSection({
         value={totalPlayers}
         description="All registered players"
       />
-      <StatsCard
-        title="Time since last match"
-        value={timeSinceLastMatch}
+      <TimeSinceLastMatch
+        mostRecentGameTimestamp={mostRecentGameTimestamp}
         description={lastMatchDescription}
       />
       <StatsCard

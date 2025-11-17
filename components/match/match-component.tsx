@@ -1,9 +1,7 @@
-"use client";
-
-import React, { useMemo } from "react";
+import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSingleMatchData } from "./use-single-match-data";
+import { processMatchData, ProcessedTeam } from "./process-single-match-data";
 import {
   formatNumber,
   floatToPercentageString,
@@ -255,8 +253,10 @@ const PlayerRow = ({
       {/* Champion + spells icons */}
       <div className="flex items-center gap-1.5 shrink-0">
         <div className="relative">
-          <div className="absolute bottom-0.5 right-1.5 px-1 py-0.5 rounded bg-background z-10">
-            <span className="text-xs">{player.stats.champLevel}</span>
+          <div className="absolute flex bottom-0.5 right-0.5 p-1 rounded-lg bg-background/70 z-10">
+            <span className="text-sm leading-none">
+              {player.stats.champLevel}
+            </span>
           </div>
           <Image
             src={`${CHAMPIONICONURL}${player.championId}.png`}
@@ -356,11 +356,11 @@ const TeamMatch = ({
   matchRoles,
   playerRanks,
 }: {
-  team: ReturnType<typeof useSingleMatchData>["blueTeam"];
+  team: ProcessedTeam | null;
   matchRoles: Record<string, string> | null;
   playerRanks: Record<string, Record<Role, number | null>>;
 }) => {
-  const sortedPlayers = useMemo(() => {
+  const sortedPlayers = (() => {
     if (!team) return [];
     if (!matchRoles) return team.players;
     return [...team.players].sort(
@@ -374,7 +374,7 @@ const TeamMatch = ({
             "") as keyof typeof roles
         ] ?? 999)
     );
-  }, [team, matchRoles]);
+  })();
 
   if (!team) return null;
 
@@ -454,7 +454,7 @@ export function MatchComponent({
   playerRanks,
 }: MatchComponentProps) {
   const match = matchData as MatchData | null | undefined;
-  const { blueTeam, redTeam } = useSingleMatchData(match);
+  const { blueTeam, redTeam } = processMatchData(match);
 
   if (!match || !blueTeam || !redTeam) {
     return (

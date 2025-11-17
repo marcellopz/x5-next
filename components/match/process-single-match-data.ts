@@ -1,7 +1,3 @@
-"use client";
-
-import { useMemo } from "react";
-
 interface Participant {
   participantId: number;
   teamId: number;
@@ -51,7 +47,7 @@ interface MatchData {
   teams: Team[];
 }
 
-interface ProcessedTeam {
+export interface ProcessedTeam {
   players: Array<Participant & { identity: ParticipantIdentity }>;
   stats: {
     kills: number;
@@ -63,10 +59,7 @@ interface ProcessedTeam {
   teamId: number;
 }
 
-const processTeam = (
-  teamId: number,
-  match: MatchData
-): ProcessedTeam => {
+const processTeam = (teamId: number, match: MatchData): ProcessedTeam => {
   const players = match.participants.filter((p) => p.teamId === teamId);
   players.forEach((player) => {
     const identity = match.participantIdentities.find(
@@ -96,17 +89,9 @@ const processTeam = (
   };
 };
 
-export function useSingleMatchData(match: MatchData | null | undefined) {
-  const blueTeam = useMemo(
-    () => (match ? processTeam(100, match) : null),
-    [match]
-  );
-
-  const redTeam = useMemo(
-    () => (match ? processTeam(200, match) : null),
-    [match]
-  );
+export function processMatchData(match: MatchData | null | undefined) {
+  const blueTeam = match ? processTeam(100, match) : null;
+  const redTeam = match ? processTeam(200, match) : null;
 
   return { blueTeam, redTeam };
 }
-

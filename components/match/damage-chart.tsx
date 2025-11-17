@@ -100,8 +100,8 @@ const TeamSection = ({
           const percentage = max > 0 ? (value / max) * 100 : 0;
 
           return (
-            <li key={i} className="py-2 px-4">
-              <div className="flex items-center gap-4">
+            <li key={i} className="p-2">
+              <div className="flex items-center gap-3">
                 <Image
                   src={`${CHAMPIONICONURL}${p.championId}.png`}
                   width={50}
