@@ -1,7 +1,6 @@
 import { generatePageMetadata } from "@/lib/metadata";
 import { getSummarizedOverallData, getPlayerList } from "@/lib/endpoints";
 import { StatsCardsSection } from "@/components/home/stats-cards-section";
-import { StatsPageTitle } from "./layout";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { getPlayerByAccountId } from "@/lib/utils";
@@ -69,7 +68,9 @@ export default async function StatsPage() {
 
   return (
     <>
-      <StatsPageTitle title="Statistics" />
+      <div>
+        <h1 className="text-2xl font-bold tracking-tight">Statistics</h1>
+      </div>
 
       <div className="space-y-8">
         {/* General Stats Section */}
