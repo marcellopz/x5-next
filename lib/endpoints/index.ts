@@ -10,6 +10,7 @@ import type {
   PlayerSummary,
   RankChangeLog,
   RoleLeaderboardData,
+  RoleStats,
   SummarizedOverallData,
 } from "../types";
 
@@ -57,6 +58,12 @@ async function fetchFromFirebase<T>(
 // Fetches all players from the "players" collection
 export async function getPlayerList(): Promise<PlayerList | null> {
   return fetchFromFirebase<PlayerList>("players");
+}
+
+export async function getRoleStats(matchId: string): Promise<RoleStats | null> {
+  return fetchFromFirebase<RoleStats>(
+    `pre-processed-data/role-stats/${matchId}`
+  );
 }
 
 // Fetches all rank change history from "player-rank-change-log" collection

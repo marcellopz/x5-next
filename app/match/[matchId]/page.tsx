@@ -5,6 +5,7 @@ import {
   getInitialRankChangeLog,
   getRankChangeLog,
   getPlayerList,
+  getRoleStats,
 } from "@/lib/endpoints";
 import { MatchDetails } from "@/components/match/match-details";
 import { MatchComponent } from "@/components/match/match-component";
@@ -37,14 +38,21 @@ export default async function MatchPage({ params }: MatchPageProps) {
 
   // Fetch match data - need to add "match" prefix for the API call
   const fullMatchId = `match${matchId}`;
-  const [matchData, matchRoles, initialRanks, rankChangeLog, playerList] =
-    await Promise.all([
-      getFullMatch(fullMatchId),
-      getMatchRoles(fullMatchId),
-      getInitialRankChangeLog(),
-      getRankChangeLog(),
-      getPlayerList(),
-    ]);
+  const [
+    matchData,
+    matchRoles,
+    initialRanks,
+    rankChangeLog,
+    playerList,
+    roleStats,
+  ] = await Promise.all([
+    getFullMatch(fullMatchId),
+    getMatchRoles(fullMatchId),
+    getInitialRankChangeLog(),
+    getRankChangeLog(),
+    getPlayerList(),
+    getRoleStats(fullMatchId),
+  ]);
 
   if (!matchData) {
     return (
@@ -93,6 +101,7 @@ export default async function MatchPage({ params }: MatchPageProps) {
           matchData={matchData}
           matchRoles={matchRoles}
           playerRanks={playerRanks}
+          roleStats={roleStats}
         />
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           <div className="lg:col-span-4">

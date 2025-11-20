@@ -7,6 +7,7 @@ import {
   floatToPercentageString,
   capitalizeFirstLetter,
 } from "./match-utils";
+import { ScoreBadge } from "@/components/ui/score-badge";
 import {
   CHAMPIONICONURL,
   ITEMICONURL,
@@ -19,12 +20,13 @@ import {
   turretWinUrl,
   turretLoseUrl,
 } from "@/lib/resources";
-import { Role } from "@/lib/types";
+import { Role, RoleLeaderboardStats, RoleStats } from "@/lib/types";
 
 interface MatchComponentProps {
   matchData: unknown;
   matchRoles: Record<string, string> | null;
   playerRanks: Record<string, Record<Role, number | null>>;
+  roleStats: RoleStats | null;
 }
 
 interface Participant {
@@ -224,6 +226,7 @@ const PlayerRow = ({
   playerRank,
   role,
   totalKills,
+  roleStats,
 }: {
   player: Participant & {
     identity?: {
@@ -237,6 +240,7 @@ const PlayerRow = ({
   playerRank: number | null;
   role?: string;
   totalKills: number;
+  roleStats: RoleLeaderboardStats | undefined;
 }) => {
   const spell1Url =
     summonerSpellsUrl[player.spell1Id as keyof typeof summonerSpellsUrl];
@@ -247,6 +251,7 @@ const PlayerRow = ({
     totalKills > 0
       ? (player.stats.kills + player.stats.assists) / totalKills
       : 0;
+  const score = roleStats?.score;
 
   return (
     <div className="flex items-center gap-3 p-2 border-b border-border flex-wrap justify-between">
@@ -330,10 +335,14 @@ const PlayerRow = ({
           Lv {player.stats.champLevel} | {formatNumber(player.stats.goldEarned)}{" "}
           G
         </p>
-        <p>
-          {player.stats.totalMinionsKilled + player.stats.neutralMinionsKilled}{" "}
-          CS | {player.stats.visionScore} VS
-        </p>
+        <div className="flex items-center gap-2">
+          <p>
+            {player.stats.totalMinionsKilled +
+              player.stats.neutralMinionsKilled}{" "}
+            CS | {player.stats.visionScore} VS
+          </p>
+          <ScoreBadge score={score} />
+        </div>
         <p>Kill Participation: {floatToPercentageString(killParticipation)}</p>
       </div>
 
@@ -355,10 +364,12 @@ const TeamMatch = ({
   team,
   matchRoles,
   playerRanks,
+  roleStats,
 }: {
   team: ProcessedTeam | null;
   matchRoles: Record<string, string> | null;
   playerRanks: Record<string, Record<Role, number | null>>;
+  roleStats: RoleStats | null;
 }) => {
   const sortedPlayers = (() => {
     if (!team) return [];
@@ -420,14 +431,11 @@ const TeamMatch = ({
               };
             }
           ) => {
-            const role =
-              matchRoles?.[
-                player.identity?.player.summonerId?.toString() as string
-              ];
-            const playerRank =
-              playerRanks[
-                player.identity?.player.summonerId?.toString() as string
-              ]?.[role as Role];
+            const summonerId =
+              player.identity?.player.summonerId?.toString() as string;
+            const role = matchRoles?.[summonerId];
+            const playerRank = playerRanks[summonerId]?.[role as Role];
+            const playerRoleStats = roleStats?.[role as Role]?.[summonerId];
             return (
               <PlayerRow
                 playerRank={playerRank}
@@ -439,6 +447,7 @@ const TeamMatch = ({
                     : undefined
                 }
                 totalKills={team.stats.kills}
+                roleStats={playerRoleStats}
               />
             );
           }
@@ -452,6 +461,7 @@ export function MatchComponent({
   matchData,
   matchRoles,
   playerRanks,
+  roleStats,
 }: MatchComponentProps) {
   const match = matchData as MatchData | null | undefined;
   const { blueTeam, redTeam } = processMatchData(match);
@@ -472,6 +482,7 @@ export function MatchComponent({
             team={blueTeam}
             matchRoles={matchRoles}
             playerRanks={playerRanks}
+            roleStats={roleStats}
           />
         </div>
         <div className="flex-1">
@@ -479,6 +490,7 @@ export function MatchComponent({
             team={redTeam}
             matchRoles={matchRoles}
             playerRanks={playerRanks}
+            roleStats={roleStats}
           />
         </div>
       </div>

@@ -185,6 +185,7 @@ export const championIds = {
   897: "K'Sante",
   901: "Smolder",
   902: "Milio",
+  904: "Zaahen",
   910: "Hwei",
   950: "Naafiri",
 };

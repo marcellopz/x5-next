@@ -186,6 +186,7 @@ export interface RoleLeaderboardStats {
   xpDiffAt10: LeaderboardEntry;
   xpDiffAt15: LeaderboardEntry;
   xpDiffAt20: LeaderboardEntry;
+  score: number;
 }
 
 export interface RoleLeaderboardData {
@@ -437,4 +438,22 @@ export interface MatchMetadata {
 export interface FullMatchData extends MatchMetadata {
   participantIdentities?: MatchParticipantIdentity[];
   [key: string]: unknown;
+}
+
+export interface RoleStats {
+  top: {
+    [summonerId: string]: RoleLeaderboardStats;
+  };
+  jungle: {
+    [summonerId: string]: RoleLeaderboardStats;
+  };
+  mid: {
+    [summonerId: string]: RoleLeaderboardStats;
+  };
+  support: {
+    [summonerId: string]: RoleLeaderboardStats;
+  };
+  adc: {
+    [summonerId: string]: RoleLeaderboardStats;
+  };
 }
