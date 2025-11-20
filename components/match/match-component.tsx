@@ -331,17 +331,27 @@ const PlayerRow = ({
 
       {/* General information */}
       <div className="flex flex-col items-center gap-1 text-sm text-center w-40 shrink-0">
-        <p>
-          Lv {player.stats.champLevel} | {formatNumber(player.stats.goldEarned)}{" "}
-          G
-        </p>
-        <div className="flex items-center gap-2">
-          <p>
-            {player.stats.totalMinionsKilled +
-              player.stats.neutralMinionsKilled}{" "}
-            CS | {player.stats.visionScore} VS
-          </p>
-          <ScoreBadge score={score} />
+        <div className="flex w-full gap-2">
+          <div className="flex flex-col gap-1 items-end w-2/5">
+            <p className="text-right whitespace-nowrap">
+              Lv {player.stats.champLevel}
+            </p>
+            <p className="text-right whitespace-nowrap">
+              {player.stats.totalMinionsKilled +
+                player.stats.neutralMinionsKilled}{" "}
+              CS
+            </p>
+          </div>
+          <div className="w-px bg-border self-stretch" />
+          <div className="flex-1 flex flex-col gap-1 items-start">
+            <p className="text-left whitespace-nowrap">
+              {formatNumber(player.stats.goldEarned)} G
+            </p>
+            <div className="flex items-center gap-2">
+              <p className="whitespace-nowrap">{player.stats.visionScore} VS</p>
+              <ScoreBadge score={score} />
+            </div>
+          </div>
         </div>
         <p>Kill Participation: {floatToPercentageString(killParticipation)}</p>
       </div>
