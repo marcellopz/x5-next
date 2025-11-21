@@ -358,7 +358,6 @@ export async function updatePlayerAction(
       "adc",
       "support",
     ];
-
     const rankChanges: RankChangeEntry[] = roles
       .filter((role) => originalPlayer[role] !== playerData[role])
       .map((role) => ({

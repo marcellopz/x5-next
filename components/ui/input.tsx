@@ -12,7 +12,10 @@ export interface InputProps
 }
 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
-  ({ className, type, startIcon, endIcon, compact, ...props }, ref) => {
+  (
+    { className, type, startIcon, endIcon, compact, onChange, ...props },
+    ref
+  ) => {
     const hasStartIcon = !!startIcon;
     const hasEndIcon = !!endIcon;
     const isNumberType = type === "number";
@@ -40,8 +43,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
       if (max === undefined || newValue <= max) {
         input.value = newValue.toString();
-        input.dispatchEvent(new Event("input", { bubbles: true }));
-        input.dispatchEvent(new Event("change", { bubbles: true }));
+        // Create a synthetic event to trigger React's onChange
+        const syntheticEvent = {
+          target: input,
+          currentTarget: input,
+        } as React.ChangeEvent<HTMLInputElement>;
+        onChange?.(syntheticEvent);
       }
     };
 
@@ -55,8 +62,12 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
 
       if (min === undefined || newValue >= min) {
         input.value = newValue.toString();
-        input.dispatchEvent(new Event("input", { bubbles: true }));
-        input.dispatchEvent(new Event("change", { bubbles: true }));
+        // Create a synthetic event to trigger React's onChange
+        const syntheticEvent = {
+          target: input,
+          currentTarget: input,
+        } as React.ChangeEvent<HTMLInputElement>;
+        onChange?.(syntheticEvent);
       }
     };
 
@@ -79,6 +90,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           isNumberType && (compact ? "pr-8" : "pr-10")
         )}
         ref={combinedRef}
+        onChange={onChange}
         {...props}
       />
     );

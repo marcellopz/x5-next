@@ -184,10 +184,10 @@ export function EditPlayerDialog({
                   No players found
                 </div>
               ) : (
-                <div className="border rounded-lg overflow-hidden">
+                <div className="border rounded-lg overflow-hidden border-border">
                   <div className="max-h-[60vh] overflow-y-auto">
                     <table className="w-full">
-                      <thead className="bg-muted/50 sticky top-0">
+                      <thead className="bg-muted sticky top-0">
                         <tr>
                           <th className="text-left p-3 text-sm font-medium">
                             Name ID
@@ -220,7 +220,7 @@ export function EditPlayerDialog({
                           <tr
                             key={player.name_id}
                             onClick={() => handlePlayerClick(player)}
-                            className="border-t cursor-pointer hover:bg-muted/50 transition-colors"
+                            className="border-t cursor-pointer hover:bg-muted/50 transition-colors border-border"
                           >
                             <td className="p-3 text-sm">{player.name_id}</td>
                             <td className="p-3 text-sm font-medium">
