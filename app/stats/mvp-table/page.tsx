@@ -1,10 +1,11 @@
 import { generatePageMetadata } from "@/lib/metadata";
 import { getMVPPlayers } from "@/lib/endpoints";
 import { MVPTable } from "@/components/stats/mvp-table";
+import { statRoutes } from "../stat-routes";
 
 export const metadata = generatePageMetadata(
-  "MVP Table",
-  "Most valuable players based on performance metrics"
+  statRoutes["mvp-table"].title,
+  statRoutes["mvp-table"].description
 );
 
 export default async function MVPTablePage() {

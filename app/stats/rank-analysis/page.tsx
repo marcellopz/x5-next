@@ -1,8 +1,9 @@
 import { generatePageMetadata } from "@/lib/metadata";
+import { statRoutes } from "../stat-routes";
 
 export const metadata = generatePageMetadata(
-  "Rank Analysis",
-  "Detailed analysis of player rankings and rank changes"
+  statRoutes["rank-analysis"].title,
+  statRoutes["rank-analysis"].description
 );
 
 export default function RankAnalysisPage() {
@@ -16,4 +17,3 @@ export default function RankAnalysisPage() {
     </div>
   );
 }
-

@@ -8,6 +8,7 @@ import { StatsCardsSection } from "@/components/home/stats-cards-section";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Player } from "@/lib/types";
+import { statRoutes } from "./stat-routes";
 
 export const metadata = generatePageMetadata(
   "Stats",
@@ -17,39 +18,38 @@ export const metadata = generatePageMetadata(
 const statOptions = [
   {
     id: "mvp-table",
-    title: "MVP Table",
-    description: "View the most valuable players based on performance metrics",
+    title: statRoutes["mvp-table"].title,
+    description: statRoutes["mvp-table"].description,
     href: "/stats/mvp-table",
   },
   {
     id: "role-player-stats",
-    title: "Role Player Stats",
-    description:
-      "Statistics for players by their roles (Top, Jungle, Mid, ADC, Support)",
+    title: statRoutes["role-player-stats"].title,
+    description: statRoutes["role-player-stats"].description,
     href: "/stats/role-player-stats",
   },
   {
     id: "role-champion-stats",
-    title: "Role Champion Stats",
-    description: "Champion performance statistics broken down by role",
+    title: statRoutes["role-champion-stats"].title,
+    description: statRoutes["role-champion-stats"].description,
     href: "/stats/role-champion-stats",
   },
   {
     id: "champion-stats",
-    title: "Champion Stats",
-    description: "Overall champion statistics and performance metrics",
+    title: statRoutes["champion-stats"].title,
+    description: statRoutes["champion-stats"].description,
     href: "/stats/champion-stats",
   },
   {
     id: "rank-analysis",
-    title: "Rank Analysis",
-    description: "Detailed analysis of player rankings and rank changes",
+    title: statRoutes["rank-analysis"].title,
+    description: statRoutes["rank-analysis"].description,
     href: "/stats/rank-analysis",
   },
   {
     id: "victory-statistics",
-    title: "Victory Statistics",
-    description: "Win rates, victory patterns, and match outcome analytics",
+    title: statRoutes["victory-statistics"].title,
+    description: statRoutes["victory-statistics"].description,
     href: "/stats/victory-statistics",
   },
 ];

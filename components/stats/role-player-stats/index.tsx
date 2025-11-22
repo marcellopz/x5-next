@@ -4,6 +4,7 @@ import React from "react";
 import { PlayersAverageRoleStats, Role, RoleStatKey } from "@/lib/types";
 import { RolePlayerStatsTable } from "./table";
 import { Select } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const rolesOrder: Role[] = ["top", "jungle", "mid", "adc", "support"];
 const roleOptions: Array<Role | "all"> = ["all", ...rolesOrder];
@@ -61,6 +62,7 @@ export function RolePlayerStats({ data }: RolePlayerStatsProps) {
   const [selectedStat, setSelectedStat] = React.useState<RoleStatKey>(
     statOptions[0] ?? "wins"
   );
+  const [filterMoreThanFive, setFilterMoreThanFive] = React.useState(false);
 
   React.useEffect(() => {
     if (!statOptions.includes(selectedStat) && statOptions.length > 0) {
@@ -83,6 +85,9 @@ export function RolePlayerStats({ data }: RolePlayerStatsProps) {
           }));
 
     return playersByRole
+      .filter(({ player }) =>
+        filterMoreThanFive ? player.playerInfo.numberOfGames > 5 : true
+      )
       .map(({ role, player }) => {
         const value = player.averageStats[selectedStat];
         if (typeof value !== "number") return null;
@@ -107,11 +112,11 @@ export function RolePlayerStats({ data }: RolePlayerStatsProps) {
       rawValue: number;
       formattedValue: string;
     }>;
-  }, [data, selectedRole, selectedStat]);
+  }, [data, selectedRole, selectedStat, filterMoreThanFive]);
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap gap-4">
+      <div className="flex flex-wrap gap-4 items-end">
         <div className="flex flex-col gap-1">
           <label
             htmlFor="role-select"
@@ -150,6 +155,20 @@ export function RolePlayerStats({ data }: RolePlayerStatsProps) {
               </option>
             ))}
           </Select>
+        </div>
+
+        <div className="flex items-center gap-2 mb-2.5">
+          <Checkbox
+            id="more-than-five-checkbox"
+            checked={filterMoreThanFive}
+            onChange={(e) => setFilterMoreThanFive(e.target.checked)}
+          />
+          <label
+            htmlFor="more-than-five-checkbox"
+            className="text-sm text-muted-foreground cursor-pointer select-none"
+          >
+            Filter for more than 5 games
+          </label>
         </div>
       </div>
 

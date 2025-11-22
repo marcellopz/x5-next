@@ -1,8 +1,9 @@
 import { generatePageMetadata } from "@/lib/metadata";
+import { statRoutes } from "../stat-routes";
 
 export const metadata = generatePageMetadata(
-  "Victory Statistics",
-  "Win rates, victory patterns, and match outcome analytics"
+  statRoutes["victory-statistics"].title,
+  statRoutes["victory-statistics"].description
 );
 
 export default function VictoryStatisticsPage() {

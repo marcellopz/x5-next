@@ -1,8 +1,9 @@
 import { generatePageMetadata } from "@/lib/metadata";
+import { statRoutes } from "../stat-routes";
 
 export const metadata = generatePageMetadata(
-  "Role Champion Stats",
-  "Champion performance statistics broken down by role"
+  statRoutes["role-champion-stats"].title,
+  statRoutes["role-champion-stats"].description
 );
 
 export default function RoleChampionStatsPage() {

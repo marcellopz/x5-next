@@ -6,11 +6,12 @@ export interface StatRouteInfo {
 export const statRoutes: Record<string, StatRouteInfo> = {
   "mvp-table": {
     title: "MVP Table",
-    description: "Most valuable players based on performance metrics",
+    description: "Players with the most wins in the most recent games",
   },
   "role-player-stats": {
     title: "Role Player Stats",
-    description: "Statistics for players by their roles",
+    description:
+      "Average statistics for players by their roles (Top, Jungle, Mid, ADC, Support)",
   },
   "role-champion-stats": {
     title: "Role Champion Stats",
@@ -29,4 +30,3 @@ export const statRoutes: Record<string, StatRouteInfo> = {
     description: "Win rates, victory patterns, and match outcome analytics",
   },
 };
-

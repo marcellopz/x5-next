@@ -1,10 +1,11 @@
 import { generatePageMetadata } from "@/lib/metadata";
 import { getPlayersAverageRoleStats } from "@/lib/endpoints";
 import { RolePlayerStats } from "@/components/stats/role-player-stats";
+import { statRoutes } from "../stat-routes";
 
 export const metadata = generatePageMetadata(
-  "Role Player Stats",
-  "Statistics for players by their roles"
+  statRoutes["role-player-stats"].title,
+  statRoutes["role-player-stats"].description
 );
 
 export default async function RolePlayerStatsPage() {
