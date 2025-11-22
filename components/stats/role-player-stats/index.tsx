@@ -62,7 +62,7 @@ export function RolePlayerStats({ data }: RolePlayerStatsProps) {
   const [selectedStat, setSelectedStat] = React.useState<RoleStatKey>(
     statOptions[0] ?? "wins"
   );
-  const [filterMoreThanFive, setFilterMoreThanFive] = React.useState(false);
+  const [filterMoreThanFive, setFilterMoreThanFive] = React.useState(true);
 
   React.useEffect(() => {
     if (!statOptions.includes(selectedStat) && statOptions.length > 0) {
