@@ -8,11 +8,13 @@ import {
   TableCell,
   useTableData,
 } from "@/components/ui/table";
+import Link from "next/link";
 
 interface RolePlayerStatsTableProps {
   statLabel: string;
   rows: Array<{
     id: string;
+    summonerId: string;
     name: string;
     tagLine?: string;
     numberOfGames: number;
@@ -73,8 +75,12 @@ function RolePlayerStatsTableContent({ statLabel }: { statLabel: string }) {
           sortedRows.map((row) => (
             <TableRow key={row.id}>
               <TableCell>
-                <div className="flex gap-2">
-                  <span className="font-medium">{row.name}</span>
+                <div className="flex gap-1 h-full items-center">
+                  <Link href={`/player/${row.summonerId}`}>
+                    <span className="font-medium hover:text-primary">
+                      {row.name}
+                    </span>
+                  </Link>
                   {row.tagLine && (
                     <span className="text-xs text-muted-foreground">
                       #{row.tagLine}

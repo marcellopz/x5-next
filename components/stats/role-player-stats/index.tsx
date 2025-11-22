@@ -76,6 +76,7 @@ export function RolePlayerStats({ data }: RolePlayerStatsProps) {
 
         return {
           id: `${selectedRole}-${player.playerInfo.summonerId}`,
+          summonerId: player.playerInfo.summonerId,
           name: player.playerInfo.gameName,
           tagLine: player.playerInfo.tagLine,
           numberOfGames: player.playerInfo.numberOfGames,
@@ -86,6 +87,7 @@ export function RolePlayerStats({ data }: RolePlayerStatsProps) {
       .filter(Boolean)
       .sort((a, b) => (b?.rawValue ?? 0) - (a?.rawValue ?? 0)) as Array<{
       id: string;
+      summonerId: string;
       name: string;
       tagLine?: string;
       numberOfGames: number;
