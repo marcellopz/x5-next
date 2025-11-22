@@ -457,3 +457,27 @@ export interface RoleStats {
     [summonerId: string]: RoleLeaderboardStats;
   };
 }
+
+type RoleWins = {
+  wins: number;
+  numberOfGames: number;
+};
+
+export type PlayerMvpPerformanceInGames = {
+  wins: number;
+  rolesWins: {
+    top: RoleWins;
+    jungle: RoleWins;
+    mid: RoleWins;
+    adc: RoleWins;
+    support: RoleWins;
+  };
+  meanScore: number;
+  numberOfGames: number;
+  gameName: string;
+  summonerId: string;
+};
+
+export type MvpPlayers = {
+  [playerId: string]: PlayerMvpPerformanceInGames;
+};

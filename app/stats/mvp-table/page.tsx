@@ -1,18 +1,21 @@
 import { generatePageMetadata } from "@/lib/metadata";
+import { getMVPPlayers } from "@/lib/endpoints";
+import { MVPTable } from "@/components/stats/mvp-table";
 
 export const metadata = generatePageMetadata(
   "MVP Table",
   "Most valuable players based on performance metrics"
 );
 
-export default function MVPTablePage() {
+export default async function MVPTablePage() {
+  const mvpPlayers = await getMVPPlayers();
+  const mvpPlayersArray = Object.values(mvpPlayers ?? {}).sort(
+    (a, b) => b.wins - a.wins || b.meanScore - a.meanScore
+  );
+
   return (
     <div className="mt-6">
-      <div className="text-center py-12 border border-border rounded-lg">
-        <p className="text-muted-foreground">
-          MVP Table content coming soon...
-        </p>
-      </div>
+      <MVPTable players={mvpPlayersArray} />
     </div>
   );
 }

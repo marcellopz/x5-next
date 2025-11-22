@@ -12,6 +12,7 @@ import type {
   RoleLeaderboardData,
   RoleStats,
   SummarizedOverallData,
+  MvpPlayers,
 } from "../types";
 
 // For client-side access, use NEXT_PUBLIC_ prefix
@@ -64,6 +65,10 @@ export async function getRoleStats(matchId: string): Promise<RoleStats | null> {
   return fetchFromFirebase<RoleStats>(
     `pre-processed-data/role-stats/${matchId}`
   );
+}
+
+export async function getMVPPlayers(): Promise<MvpPlayers | null> {
+  return fetchFromFirebase<MvpPlayers>("pre-processed-data/mvp-players");
 }
 
 // Fetches all rank change history from "player-rank-change-log" collection
