@@ -5,9 +5,22 @@ import { PlayersAverageRoleStats, Role, RoleStatKey } from "@/lib/types";
 import { RolePlayerStatsTable } from "./table";
 import { Select } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { getStatDescription } from "./stat-config";
+import {
+  formatStatLabel,
+  formatStatValue,
+  getStatOptions,
+  getStatGroups,
+} from "./options-utils";
 
-const rolesOrder: Role[] = ["top", "jungle", "mid", "adc", "support"];
-const roleOptions: Array<Role | "all"> = ["all", ...rolesOrder];
+const roleOptions: Array<Role | "all"> = [
+  "all",
+  "top",
+  "jungle",
+  "mid",
+  "adc",
+  "support",
+];
 const roleLabels: Record<Role | "all", string> = {
   all: "All Roles",
   top: "Top Lane",
@@ -21,42 +34,12 @@ interface RolePlayerStatsProps {
   data: PlayersAverageRoleStats;
 }
 
-const formatStatLabel = (stat: string) =>
-  stat
-    .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
-    .replace(/([A-Za-z])([0-9])/g, "$1 $2")
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, (char) => char.toUpperCase());
-
-const formatStatValue = (key: RoleStatKey, value: number) => {
-  if (key === "wins") {
-    return `${(value * 100).toFixed(1)}%`;
-  }
-
-  if (value >= 100 || Number.isInteger(value)) {
-    return value.toFixed(0);
-  }
-
-  return value.toFixed(2);
-};
-
-const getStatOptions = (data: PlayersAverageRoleStats): RoleStatKey[] => {
-  const keys = new Set<RoleStatKey>();
-  for (const role of rolesOrder) {
-    const players = data[role];
-    if (!players) continue;
-    const firstPlayer = Object.values(players)[0];
-    if (firstPlayer) {
-      Object.keys(firstPlayer.averageStats).forEach((statKey) =>
-        keys.add(statKey as RoleStatKey)
-      );
-    }
-  }
-  return Array.from(keys);
-};
-
 export function RolePlayerStats({ data }: RolePlayerStatsProps) {
   const statOptions = React.useMemo(() => getStatOptions(data), [data]);
+  const statGroups = React.useMemo(
+    () => getStatGroups(statOptions),
+    [statOptions]
+  );
 
   const [selectedRole, setSelectedRole] = React.useState<Role | "all">("all");
   const [selectedStat, setSelectedStat] = React.useState<RoleStatKey>(
@@ -71,29 +54,22 @@ export function RolePlayerStats({ data }: RolePlayerStatsProps) {
   }, [statOptions, selectedStat]);
 
   const rows = React.useMemo(() => {
-    const playersByRole =
-      selectedRole === "all"
-        ? rolesOrder.flatMap((role) =>
-            Object.values(data[role] ?? {}).map((player) => ({
-              role,
-              player,
-            }))
-          )
-        : Object.values(data[selectedRole] ?? {}).map((player) => ({
-            role: selectedRole,
-            player,
-          }));
+    // Get players data based on selected role
+    const playersData =
+      selectedRole === "all" ? data.all ?? {} : data[selectedRole] ?? {};
 
-    return playersByRole
-      .filter(({ player }) =>
+    const players = Object.values(playersData);
+
+    return players
+      .filter((player) =>
         filterMoreThanFive ? player.playerInfo.numberOfGames > 5 : true
       )
-      .map(({ role, player }) => {
+      .map((player) => {
         const value = player.averageStats[selectedStat];
         if (typeof value !== "number") return null;
 
         return {
-          id: `${role}-${player.playerInfo.summonerId}`,
+          id: `${selectedRole}-${player.playerInfo.summonerId}`,
           summonerId: player.playerInfo.summonerId,
           name: player.playerInfo.gameName,
           tagLine: player.playerInfo.tagLine,
@@ -148,13 +124,8 @@ export function RolePlayerStats({ data }: RolePlayerStatsProps) {
             id="stat-select"
             value={selectedStat}
             onChange={(e) => setSelectedStat(e.target.value as RoleStatKey)}
-          >
-            {statOptions.map((stat) => (
-              <option key={stat} value={stat}>
-                {formatStatLabel(stat)}
-              </option>
-            ))}
-          </Select>
+            groups={statGroups}
+          />
         </div>
 
         <div className="flex items-center gap-2 mb-2.5">
@@ -174,6 +145,7 @@ export function RolePlayerStats({ data }: RolePlayerStatsProps) {
 
       <RolePlayerStatsTable
         statLabel={formatStatLabel(selectedStat)}
+        statDescription={getStatDescription(selectedStat)}
         rows={rows}
       />
     </div>

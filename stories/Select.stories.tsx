@@ -218,3 +218,246 @@ export const Compact: Story = {
     </div>
   ),
 };
+
+export const WithGroups: Story = {
+  render: () => {
+    const [value, setValue] = useState("");
+
+    return (
+      <div className="w-[300px] space-y-4">
+        <Select
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Select a fruit"
+          groups={[
+            {
+              label: "Citrus Fruits",
+              options: [
+                { value: "orange", label: "Orange" },
+                { value: "lemon", label: "Lemon" },
+                { value: "lime", label: "Lime" },
+                { value: "grapefruit", label: "Grapefruit" },
+              ],
+            },
+            {
+              label: "Berries",
+              options: [
+                { value: "strawberry", label: "Strawberry" },
+                { value: "blueberry", label: "Blueberry" },
+                { value: "raspberry", label: "Raspberry" },
+                { value: "blackberry", label: "Blackberry" },
+              ],
+            },
+            {
+              label: "Tropical Fruits",
+              options: [
+                { value: "mango", label: "Mango" },
+                { value: "pineapple", label: "Pineapple" },
+                { value: "banana", label: "Banana" },
+                { value: "papaya", label: "Papaya" },
+              ],
+            },
+          ]}
+        />
+        <p className="text-sm text-muted-foreground">
+          Selected: {value || "Nothing selected"}
+        </p>
+      </div>
+    );
+  },
+};
+
+export const WithOptionsAndGroups: Story = {
+  render: () => {
+    const [value, setValue] = useState("");
+
+    return (
+      <div className="w-[300px] space-y-4">
+        <Select
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Select a country"
+          options={[{ value: "all", label: "All Countries" }]}
+          groups={[
+            {
+              label: "North America",
+              options: [
+                { value: "us", label: "United States" },
+                { value: "ca", label: "Canada" },
+                { value: "mx", label: "Mexico" },
+              ],
+            },
+            {
+              label: "Europe",
+              options: [
+                { value: "uk", label: "United Kingdom" },
+                { value: "de", label: "Germany" },
+                { value: "fr", label: "France" },
+                { value: "es", label: "Spain" },
+                { value: "it", label: "Italy" },
+              ],
+            },
+            {
+              label: "Asia",
+              options: [
+                { value: "jp", label: "Japan" },
+                { value: "cn", label: "China" },
+                { value: "kr", label: "South Korea" },
+                { value: "in", label: "India" },
+              ],
+            },
+          ]}
+        />
+        <p className="text-sm text-muted-foreground">
+          Selected: {value || "Nothing selected"}
+        </p>
+      </div>
+    );
+  },
+};
+
+export const WithOptionsOnly: Story = {
+  render: () => {
+    const [value, setValue] = useState("");
+
+    return (
+      <div className="w-[300px] space-y-4">
+        <Select
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Select a color"
+          options={[
+            { value: "red", label: "Red" },
+            { value: "blue", label: "Blue" },
+            { value: "green", label: "Green" },
+            { value: "yellow", label: "Yellow" },
+            { value: "purple", label: "Purple" },
+            { value: "orange", label: "Orange" },
+          ]}
+        />
+        <p className="text-sm text-muted-foreground">
+          Selected: {value || "Nothing selected"}
+        </p>
+      </div>
+    );
+  },
+};
+
+export const RolePlayerStatsExample: Story = {
+  render: () => {
+    const [selectedRole, setSelectedRole] = useState("all");
+    const [selectedStat, setSelectedStat] = useState("wins");
+
+    return (
+      <div className="w-[400px] space-y-4">
+        <div>
+          <label className="text-sm font-medium mb-2 block">Lane</label>
+          <Select
+            value={selectedRole}
+            onChange={(e) => setSelectedRole(e.target.value)}
+            options={[{ value: "all", label: "All Roles" }]}
+            groups={[
+              {
+                label: "Lanes",
+                options: [
+                  { value: "top", label: "Top Lane" },
+                  { value: "jungle", label: "Jungle" },
+                  { value: "mid", label: "Mid Lane" },
+                  { value: "adc", label: "Bot Lane" },
+                  { value: "support", label: "Support" },
+                ],
+              },
+            ]}
+          />
+        </div>
+        <div>
+          <label className="text-sm font-medium mb-2 block">Statistic</label>
+          <Select
+            value={selectedStat}
+            onChange={(e) => setSelectedStat(e.target.value)}
+            groups={[
+              {
+                label: "Performance",
+                options: [
+                  { value: "wins", label: "Wins" },
+                  { value: "kda", label: "KDA" },
+                  { value: "score", label: "Score" },
+                ],
+              },
+              {
+                label: "Damage",
+                options: [
+                  {
+                    value: "totalDamageDealtToChampions",
+                    label: "Total Damage",
+                  },
+                  { value: "damagePerMinute", label: "Damage Per Minute" },
+                  { value: "damageShare", label: "Damage Share" },
+                ],
+              },
+              {
+                label: "Economy",
+                options: [
+                  { value: "goldEarned", label: "Gold Earned" },
+                  { value: "goldPerMinute", label: "Gold Per Minute" },
+                  { value: "csPerMinute", label: "CS Per Minute" },
+                ],
+              },
+            ]}
+          />
+        </div>
+        <div className="p-4 bg-muted rounded-md">
+          <p className="text-sm">
+            <span className="font-medium">Selected Role:</span> {selectedRole}
+          </p>
+          <p className="text-sm">
+            <span className="font-medium">Selected Stat:</span> {selectedStat}
+          </p>
+        </div>
+      </div>
+    );
+  },
+};
+
+export const WithDisabledOptions: Story = {
+  render: () => {
+    const [value, setValue] = useState("");
+
+    return (
+      <div className="w-[300px] space-y-4">
+        <Select
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder="Select an option"
+          groups={[
+            {
+              label: "Available Options",
+              options: [
+                { value: "opt1", label: "Option 1" },
+                { value: "opt2", label: "Option 2" },
+                { value: "opt3", label: "Option 3" },
+              ],
+            },
+            {
+              label: "Unavailable Options",
+              options: [
+                { value: "opt4", label: "Option 4 (Disabled)", disabled: true },
+                { value: "opt5", label: "Option 5 (Disabled)", disabled: true },
+              ],
+            },
+            {
+              label: "More Options",
+              options: [
+                { value: "opt6", label: "Option 6" },
+                { value: "opt7", label: "Option 7" },
+              ],
+            },
+          ]}
+        />
+        <p className="text-sm text-muted-foreground">
+          Selected: {value || "Nothing selected"}
+        </p>
+      </div>
+    );
+  },
+};

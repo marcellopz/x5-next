@@ -12,6 +12,7 @@ import Link from "next/link";
 
 interface RolePlayerStatsTableProps {
   statLabel: string;
+  statDescription?: string;
   rows: Array<{
     id: string;
     summonerId: string;
@@ -25,6 +26,7 @@ interface RolePlayerStatsTableProps {
 
 export function RolePlayerStatsTable({
   statLabel,
+  statDescription,
   rows,
 }: RolePlayerStatsTableProps) {
   if (!rows.length) {
@@ -46,13 +48,22 @@ export function RolePlayerStatsTable({
         }}
         initialSort={{ column: "stat", direction: "desc" }}
       >
-        <RolePlayerStatsTableContent statLabel={statLabel} />
+        <RolePlayerStatsTableContent
+          statLabel={statLabel}
+          statDescription={statDescription}
+        />
       </Table>
     </div>
   );
 }
 
-function RolePlayerStatsTableContent({ statLabel }: { statLabel: string }) {
+function RolePlayerStatsTableContent({
+  statLabel,
+  statDescription,
+}: {
+  statLabel: string;
+  statDescription?: string;
+}) {
   const sortedRows = useTableData() as RolePlayerStatsTableProps["rows"];
 
   return (
@@ -63,7 +74,14 @@ function RolePlayerStatsTableContent({ statLabel }: { statLabel: string }) {
             Player
           </TableHead>
           <TableHead className="text-center" sortable sortKey="stat">
-            {statLabel}
+            <div className="flex flex-col items-center gap-0.5">
+              <span>{statLabel}</span>
+              {statDescription && (
+                <span className="text-xs font-normal text-muted-foreground">
+                  {statDescription}
+                </span>
+              )}
+            </div>
           </TableHead>
           <TableHead className="text-center" sortable sortKey="games">
             Games

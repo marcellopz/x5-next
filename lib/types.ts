@@ -289,7 +289,9 @@ export interface PlayerAverageRoleStats {
 export type PlayersAverageRoleStats = Record<
   Role,
   Record<string, PlayerAverageRoleStats>
->;
+> & {
+  all: Record<string, PlayerAverageRoleStats>;
+};
 
 export type RoleStatKey = keyof ParticipantCalculatedAverageStats;
 
