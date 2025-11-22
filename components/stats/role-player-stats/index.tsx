@@ -6,7 +6,9 @@ import { RolePlayerStatsTable } from "./table";
 import { Select } from "@/components/ui/select";
 
 const rolesOrder: Role[] = ["top", "jungle", "mid", "adc", "support"];
-const roleLabels: Record<Role, string> = {
+const roleOptions: Array<Role | "all"> = ["all", ...rolesOrder];
+const roleLabels: Record<Role | "all", string> = {
+  all: "All Roles",
   top: "Top Lane",
   jungle: "Jungle",
   mid: "Mid Lane",
@@ -55,7 +57,7 @@ const getStatOptions = (data: PlayersAverageRoleStats): RoleStatKey[] => {
 export function RolePlayerStats({ data }: RolePlayerStatsProps) {
   const statOptions = React.useMemo(() => getStatOptions(data), [data]);
 
-  const [selectedRole, setSelectedRole] = React.useState<Role>("top");
+  const [selectedRole, setSelectedRole] = React.useState<Role | "all">("all");
   const [selectedStat, setSelectedStat] = React.useState<RoleStatKey>(
     statOptions[0] ?? "wins"
   );
@@ -67,15 +69,26 @@ export function RolePlayerStats({ data }: RolePlayerStatsProps) {
   }, [statOptions, selectedStat]);
 
   const rows = React.useMemo(() => {
-    const playersMap = data[selectedRole] ?? {};
+    const playersByRole =
+      selectedRole === "all"
+        ? rolesOrder.flatMap((role) =>
+            Object.values(data[role] ?? {}).map((player) => ({
+              role,
+              player,
+            }))
+          )
+        : Object.values(data[selectedRole] ?? {}).map((player) => ({
+            role: selectedRole,
+            player,
+          }));
 
-    return Object.values(playersMap)
-      .map((player) => {
+    return playersByRole
+      .map(({ role, player }) => {
         const value = player.averageStats[selectedStat];
         if (typeof value !== "number") return null;
 
         return {
-          id: `${selectedRole}-${player.playerInfo.summonerId}`,
+          id: `${role}-${player.playerInfo.summonerId}`,
           summonerId: player.playerInfo.summonerId,
           name: player.playerInfo.gameName,
           tagLine: player.playerInfo.tagLine,
@@ -109,9 +122,9 @@ export function RolePlayerStats({ data }: RolePlayerStatsProps) {
           <Select
             id="role-select"
             value={selectedRole}
-            onChange={(e) => setSelectedRole(e.target.value as Role)}
+            onChange={(e) => setSelectedRole(e.target.value as Role | "all")}
           >
-            {rolesOrder.map((role) => (
+            {roleOptions.map((role) => (
               <option key={role} value={role}>
                 {roleLabels[role]}
               </option>
