@@ -198,6 +198,101 @@ export interface RoleLeaderboardData {
   top: RoleLeaderboardStats;
 }
 
+export interface RolePlayerInfo {
+  summonerId: string;
+  gameName: string;
+  tagLine: string;
+  numberOfGames: number;
+}
+
+export interface ParticipantCalculatedAverageStats {
+  wins: number;
+  kills: number;
+  deaths: number;
+  assists: number;
+  kda: number;
+  totalMinionsKilled: number;
+  neutralMinionsKilled: number;
+  totalCS: number;
+  csPerMinute: number;
+  goldEarned: number;
+  goldPerMinute: number;
+  totalDamageDealtToChampions: number;
+  damagePerMinute: number;
+  physicalDamageDealtToChampions: number;
+  magicDamageDealtToChampions: number;
+  trueDamageDealtToChampions: number;
+  visionScore: number;
+  visionScorePerMinute: number;
+  wardsPlaced: number;
+  wardsKilled: number;
+  visionWardsBoughtInGame: number;
+  damageDealtToObjectives: number;
+  damageDealtToTurrets: number;
+  totalDamageTaken: number;
+  damageSelfMitigated: number;
+  totalHeal: number;
+  timeCCingOthers: number;
+  totalTimeCrowdControlDealt: number;
+  teamKills: number;
+  teamDamage: number;
+  killParticipation: number;
+  damageShare: number;
+  goldAt10: number;
+  xpAt10: number;
+  csAt10: number;
+  levelAt10: number;
+  goldDiffAt10: number;
+  xpDiffAt10: number;
+  csDiffAt10: number;
+  goldAt15: number;
+  xpAt15: number;
+  csAt15: number;
+  levelAt15: number;
+  goldDiffAt15: number;
+  xpDiffAt15: number;
+  csDiffAt15: number;
+  goldAt20: number;
+  xpAt20: number;
+  csAt20: number;
+  levelAt20: number;
+  goldDiffAt20: number;
+  xpDiffAt20: number;
+  csDiffAt20: number;
+  soloKills: number;
+  firstBlood: number;
+  firstBloodKill: number;
+  firstBloodAssist: number;
+  doubleKills: number;
+  tripleKills: number;
+  quadraKills: number;
+  pentaKills: number;
+  turretKills: number;
+  inhibitorKills: number;
+  firstTowerKill: number;
+  firstTowerAssist: number;
+  killsAndAssistsPre15: number;
+  teamKillsPre15: number;
+  earlyGameKP: number;
+  damagePerDeath: number;
+  damagePerGold: number;
+  objectiveControlRate?: number;
+  roamsSuccessful?: number;
+  score: number;
+}
+
+export interface PlayerAverageRoleStats {
+  playerInfo: RolePlayerInfo;
+  averageStats: ParticipantCalculatedAverageStats;
+}
+
+export type PlayersAverageRoleStats = Record<
+  Role,
+  Record<string, PlayerAverageRoleStats>
+>;
+
+export type RoleStatKey = keyof ParticipantCalculatedAverageStats;
+
 export interface ChampionLeaderboardEntry {
   championId: string;
   championName: string;

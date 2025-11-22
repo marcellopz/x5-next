@@ -2,17 +2,18 @@ import type {
   AllReducedData,
   InitialRanksData,
   MatchWithId,
+  MvpPlayers,
   Player,
   PlayerInfo,
   PlayerList,
   PlayerPairs,
   PlayerRankChanges,
   PlayerSummary,
+  PlayersAverageRoleStats,
   RankChangeLog,
   RoleLeaderboardData,
   RoleStats,
   SummarizedOverallData,
-  MvpPlayers,
 } from "../types";
 
 // For client-side access, use NEXT_PUBLIC_ prefix
@@ -135,6 +136,12 @@ export async function getAllReducedData(): Promise<MatchWithId[]> {
 export async function getRoleLeaderboardData(): Promise<RoleLeaderboardData | null> {
   return fetchFromFirebase<RoleLeaderboardData>(
     "pre-processed-data/role-leaderboard"
+  );
+}
+
+export async function getPlayersAverageRoleStats(): Promise<PlayersAverageRoleStats | null> {
+  return fetchFromFirebase<PlayersAverageRoleStats>(
+    "pre-processed-data/players-average-role-stats"
   );
 }
 
