@@ -99,6 +99,7 @@ export interface GamesPerMonth {
 }
 
 export interface LeaderboardEntry {
+  extra?: string;
   legend_id: string;
   legend_name: string;
   summonerId: string;

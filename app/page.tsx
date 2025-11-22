@@ -1,5 +1,6 @@
 import {
   getInitialRankChangeLog,
+  getMVPPlayers,
   getPlayerList,
   getRankChangeLog,
   getSummarizedOverallData,
@@ -13,7 +14,6 @@ import {
   PlayerOverallLeaderboard,
 } from "@/components/home";
 import { PageHeader } from "@/components/ui/page-header";
-import { getPlayerByAccountId } from "@/lib/utils";
 import { getRoleLeaderboardData } from "@/lib/endpoints";
 import { Player } from "@/lib/types";
 
@@ -24,12 +24,14 @@ export default async function Home() {
     summarizedOverallData,
     initialRankChangeLog,
     roleLeaderboard,
+    mvpPlayers,
   ] = await Promise.all([
     getPlayerList(),
     getRankChangeLog(),
     getSummarizedOverallData(),
     getInitialRankChangeLog(),
     getRoleLeaderboardData(),
+    getMVPPlayers(),
   ]);
 
   const playerList: Player[] = allPlayersObject
@@ -39,9 +41,9 @@ export default async function Home() {
   const totalPlayers = playerList ? playerList.length : 0;
 
   // Get the recent MVP player by account_id
-  const recentMVP = summarizedOverallData?.topRecentPlayer
-    ? getPlayerByAccountId(playerList, summarizedOverallData.topRecentPlayer)
-    : null;
+  const recentMVP = Object.values(mvpPlayers ?? {}).sort(
+    (a, b) => b.wins - a.wins || b.meanScore - a.meanScore
+  )[0];
 
   return (
     <div className="container mx-auto px-4 py-8 flex flex-col gap-6">
@@ -60,7 +62,7 @@ export default async function Home() {
         numberOfGames={summarizedOverallData?.numberOfGames || 0}
         totalPlayers={totalPlayers}
         mostRecentGameTimestamp={summarizedOverallData?.mostRecentGameTimestamp}
-        recentMVP={recentMVP?.name || "???"}
+        recentMVP={recentMVP}
       />
 
       <PlayerOverallLeaderboard

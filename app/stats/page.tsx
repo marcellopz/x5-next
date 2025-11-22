@@ -1,9 +1,12 @@
 import { generatePageMetadata } from "@/lib/metadata";
-import { getSummarizedOverallData, getPlayerList } from "@/lib/endpoints";
+import {
+  getSummarizedOverallData,
+  getPlayerList,
+  getMVPPlayers,
+} from "@/lib/endpoints";
 import { StatsCardsSection } from "@/components/home/stats-cards-section";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
-import { getPlayerByAccountId } from "@/lib/utils";
 import { Player } from "@/lib/types";
 
 export const metadata = generatePageMetadata(
@@ -52,19 +55,21 @@ const statOptions = [
 ];
 
 export default async function StatsPage() {
-  const [summarizedOverallData, allPlayersObject] = await Promise.all([
-    getSummarizedOverallData(),
-    getPlayerList(),
-  ]);
+  const [summarizedOverallData, allPlayersObject, mvpPlayers] =
+    await Promise.all([
+      getSummarizedOverallData(),
+      getPlayerList(),
+      getMVPPlayers(),
+    ]);
 
   const playerList: Player[] = allPlayersObject
     ? Object.values(allPlayersObject).filter((player) => !player.hide)
     : [];
   const totalPlayers = playerList ? playerList.length : 0;
 
-  const recentMVP = summarizedOverallData?.topRecentPlayer
-    ? getPlayerByAccountId(playerList, summarizedOverallData.topRecentPlayer)
-    : null;
+  const recentMVP = Object.values(mvpPlayers ?? {}).sort(
+    (a, b) => b.wins - a.wins || b.meanScore - a.meanScore
+  )[0];
 
   return (
     <>
@@ -82,7 +87,7 @@ export default async function StatsPage() {
             mostRecentGameTimestamp={
               summarizedOverallData?.mostRecentGameTimestamp
             }
-            recentMVP={recentMVP?.name || "???"}
+            recentMVP={recentMVP}
           />
         </div>
 

@@ -28,7 +28,7 @@ export function PlayerOverallLeaderboard({
         id: entry.summonerId,
         label: entry.legend_name,
         value: `${(entry.value * 100).toFixed(1)}%`,
-        subtitle: `Overall`,
+        subtitle: `In ${entry.extra} games`,
       })),
     [leaderboard?.winRate]
   );
@@ -39,7 +39,7 @@ export function PlayerOverallLeaderboard({
         id: entry.summonerId,
         label: entry.legend_name,
         value: `${(entry.value * 100).toFixed(1)}%`,
-        subtitle: `Last 20 games`,
+        subtitle: `In ${entry.extra} games`,
       })),
     [leaderboard?.winRateLast20Games]
   );

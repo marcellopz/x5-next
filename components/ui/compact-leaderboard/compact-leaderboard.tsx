@@ -10,6 +10,7 @@ export interface LeaderboardItem {
   label: string;
   value: string | number;
   subtitle?: string;
+  extra?: string;
 }
 
 interface CompactLeaderboardProps {

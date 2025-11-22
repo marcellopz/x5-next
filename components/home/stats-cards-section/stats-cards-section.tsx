@@ -1,3 +1,4 @@
+import { PlayerMvpPerformanceInGames } from "@/lib/types";
 import { StatsCard } from "./stats-card";
 import { TimeSinceLastMatch } from "./time-since-last-match";
 
@@ -5,7 +6,7 @@ interface StatsCardsSectionProps {
   numberOfGames: number;
   totalPlayers: number;
   mostRecentGameTimestamp: number | undefined;
-  recentMVP: string;
+  recentMVP: PlayerMvpPerformanceInGames | undefined;
 }
 
 export function StatsCardsSection({
@@ -35,11 +36,13 @@ export function StatsCardsSection({
         title="Number of matches"
         value={numberOfGames}
         description="Number of matches played"
+        linkTo="/history"
       />
       <StatsCard
         title="Total Players"
         value={totalPlayers}
         description="All registered players"
+        linkTo="/player-list"
       />
       <TimeSinceLastMatch
         mostRecentGameTimestamp={mostRecentGameTimestamp}
@@ -47,8 +50,9 @@ export function StatsCardsSection({
       />
       <StatsCard
         title="Recent MVP"
-        value={recentMVP}
+        value={recentMVP?.gameName || "???"}
         description="Most wins in the last 10 matches"
+        linkTo="/stats/mvp-table"
       />
     </div>
   );

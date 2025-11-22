@@ -23,7 +23,7 @@ function MVPTableRows() {
   return (
     <>
       {sortedPlayers.map((player, index) => (
-        <TableRow key={player.summonerId}>
+        <TableRow key={player.gameName}>
           <TableCell className="text-center text-muted-foreground">
             {index + 1}
           </TableCell>
