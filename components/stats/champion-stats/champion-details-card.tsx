@@ -36,7 +36,7 @@ function isChampionStatsEntryAll(
 export function ChampionDetailsCard({ champion }: ChampionDetailsCardProps) {
   if (!champion) {
     return (
-      <Card>
+      <Card className="sticky top-20">
         <CardHeader>
           <CardTitle>Select a Champion</CardTitle>
           <CardDescription>
@@ -66,10 +66,8 @@ export function ChampionDetailsCard({ champion }: ChampionDetailsCardProps) {
     (a, b) => b.numberOfGames - a.numberOfGames
   );
 
-  console.log(champion);
-
   return (
-    <Card>
+    <Card className="sticky top-20">
       <CardHeader>
         <div className="flex items-center gap-4">
           <div className="relative w-20 h-20 rounded-lg overflow-hidden shrink-0 border-2 border-border">
@@ -91,14 +89,20 @@ export function ChampionDetailsCard({ champion }: ChampionDetailsCardProps) {
         {/* Overall Stats */}
         <div>
           <h3 className="text-sm font-semibold mb-3">Overall Statistics</h3>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-4 gap-3">
             <div className="space-y-1">
               <div className="text-xs text-muted-foreground">Picks</div>
               <div className="text-lg font-semibold">{champion.picks}</div>
             </div>
             <div className="space-y-1">
-              <div className="text-xs text-muted-foreground">Wins</div>
-              <div className="text-lg font-semibold">{champion.wins}</div>
+              <div className="text-xs text-muted-foreground">Win/Loss</div>
+              <div className="text-lg font-semibold">
+                <span className="text-green-300">{champion.wins}</span>{" "}
+                <span className="text-muted-foreground">/</span>{" "}
+                <span className="text-red-300">
+                  {champion.picks - champion.wins}
+                </span>
+              </div>
             </div>
             <div className="space-y-1">
               <div className="text-xs text-muted-foreground">Win Rate</div>
@@ -168,6 +172,9 @@ export function ChampionDetailsCard({ champion }: ChampionDetailsCardProps) {
                   <TableRow>
                     <TableHead className="text-xs">Player</TableHead>
                     <TableHead className="text-xs text-center">Games</TableHead>
+                    <TableHead className="text-xs text-center">
+                      Win Rate
+                    </TableHead>
                     <TableHead className="text-xs text-center">W/L</TableHead>
                     <TableHead className="text-xs text-center">KDA</TableHead>
                     <TableHead className="text-xs text-center">CS</TableHead>
@@ -192,6 +199,12 @@ export function ChampionDetailsCard({ champion }: ChampionDetailsCardProps) {
                         </TableCell>
                         <TableCell className="text-xs text-center">
                           {player.numberOfGames}
+                        </TableCell>
+                        <TableCell className="text-xs text-center">
+                          {((player.wins / player.numberOfGames) * 100).toFixed(
+                            1
+                          )}
+                          %
                         </TableCell>
                         <TableCell className="text-xs text-center whitespace-nowrap">
                           <span className="text-green-400 text-sm">

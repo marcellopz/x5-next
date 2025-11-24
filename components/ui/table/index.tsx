@@ -120,8 +120,8 @@ const Table = <T extends object>({
         checkboxConfig: checkboxConfig as TableContextType["checkboxConfig"],
       }}
     >
-      <div className="relative w-full">
-        <div className="overflow-auto border border-border rounded-lg">
+      <div className="relative w-full h-full">
+        <div className="h-full overflow-auto border border-border rounded-lg">
           <table className={cn("w-full text-sm", className)} {...props}>
             {children}
           </table>

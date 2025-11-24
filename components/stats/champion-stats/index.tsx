@@ -71,7 +71,7 @@ export function ChampionStats({ data }: ChampionStatsProps) {
     : null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-2 lg:space-y-6">
       {/* Role Filter Buttons and Checkbox */}
       <div className="flex flex-wrap gap-4 items-end">
         <div className="flex flex-wrap gap-2">
@@ -112,7 +112,7 @@ export function ChampionStats({ data }: ChampionStatsProps) {
       {/* Content: Table on left, Details on right */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         {/* Champions Table */}
-        <div className="lg:col-span-3 max-h-[300px] lg:max-h-none lg:border border-border rounded-lg overflow-y-auto">
+        <div className="lg:col-span-3 max-h-[300px] lg:max-h-none lg:border-none border border-border rounded-lg overflow-y-auto">
           <ChampionsTable
             champions={championsData}
             selectedChampionId={selectedChampionId}

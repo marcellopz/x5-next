@@ -100,7 +100,7 @@ export function ChampionsTable({
       sortConfig={sortConfig}
       initialSort={{ column: "picks", direction: "desc" }}
     >
-      <TableHeader>
+      <TableHeader className="sticky top-0 z-10 bg-muted!">
         <TableRow>
           <TableHead className="w-12">#</TableHead>
           <TableHead sortable sortKey="championName">
