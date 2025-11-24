@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import type { ChampionsAverageRoleStats } from "@/lib/types";
 import { ChampionsTable } from "./champions-table";
 import { ChampionDetailsCard } from "./champion-details-card";
+import useIsMobile from "@/lib/hooks/useIsMobile";
 
 type RoleFilter = "all" | "top" | "jungle" | "mid" | "adc" | "support";
 
@@ -38,6 +39,7 @@ export function ChampionStats({ data }: ChampionStatsProps) {
     null
   );
   const [filterMoreThanFive, setFilterMoreThanFive] = useState(false);
+  const isMobile = useIsMobile();
 
   // Get champions for selected role
   const allChampionsData =
@@ -75,7 +77,7 @@ export function ChampionStats({ data }: ChampionStatsProps) {
         <div className="flex flex-wrap gap-2">
           {roleFilters.map((role) => (
             <Button
-              size="sm"
+              size={isMobile ? "xs" : "sm"}
               key={role}
               variant={selectedRole === role ? "default" : "outline"}
               onClick={() => {
@@ -110,7 +112,7 @@ export function ChampionStats({ data }: ChampionStatsProps) {
       {/* Content: Table on left, Details on right */}
       <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
         {/* Champions Table */}
-        <div className="lg:col-span-3">
+        <div className="lg:col-span-3 max-h-[300px] lg:max-h-none lg:border border-border rounded-lg overflow-y-auto">
           <ChampionsTable
             champions={championsData}
             selectedChampionId={selectedChampionId}
