@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { PlayersAverageRoleStats, Role, RoleStatKey } from "@/lib/types";
 import { RolePlayerStatsTable } from "./table";
 import { Select } from "@/components/ui/select";
@@ -35,25 +35,22 @@ interface RolePlayerStatsProps {
 }
 
 export function RolePlayerStats({ data }: RolePlayerStatsProps) {
-  const statOptions = React.useMemo(() => getStatOptions(data), [data]);
-  const statGroups = React.useMemo(
-    () => getStatGroups(statOptions),
-    [statOptions]
-  );
+  const statOptions = useMemo(() => getStatOptions(data), [data]);
+  const statGroups = useMemo(() => getStatGroups(statOptions), [statOptions]);
 
-  const [selectedRole, setSelectedRole] = React.useState<Role | "all">("all");
-  const [selectedStat, setSelectedStat] = React.useState<RoleStatKey>(
+  const [selectedRole, setSelectedRole] = useState<Role | "all">("all");
+  const [selectedStat, setSelectedStat] = useState<RoleStatKey>(
     statOptions[0] ?? "wins"
   );
-  const [filterMoreThanFive, setFilterMoreThanFive] = React.useState(true);
+  const [filterMoreThanFive, setFilterMoreThanFive] = useState(true);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!statOptions.includes(selectedStat) && statOptions.length > 0) {
       setSelectedStat(statOptions[0]);
     }
   }, [statOptions, selectedStat]);
 
-  const rows = React.useMemo(() => {
+  const rows = useMemo(() => {
     // Get players data based on selected role
     const playersData =
       selectedRole === "all" ? data.all ?? {} : data[selectedRole] ?? {};

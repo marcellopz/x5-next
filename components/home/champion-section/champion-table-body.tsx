@@ -74,9 +74,9 @@ export function ChampionTableBody({
           <TableCell className="whitespace-nowrap">{champion.picks}</TableCell>
           <TableCell className="whitespace-nowrap">{champion.bans}</TableCell>
           <TableCell className="whitespace-nowrap">
-            <span className="text-green-500 text-sm">{champion.wins}</span>
+            <span className="text-green-400 text-sm">{champion.wins}</span>
             {" / "}
-            <span className="text-red-500 text-sm">{champion.losses}</span>
+            <span className="text-red-400 text-sm">{champion.losses}</span>
           </TableCell>
           <TableCell className="whitespace-nowrap">
             {champion.winRate}

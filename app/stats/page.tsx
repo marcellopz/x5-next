@@ -23,16 +23,10 @@ const statOptions = [
     href: "/stats/mvp-table",
   },
   {
-    id: "role-player-stats",
-    title: statRoutes["role-player-stats"].title,
-    description: statRoutes["role-player-stats"].description,
-    href: "/stats/role-player-stats",
-  },
-  {
-    id: "role-champion-stats",
-    title: statRoutes["role-champion-stats"].title,
-    description: statRoutes["role-champion-stats"].description,
-    href: "/stats/role-champion-stats",
+    id: "player-stats",
+    title: statRoutes["player-stats"].title,
+    description: statRoutes["player-stats"].description,
+    href: "/stats/player-stats",
   },
   {
     id: "champion-stats",

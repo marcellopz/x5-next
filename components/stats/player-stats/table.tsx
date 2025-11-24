@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Table,
   TableHeader,
@@ -9,6 +8,7 @@ import {
   useTableData,
 } from "@/components/ui/table";
 import Link from "next/link";
+import useIsMobile from "@/lib/hooks/useIsMobile";
 
 interface RolePlayerStatsTableProps {
   statLabel: string;
@@ -29,6 +29,7 @@ export function RolePlayerStatsTable({
   statDescription,
   rows,
 }: RolePlayerStatsTableProps) {
+  const isMobile = useIsMobile();
   if (!rows.length) {
     return (
       <p className="text-sm text-muted-foreground">
@@ -46,6 +47,7 @@ export function RolePlayerStatsTable({
           stat: (row) => row.rawValue,
           games: (row) => row.numberOfGames,
         }}
+        compact={isMobile}
         initialSort={{ column: "stat", direction: "desc" }}
       >
         <RolePlayerStatsTableContent

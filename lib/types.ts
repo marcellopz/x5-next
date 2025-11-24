@@ -579,3 +579,46 @@ export type PlayerMvpPerformanceInGames = {
 export type MvpPlayers = {
   [playerId: string]: PlayerMvpPerformanceInGames;
 };
+
+// Champion Average Role Stats Types
+export interface PlayedByEntry {
+  summonerId: string;
+  gameName: string;
+  tagLine: string;
+  numberOfGames: number;
+  wins: number;
+  kda: number;
+  kills: number;
+  deaths: number;
+  assists: number;
+  creepScore: number;
+  visionScore: number;
+}
+
+export interface ChampionStatsEntryRole {
+  championId: string;
+  championName: string;
+  picks: number;
+  wins: number;
+  kills: number;
+  deaths: number;
+  assists: number;
+  creepsKilled: number;
+  playedBy: {
+    [summonerId: string]: PlayedByEntry;
+  };
+}
+
+export interface ChampionStatsEntryAll extends ChampionStatsEntryRole {
+  bans: number;
+  presence: number;
+}
+
+export type ChampionsAverageRoleStats = {
+  top: { [championId: string]: ChampionStatsEntryRole };
+  jungle: { [championId: string]: ChampionStatsEntryRole };
+  mid: { [championId: string]: ChampionStatsEntryRole };
+  adc: { [championId: string]: ChampionStatsEntryRole };
+  support: { [championId: string]: ChampionStatsEntryRole };
+  all: { [championId: string]: ChampionStatsEntryAll };
+};

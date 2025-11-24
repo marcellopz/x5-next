@@ -8,18 +8,13 @@ export const statRoutes: Record<string, StatRouteInfo> = {
     title: "MVP Table",
     description: "Players with the most wins in the most recent games",
   },
-  "role-player-stats": {
-    title: "Role Player Stats",
-    description:
-      "Average statistics for players by their roles (Top, Jungle, Mid, ADC, Support)",
-  },
-  "role-champion-stats": {
-    title: "Role Champion Stats",
-    description: "Champion performance statistics broken down by role",
+  "player-stats": {
+    title: "Player Stats",
+    description: "Average statistics for players by role or overall",
   },
   "champion-stats": {
     title: "Champion Stats",
-    description: "Overall champion statistics and performance metrics",
+    description: "Champion performance statistics by role or overall",
   },
   "rank-analysis": {
     title: "Rank Analysis",

@@ -234,11 +234,11 @@ export const statCategories: Array<{
     label: "Team Contribution",
     stats: [
       "killParticipation",
-      "teamKills",
-      "teamDamage",
+      // "teamKills",
+      // "teamDamage",
       "earlyGameKP",
       "killsAndAssistsPre15",
-      "teamKillsPre15",
+      // "teamKillsPre15",
     ],
   },
   {

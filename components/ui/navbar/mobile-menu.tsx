@@ -7,6 +7,7 @@ import { usePathname } from "next/navigation";
 import { BrandLogo } from "./brand-logo";
 import { LanguageToggle } from "./language-toggle";
 import { cn } from "@/lib/utils";
+import { SeasonSelector } from "./season-selector";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -91,7 +92,10 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
       >
         {/* Header */}
         <div className="flex items-center justify-between h-14 px-4 border-b border-border">
-          <BrandLogo />
+          <div className="flex items-center gap-2">
+            <BrandLogo />
+            <SeasonSelector />
+          </div>
           <button
             onClick={onClose}
             className="p-2 rounded-md hover:bg-accent transition-colors"
@@ -126,6 +130,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
             label="Patch Notes"
             onClick={onClose}
           />
+          <MobileNavLink href="/stats" label="Statistics" onClick={onClose} />
         </nav>
 
         {/* Footer */}

@@ -1,5 +1,6 @@
 import type {
   AllReducedData,
+  ChampionsAverageRoleStats,
   InitialRanksData,
   MatchWithId,
   MvpPlayers,
@@ -98,6 +99,20 @@ export async function getSummarizedOverallData(): Promise<SummarizedOverallData 
   );
 }
 
+export async function getChampionOVerallData(): Promise<
+  SummarizedOverallData["champions"] | null
+> {
+  return fetchFromFirebase<SummarizedOverallData["champions"]>(
+    "pre-processed-data/overall-stats/champions"
+  );
+}
+
+export async function getNumberOfGames(): Promise<number | null> {
+  return fetchFromFirebase<number>(
+    "pre-processed-data/overall-stats/numberOfGames"
+  );
+}
+
 // Fetches initial rank change log
 export async function getInitialRankChangeLog(): Promise<InitialRanksData | null> {
   return fetchFromFirebase<InitialRanksData>("player-initial-ranks");
@@ -142,6 +157,12 @@ export async function getRoleLeaderboardData(): Promise<RoleLeaderboardData | nu
 export async function getPlayersAverageRoleStats(): Promise<PlayersAverageRoleStats | null> {
   return fetchFromFirebase<PlayersAverageRoleStats>(
     "pre-processed-data/players-average-role-stats"
+  );
+}
+
+export async function getChampionsAverageRoleStats(): Promise<ChampionsAverageRoleStats | null> {
+  return fetchFromFirebase<ChampionsAverageRoleStats>(
+    "pre-processed-data/champions-average-role-stats"
   );
 }
 
