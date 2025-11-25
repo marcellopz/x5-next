@@ -55,7 +55,7 @@ export function RoleStatsPane({
           {ROLE_META[activeRole].label} Stats
         </h3>
         <h4 className="text-sm text-muted-foreground opacity-80 flex flex-col justify-end">
-          Stats based on the last 10 games
+          Stats based on the last 5 games for each player
         </h4>
       </div>
       <div className="flex-1 grid grid-cols-2 gap-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 auto-rows-fr">
