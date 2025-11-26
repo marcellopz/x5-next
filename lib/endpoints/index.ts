@@ -9,6 +9,7 @@ import type {
   PlayerList,
   PlayerPairs,
   PlayerRankChanges,
+  PlayerRankChangeStats,
   PlayerSummary,
   PlayersAverageRoleStats,
   RankChangeLog,
@@ -163,6 +164,12 @@ export async function getPlayersAverageRoleStats(): Promise<PlayersAverageRoleSt
 export async function getChampionsAverageRoleStats(): Promise<ChampionsAverageRoleStats | null> {
   return fetchFromFirebase<ChampionsAverageRoleStats>(
     "pre-processed-data/champions-average-role-stats"
+  );
+}
+
+export async function getPlayerRankChangeStats(): Promise<PlayerRankChangeStats | null> {
+  return fetchFromFirebase<PlayerRankChangeStats>(
+    "pre-processed-data/player-rank-change-stats"
   );
 }
 

@@ -614,6 +614,35 @@ export interface ChampionStatsEntryAll extends ChampionStatsEntryRole {
   presence: number;
 }
 
+export interface WinLoseSinceLastChange {
+  wins: number;
+  loses: number;
+  rank: number;
+}
+
+export interface PlayerRankChangeStats {
+  number_of_changes: {
+    [name_id: string]: number;
+  };
+  win_loses_since_last_change: {
+    top: {
+      [name_id: string]: WinLoseSinceLastChange;
+    };
+    jungle: {
+      [name_id: string]: WinLoseSinceLastChange;
+    };
+    mid: {
+      [name_id: string]: WinLoseSinceLastChange;
+    };
+    adc: {
+      [name_id: string]: WinLoseSinceLastChange;
+    };
+    support: {
+      [name_id: string]: WinLoseSinceLastChange;
+    };
+  };
+}
+
 export type ChampionsAverageRoleStats = {
   top: { [championId: string]: ChampionStatsEntryRole };
   jungle: { [championId: string]: ChampionStatsEntryRole };
