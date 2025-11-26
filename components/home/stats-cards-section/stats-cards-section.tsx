@@ -51,7 +51,7 @@ export function StatsCardsSection({
       <StatsCard
         title="Recent MVP"
         value={recentMVP?.gameName || "???"}
-        description="Most wins in the last 10 matches"
+        description="Best performing player in the last 10 games"
         linkTo="/stats/mvp-table"
       />
     </div>

@@ -46,6 +46,12 @@ const statOptions = [
     description: statRoutes["victory-statistics"].description,
     href: "/stats/victory-statistics",
   },
+  {
+    id: "map-side-comparison",
+    title: statRoutes["map-side-comparison"].title,
+    description: statRoutes["map-side-comparison"].description,
+    href: "/stats/map-side-comparison",
+  },
 ];
 
 export default async function StatsPage() {

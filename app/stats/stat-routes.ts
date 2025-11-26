@@ -24,4 +24,9 @@ export const statRoutes: Record<string, StatRouteInfo> = {
     title: "Victory Statistics",
     description: "Win rates, victory patterns, and match outcome analytics",
   },
+  "map-side-comparison": {
+    title: "Map Side Comparison",
+    description:
+      "Compare performance statistics between blue side and red side",
+  },
 };

@@ -58,6 +58,10 @@ export interface TeamSideStats {
   riftHeraldKills: number;
   towerKills: number;
   wins: number;
+  kills: number;
+  atakhans: number;
+  voidGrubs: number;
+  elderDragons: number;
 }
 
 export interface ChampionStats {

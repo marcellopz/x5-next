@@ -69,7 +69,7 @@ export const TITLE_TO_API_MAPPING: Record<
   },
   "Most Wins": {
     apiKey: "wins",
-    format: (v) => `${(v * 100).toFixed(0)}% winrate (last 10)`,
+    format: (v) => `${(v * 100).toFixed(0)}% winrate (last 5)`,
   },
   "Roam Master*": {
     apiKey: "roamsSuccessful",
@@ -138,7 +138,7 @@ export const ROLE_META: Record<
       {
         title: "Most Wins",
         value: "Mesquita",
-        description: "85% winrate (last 10)",
+        description: "85% winrate (last 5)",
       },
       { title: "Best KDA", value: "Bigode", description: "5.1 avg KDA ratio" },
       {
@@ -201,7 +201,7 @@ export const ROLE_META: Record<
       {
         title: "Most Wins",
         value: "Bigode",
-        description: "80% winrate (last 10)",
+        description: "80% winrate (last 5)",
       },
       {
         title: "Best KDA",
@@ -268,7 +268,7 @@ export const ROLE_META: Record<
       {
         title: "Most Wins",
         value: "Dudu",
-        description: "78% winrate (last 10)",
+        description: "78% winrate (last 5)",
       },
       {
         title: "Best KDA",
@@ -335,7 +335,7 @@ export const ROLE_META: Record<
       {
         title: "Most Wins",
         value: "Loves",
-        description: "82% winrate (last 10)",
+        description: "82% winrate (last 5)",
       },
       {
         title: "Best KDA",
@@ -402,7 +402,7 @@ export const ROLE_META: Record<
       {
         title: "Most Wins",
         value: "Valbim",
-        description: "88% winrate (last 10)",
+        description: "88% winrate (last 5)",
       },
       { title: "Best KDA", value: "Lyra", description: "6.9 avg KDA ratio" },
       {
