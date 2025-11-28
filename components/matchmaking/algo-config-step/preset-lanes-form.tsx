@@ -23,7 +23,7 @@ export function PresetLanesForm({ enabled }: PresetLanesFormProps) {
 
   // Get available players for a specific lane and side
   const getAvailablePlayers = (currentLane: Lane) => {
-    const usedPlayerIds = new Set<string | number>();
+    const usedPlayerIds = new Set<string>();
 
     // Collect all players already assigned in OTHER lanes (not the current one)
     (Object.keys(config.presetLanes.lanes) as Lane[]).forEach((lane) => {
@@ -35,7 +35,7 @@ export function PresetLanesForm({ enabled }: PresetLanesFormProps) {
       }
     });
 
-    return selectedPlayers.filter((p) => !usedPlayerIds.has(p.account_id));
+    return selectedPlayers.filter((p) => !usedPlayerIds.has(p.name_id));
   };
 
   const handlePlayerSelect = (

@@ -21,20 +21,8 @@ const laneOptions: { value: Lane; label: string }[] = [
 export function AvoidRolesForm({ enabled }: AvoidRolesFormProps) {
   const { selectedPlayers, config, setConfig } = useMatchmaking();
 
-  // Get players that are NOT assigned in preset lanes
-  const getAvailablePlayers = () => {
-    const presetPlayerIds = new Set<string>();
-
-    // Collect all players already assigned in preset lanes
-    Object.values(config.presetLanes.lanes).forEach((lane) => {
-      if (lane.player1) presetPlayerIds.add(lane.player1);
-      if (lane.player2) presetPlayerIds.add(lane.player2);
-    });
-
-    return selectedPlayers.filter((p) => !presetPlayerIds.has(p.name_id));
-  };
-
-  const availablePlayers = getAvailablePlayers();
+  // Get all selected players (preset lane players can also have avoid role rules)
+  const availablePlayers = selectedPlayers;
 
   const addRule = () => {
     setConfig((prev) => ({
@@ -91,7 +79,7 @@ export function AvoidRolesForm({ enabled }: AvoidRolesFormProps) {
           >
             <option value="">-</option>
             {availablePlayers.map((player) => (
-              <option key={player.account_id} value={player.account_id}>
+              <option key={player.name_id} value={player.name_id}>
                 {player.name}
               </option>
             ))}

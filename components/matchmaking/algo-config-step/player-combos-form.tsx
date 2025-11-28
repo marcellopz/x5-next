@@ -12,20 +12,8 @@ interface PlayerCombosFormProps {
 export function PlayerCombosForm({ enabled }: PlayerCombosFormProps) {
   const { selectedPlayers, config, setConfig } = useMatchmaking();
 
-  // Get players that are NOT assigned in preset lanes
-  const getAvailablePlayers = () => {
-    const presetPlayerIds = new Set<string>();
-
-    // Collect all players already assigned in preset lanes
-    Object.values(config.presetLanes.lanes).forEach((lane) => {
-      if (lane.player1) presetPlayerIds.add(lane.player1);
-      if (lane.player2) presetPlayerIds.add(lane.player2);
-    });
-
-    return selectedPlayers.filter((p) => !presetPlayerIds.has(p.name_id));
-  };
-
-  const availablePlayers = getAvailablePlayers();
+  // Get all selected players (preset lane players can also be in combos)
+  const availablePlayers = selectedPlayers;
 
   // Get players already used in combos
   const getUsedPlayerIds = () => {
