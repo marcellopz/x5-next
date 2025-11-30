@@ -79,7 +79,7 @@ export default async function StatsPage() {
         <div className="space-y-2">
           <h1 className="text-2xl font-bold tracking-tight">Statistics</h1>
           <p className="text-sm text-muted-foreground">
-            A snapshot of how teams and players are performing across the split.
+            An overview of competitive statistics and insights from all matches.
           </p>
         </div>
         {generalStats ? (
