@@ -105,7 +105,7 @@ export function extractPlayerHighlights(
     }
 
     if (candidates.length) {
-      candidates.sort((a, b) => b.winRate - a.winRate);
+      candidates.sort((a, b) => b.winRate - a.winRate || b.games - a.games);
       highlights.push(candidates[0]);
     }
   }
