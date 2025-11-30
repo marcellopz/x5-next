@@ -6,6 +6,8 @@ import {
   getNumberOfGames,
 } from "@/lib/endpoints";
 import { ChampionStats } from "@/components/stats/champion-stats";
+import { ChampionStatsHeader } from "@/components/stats/champion-stats/champion-stats-header";
+import { championIds } from "@/lib/resources";
 import type {
   ChampionsAverageRoleStats,
   ChampionStats as ChampionStatsType,
@@ -55,5 +57,40 @@ export default async function ChampionStatsPage() {
     numberOfGames ?? 1
   );
 
-  return <ChampionStats data={completedChampionsRoleStats} />;
+  const allChampions = Object.values(completedChampionsRoleStats.all ?? {});
+  const pickedChampions = allChampions.filter(
+    (champ) => champ.picks > 0
+  ).length;
+  const totalChampions = Object.keys(championIds).length;
+  const neverPickedChampionsCount = Math.max(
+    totalChampions - pickedChampions,
+    0
+  );
+
+  // Get list of never-picked champions
+  const pickedChampionIds = new Set(
+    allChampions
+      .filter((champ) => champ.picks > 0)
+      .map((champ) => champ.championId)
+  );
+  const neverPickedChampions = Object.entries(championIds)
+    .filter(([id]) => !pickedChampionIds.has(id))
+    .map(([id, name]) => ({
+      championId: id,
+      championName: name,
+    }))
+    .sort((a, b) => a.championName.localeCompare(b.championName));
+
+  return (
+    <div className="space-y-6">
+      <ChampionStatsHeader
+        picked={pickedChampions}
+        neverPicked={neverPickedChampionsCount}
+      />
+      <ChampionStats
+        data={completedChampionsRoleStats}
+        neverPickedChampions={neverPickedChampions}
+      />
+    </div>
+  );
 }

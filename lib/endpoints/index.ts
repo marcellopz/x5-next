@@ -16,6 +16,7 @@ import type {
   RoleLeaderboardData,
   RoleStats,
   SummarizedOverallData,
+  VictoryStatistics,
 } from "../types";
 
 // For client-side access, use NEXT_PUBLIC_ prefix
@@ -170,6 +171,12 @@ export async function getChampionsAverageRoleStats(): Promise<ChampionsAverageRo
 export async function getPlayerRankChangeStats(): Promise<PlayerRankChangeStats | null> {
   return fetchFromFirebase<PlayerRankChangeStats>(
     "pre-processed-data/player-rank-change-stats"
+  );
+}
+
+export async function getVictoryStatistics(): Promise<VictoryStatistics | null> {
+  return fetchFromFirebase<VictoryStatistics>(
+    "pre-processed-data/victory-statistics"
   );
 }
 

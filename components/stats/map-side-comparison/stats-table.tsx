@@ -40,11 +40,11 @@ export function StatsTable({
           <TableHeader>
             <TableRow>
               <TableHead>Stat</TableHead>
+              <TableHead className="text-center text-blue-400!">
+                Blue Side
+              </TableHead>
               <TableHead className="text-center text-red-400">
                 Red Side
-              </TableHead>
-              <TableHead className="text-center text-blue-400">
-                Blue Side
               </TableHead>
             </TableRow>
           </TableHeader>
@@ -63,21 +63,21 @@ export function StatsTable({
                   <TableCell className="font-medium">{label}</TableCell>
                   <TableCell className="text-center">
                     <div className="flex flex-col items-center">
-                      <span className="text-red-400 font-semibold">
-                        {redValue}
-                      </span>
-                      <span className="text-xs text-muted-foreground">
-                        {redPercentage}%
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <div className="flex flex-col items-center">
                       <span className="text-blue-400 font-semibold">
                         {blueValue}
                       </span>
                       <span className="text-xs text-muted-foreground">
                         {bluePercentage}%
+                      </span>
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-center">
+                    <div className="flex flex-col items-center">
+                      <span className="text-red-400 font-semibold">
+                        {redValue}
+                      </span>
+                      <span className="text-xs text-muted-foreground">
+                        {redPercentage}%
                       </span>
                     </div>
                   </TableCell>

@@ -655,3 +655,62 @@ export type ChampionsAverageRoleStats = {
   support: { [championId: string]: ChampionStatsEntryRole };
   all: { [championId: string]: ChampionStatsEntryAll };
 };
+
+export interface StatEntry {
+  total: number;
+  wins: number;
+  winRate: number;
+}
+
+export interface DragonTypeStats {
+  first: StatEntry;
+  any: StatEntry;
+  multiple: StatEntry;
+}
+
+export interface VictoryStatistics {
+  firstDragon: StatEntry;
+  atakhan: StatEntry;
+  firstBlood: StatEntry;
+  firstBaron: StatEntry;
+  firstTower: StatEntry;
+  firstInhibitor: StatEntry;
+  riftHerald: StatEntry;
+  elderDragon: StatEntry;
+  baron: StatEntry;
+  voidGrubs: {
+    exact: {
+      one: StatEntry;
+      two: StatEntry;
+      three: StatEntry;
+    };
+    atLeast: {
+      one: StatEntry;
+      two: StatEntry;
+      three: StatEntry;
+    };
+  };
+  dragons: {
+    exact: {
+      one: StatEntry;
+      two: StatEntry;
+      three: StatEntry;
+      four: StatEntry;
+    };
+    atLeast: {
+      one: StatEntry;
+      two: StatEntry;
+      three: StatEntry;
+      four: StatEntry;
+    };
+    dragonSoul: StatEntry;
+    types: {
+      fire: DragonTypeStats;
+      water: DragonTypeStats;
+      air: DragonTypeStats;
+      earth: DragonTypeStats;
+      hextech: DragonTypeStats;
+      chemtech: DragonTypeStats;
+    };
+  };
+}

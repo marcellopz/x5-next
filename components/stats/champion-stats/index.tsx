@@ -7,12 +7,26 @@ import { cn } from "@/lib/utils";
 import type { ChampionsAverageRoleStats } from "@/lib/types";
 import { ChampionsTable } from "./champions-table";
 import { ChampionDetailsCard } from "./champion-details-card";
+import { NeverPickedTable } from "./never-picked-table";
 import useIsMobile from "@/lib/hooks/useIsMobile";
 
-type RoleFilter = "all" | "top" | "jungle" | "mid" | "adc" | "support";
+type RoleFilter =
+  | "all"
+  | "top"
+  | "jungle"
+  | "mid"
+  | "adc"
+  | "support"
+  | "never-picked";
+
+interface NeverPickedChampion {
+  championId: string;
+  championName: string;
+}
 
 interface ChampionStatsProps {
   data: ChampionsAverageRoleStats;
+  neverPickedChampions: NeverPickedChampion[];
 }
 
 const roleLabels: Record<RoleFilter, string> = {
@@ -22,6 +36,7 @@ const roleLabels: Record<RoleFilter, string> = {
   mid: "Mid",
   adc: "Adc",
   support: "Support",
+  "never-picked": "Never Picked",
 };
 
 const roleFilters: RoleFilter[] = [
@@ -31,9 +46,13 @@ const roleFilters: RoleFilter[] = [
   "mid",
   "adc",
   "support",
+  "never-picked",
 ];
 
-export function ChampionStats({ data }: ChampionStatsProps) {
+export function ChampionStats({
+  data,
+  neverPickedChampions,
+}: ChampionStatsProps) {
   const [selectedRole, setSelectedRole] = useState<RoleFilter>("all");
   const [selectedChampionId, setSelectedChampionId] = useState<string | null>(
     null
@@ -41,29 +60,45 @@ export function ChampionStats({ data }: ChampionStatsProps) {
   const [filterMoreThanFive, setFilterMoreThanFive] = useState(false);
   const isMobile = useIsMobile();
 
+  const isNeverPicked = selectedRole === "never-picked";
+
   // Get champions for selected role
-  const allChampionsData =
-    selectedRole === "all" ? data.all : data[selectedRole];
+  const allChampionsData = useMemo(() => {
+    if (isNeverPicked) return {};
+    return selectedRole === "all"
+      ? data.all
+      : data[selectedRole as keyof typeof data];
+  }, [data, selectedRole, isNeverPicked]);
 
   // Filter champions based on picks > 5
   const championsData = useMemo(() => {
+    if (isNeverPicked) return {};
     if (!filterMoreThanFive) return allChampionsData;
 
     const filtered: typeof allChampionsData = {};
     Object.entries(allChampionsData).forEach(([championId, champion]) => {
-      if (champion.picks > 5) {
+      if (
+        champion &&
+        typeof champion === "object" &&
+        "picks" in champion &&
+        champion.picks > 5
+      ) {
         filtered[championId] = champion;
       }
     });
     return filtered;
-  }, [allChampionsData, filterMoreThanFive]);
+  }, [allChampionsData, filterMoreThanFive, isNeverPicked]);
 
   // Reset selection if selected champion is filtered out
   useEffect(() => {
-    if (selectedChampionId && !championsData[selectedChampionId]) {
+    if (
+      selectedChampionId &&
+      !championsData[selectedChampionId] &&
+      !isNeverPicked
+    ) {
       setSelectedChampionId(null);
     }
-  }, [championsData, selectedChampionId]);
+  }, [championsData, selectedChampionId, isNeverPicked]);
 
   // Get selected champion data
   const selectedChampion = selectedChampionId
@@ -94,38 +129,46 @@ export function ChampionStats({ data }: ChampionStatsProps) {
           ))}
         </div>
 
-        <div className="flex items-center gap-2 mb-2.5">
-          <Checkbox
-            id="more-than-five-checkbox"
-            checked={filterMoreThanFive}
-            onChange={(e) => setFilterMoreThanFive(e.target.checked)}
-          />
-          <label
-            htmlFor="more-than-five-checkbox"
-            className="text-sm text-muted-foreground cursor-pointer select-none"
-          >
-            Filter for more than 5 games
-          </label>
-        </div>
+        {!isNeverPicked && (
+          <div className="flex items-center gap-2 mb-2.5">
+            <Checkbox
+              id="more-than-five-checkbox"
+              checked={filterMoreThanFive}
+              onChange={(e) => setFilterMoreThanFive(e.target.checked)}
+            />
+            <label
+              htmlFor="more-than-five-checkbox"
+              className="text-sm text-muted-foreground cursor-pointer select-none"
+            >
+              Filter for more than 5 games
+            </label>
+          </div>
+        )}
       </div>
 
       {/* Content: Table on left, Details on right */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
-        {/* Champions Table */}
-        <div className="lg:col-span-3 max-h-[300px] lg:max-h-none lg:border-none border border-border rounded-lg overflow-y-auto">
-          <ChampionsTable
-            champions={championsData}
-            selectedChampionId={selectedChampionId}
-            onSelectChampion={setSelectedChampionId}
-            selectedRole={selectedRole}
-          />
+      {isNeverPicked ? (
+        <div className="border border-border rounded-lg overflow-y-auto max-h-[600px]">
+          <NeverPickedTable champions={neverPickedChampions} />
         </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6">
+          {/* Champions Table */}
+          <div className="lg:col-span-3 max-h-[300px] lg:max-h-none lg:border-none border border-border rounded-lg overflow-y-auto">
+            <ChampionsTable
+              champions={championsData}
+              selectedChampionId={selectedChampionId}
+              onSelectChampion={setSelectedChampionId}
+              selectedRole={selectedRole}
+            />
+          </div>
 
-        {/* Champion Details Card */}
-        <div className="lg:col-span-2">
-          <ChampionDetailsCard champion={selectedChampion} />
+          {/* Champion Details Card */}
+          <div className="lg:col-span-2">
+            <ChampionDetailsCard champion={selectedChampion} />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }

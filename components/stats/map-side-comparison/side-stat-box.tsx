@@ -70,24 +70,23 @@ export function SideStatBox({
       <CardHeader className="pb-3">
         <CardTitle className="text-base font-semibold">{title}</CardTitle>
       </CardHeader>
-      <CardContent>
+      <CardContent className="pb-4!">
         {total === 0 ? (
           <div className="text-center text-muted-foreground py-8">
             No data available
           </div>
         ) : (
           <div className="space-y-4">
-            {/* Pie Chart */}
-            <div style={{ width: "100%", height: "200px" }}>
+            <div className="relative w-full h-32 xl:h-42">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
+                <PieChart margin={{ top: 0, right: 0, bottom: -5, left: 0 }}>
                   <Tooltip content={<CustomTooltip />} />
                   <Pie
                     data={data}
                     cx="50%"
                     cy="50%"
-                    innerRadius={60}
-                    outerRadius={80}
+                    innerRadius="65%"
+                    outerRadius="90%"
                     paddingAngle={2}
                     dataKey="value"
                     stroke={chartTheme.tooltip.background}
@@ -100,27 +99,25 @@ export function SideStatBox({
                   </Pie>
                 </PieChart>
               </ResponsiveContainer>
-            </div>
-
-            {/* Stats below chart */}
-            <div className="flex justify-center gap-6 text-sm">
-              <div className="flex items-center gap-2">
-                <div
-                  className="w-3 h-3 rounded-full"
-                  style={{ backgroundColor: RED_COLOR }}
-                />
-                <span className="text-red-400 font-medium">
-                  Red: {redSideStat}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <div
-                  className="w-3 h-3 rounded-full"
-                  style={{ backgroundColor: BLUE_COLOR }}
-                />
-                <span className="text-blue-400 font-medium">
-                  Blue: {blueSideStat}
-                </span>
+              <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 pointer-events-none">
+                <div className="flex items-center gap-2">
+                  <span
+                    className="w-2.5 h-2.5 rounded-full"
+                    style={{ backgroundColor: RED_COLOR }}
+                  />
+                  <span className="text-sm font-semibold text-red-400">
+                    {redSideStat}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span
+                    className="w-2.5 h-2.5 rounded-full"
+                    style={{ backgroundColor: BLUE_COLOR }}
+                  />
+                  <span className="text-sm font-semibold text-blue-400">
+                    {blueSideStat}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

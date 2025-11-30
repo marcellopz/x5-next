@@ -26,6 +26,10 @@ export function StatsHeader() {
   const pageTitle = routeInfo?.title || "Statistics";
   const pageDescription = routeInfo?.description;
 
+  if (currentRoute === "champion-stats") {
+    return <Breadcrumb items={breadcrumbItems} className="mb-4" />;
+  }
+
   return (
     <>
       <Breadcrumb items={breadcrumbItems} className="mb-4" />
