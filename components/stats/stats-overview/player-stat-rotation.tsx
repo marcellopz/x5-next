@@ -10,9 +10,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Link from "next/link";
 
 interface PlayerStatRow {
   name: string;
+  summonerId?: string;
   tagLine?: string;
   valueLabel: string;
   detail?: string;
@@ -130,7 +132,12 @@ export function PlayerStatRotation({ statSets }: PlayerStatRotationProps) {
                       <TableRow key={`${set.id}-${row.name}`}>
                         <TableCell>
                           <div className="flex items-center gap-1">
-                            <span className="font-semibold">{row.name}</span>
+                            <Link
+                              href={`/player/${row.summonerId}`}
+                              className="text-sm font-semibold hover:text-primary transition-colors"
+                            >
+                              <span className="font-semibold">{row.name}</span>
+                            </Link>
                             {row.tagLine && (
                               <span className="text-xs text-muted-foreground">
                                 #{row.tagLine}

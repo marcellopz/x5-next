@@ -390,6 +390,7 @@ export function extractPlayerStatSets(
         return {
           name: player.playerInfo.gameName,
           tagLine: player.playerInfo.tagLine,
+          summonerId: player.playerInfo.summonerId ?? "",
           value: raw,
           valueLabel: config.format(raw),
           detail: `${games} games`,
