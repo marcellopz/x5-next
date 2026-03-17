@@ -206,8 +206,8 @@
     "loadingMatch": "Carregando dados da partida..."
   },
   "layout": {
-    "titleSeason3": "x5 temporada 3",
-    "titleSeason2": "x5 temporada 2",
+    "titleSeason3": "x5 season 3",
+    "titleSeason2": "x5 season 2",
     "description": "Dashboard de analytics personalizado de League of Legends"
   },
   "matchPage": {
@@ -258,13 +258,13 @@
     "showLess": "Mostrar menos"
   },
   "season": {
-    "season1": "Temporada 1",
-    "season2": "Temporada 2",
-    "season2Legacy": "Temporada 2 Legado",
-    "season3": "Temporada 3",
-    "season3Legacy": "Temporada 3 Legado",
-    "s2": "t2",
-    "s3": "t3"
+    "season1": "Season 1",
+    "season2": "Season 2",
+    "season2Legacy": "Season 2 Legacy",
+    "season3": "Season 3",
+    "season3Legacy": "Season 3 Legacy",
+    "s2": "s2",
+    "s3": "s3"
   },
   "admin": {
     "configError": "Erro de Configuração",
