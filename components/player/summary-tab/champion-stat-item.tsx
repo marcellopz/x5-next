@@ -60,6 +60,7 @@ export function ChampionStatItem({ champion }: ChampionStatItemProps) {
             alt={champion.championName || `Champion ${championId}`}
             width={48}
             height={48}
+            sizes="48px"
             className="rounded"
           />
         </div>

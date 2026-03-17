@@ -108,7 +108,7 @@ const TeamSection = ({
                   height={50}
                   alt={`${p.championName} champion icon`}
                   className="rounded border border-border/60 shrink-0"
-                  unoptimized
+                  sizes="50px"
                 />
                 <div className="flex-1 py-3.5">
                   <div

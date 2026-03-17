@@ -66,6 +66,7 @@ export function PlayerDisplay({
             alt={championName || "Champion"}
             width={40}
             height={40}
+            sizes="40px"
             className="rounded border border-border w-full h-full"
             priority={priority}
             onError={(e) => {
@@ -125,6 +126,7 @@ export function PlayerDisplay({
                 alt={`Item ${item}`}
                 width={32}
                 height={32}
+                sizes="32px"
                 className="rounded-md w-full h-full object-cover"
                 priority={priority}
                 onError={(e) => {

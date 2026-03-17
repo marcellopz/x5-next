@@ -50,6 +50,7 @@ export function TeamHeader({
             alt="Dragons"
             width={ICON_SIZE}
             height={ICON_SIZE}
+            sizes="16px"
             className="brightness-0 saturate-100"
             style={{ filter: iconFilter }}
             title="Dragons"
@@ -62,6 +63,7 @@ export function TeamHeader({
             alt="Baron"
             width={ICON_SIZE}
             height={ICON_SIZE}
+            sizes="16px"
             className="brightness-0 saturate-100"
             style={{ filter: iconFilter }}
             title="Baron"
@@ -74,6 +76,7 @@ export function TeamHeader({
             alt="Towers"
             width={ICON_SIZE}
             height={ICON_SIZE}
+            sizes="16px"
             className="brightness-0 saturate-100"
             style={{ filter: iconFilter }}
             title="Towers"
@@ -86,6 +89,7 @@ export function TeamHeader({
             alt="Gold Earned"
             width={ICON_SIZE}
             height={ICON_SIZE}
+            sizes="16px"
             className="brightness-0 saturate-100 mr-1.5"
             style={{ filter: iconFilter }}
             title="Gold Earned"

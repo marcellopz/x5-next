@@ -72,7 +72,7 @@ const Tab = ({
         height={40}
         alt={`Champion icon ${champId}`}
         className="rounded border border-border/60"
-        unoptimized
+        sizes="40px"
       />
     </div>
   </button>

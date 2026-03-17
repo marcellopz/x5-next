@@ -12,6 +12,8 @@ export function BrandLogo() {
           width={32}
           height={32}
           className="w-full h-full object-cover"
+          sizes="32px"
+          priority
         />
       </div>
       <div className="text-sm font-semibold tracking-tight">x5</div>

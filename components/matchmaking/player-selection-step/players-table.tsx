@@ -54,6 +54,7 @@ export function PlayersTable({
                 alt="Top"
                 width={20}
                 height={20}
+                sizes="20px"
                 className="min-w-5 h-5 mx-auto"
               />
             </TableHead>
@@ -63,6 +64,7 @@ export function PlayersTable({
                 alt="Jungle"
                 width={20}
                 height={20}
+                sizes="20px"
                 className="min-w-5 h-5 mx-auto"
               />
             </TableHead>
@@ -72,6 +74,7 @@ export function PlayersTable({
                 alt="Mid"
                 width={20}
                 height={20}
+                sizes="20px"
                 className="min-w-5 h-5 mx-auto"
               />
             </TableHead>
@@ -81,6 +84,7 @@ export function PlayersTable({
                 alt="Bot"
                 width={20}
                 height={20}
+                sizes="20px"
                 className="min-w-5 h-5 mx-auto"
               />
             </TableHead>
@@ -90,6 +94,7 @@ export function PlayersTable({
                 alt="Support"
                 width={20}
                 height={20}
+                sizes="20px"
                 className="min-w-5 h-5 mx-auto"
               />
             </TableHead>

@@ -160,6 +160,7 @@ export function SummaryLastGames({
                     alt={champGroup[0].championName}
                     width={36}
                     height={36}
+                    sizes="36px"
                     className="rounded"
                   />
                 </div>

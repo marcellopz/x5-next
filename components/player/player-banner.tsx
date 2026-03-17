@@ -100,10 +100,11 @@ function PlayerInfoSection({
         >
           <Image
             src="/opgg.png"
-            alt="OP.GG"
-            width={config.iconSize}
-            height={config.iconSize}
-            className="cursor-pointer brightness-0 invert"
+          alt="OP.GG"
+          width={config.iconSize}
+          height={config.iconSize}
+          sizes="24px"
+          className="cursor-pointer brightness-0 invert"
           />
         </button>
       </div>
@@ -206,7 +207,7 @@ function RoleStatsList({
                 : "border-border/50 bg-[hsl(220,60%,7%)]/50 hover:bg-[hsl(220,60%,7%)]/70"
             )}
           >
-            <Image src={roleIcons[i]} alt={role} width={32} height={32} />
+            <Image src={roleIcons[i]} alt={role} width={32} height={32} sizes="32px" />
             <div className="text-foreground text-base flex-1">
               <p className="font-semibold">
                 {floatToPercentageString(winRate)}

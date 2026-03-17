@@ -172,6 +172,7 @@ function PlayerTableContent({
               alt="Top"
               width={20}
               height={20}
+              sizes="20px"
               className="w-5 h-5 mx-auto"
             />
           </TableHead>
@@ -185,6 +186,7 @@ function PlayerTableContent({
               alt="Jungle"
               width={20}
               height={20}
+              sizes="20px"
               className="w-5 h-5 mx-auto"
             />
           </TableHead>
@@ -198,6 +200,7 @@ function PlayerTableContent({
               alt="Mid"
               width={20}
               height={20}
+              sizes="20px"
               className="w-5 h-5 mx-auto"
             />
           </TableHead>
@@ -211,6 +214,7 @@ function PlayerTableContent({
               alt="Bot"
               width={20}
               height={20}
+              sizes="20px"
               className="w-5 h-5 mx-auto"
             />
           </TableHead>
@@ -224,6 +228,7 @@ function PlayerTableContent({
               alt="Support"
               width={20}
               height={20}
+              sizes="20px"
               className="w-5 h-5 mx-auto"
             />
           </TableHead>
@@ -273,6 +278,7 @@ function PlayerTableContent({
                         alt="OP.GG Profile"
                         width={20}
                         height={20}
+                        sizes="20px"
                         className="w-5 h-5"
                       />
                     </a>

@@ -147,15 +147,16 @@ const BaronDragonTurretBans = ({
             alt="Baron Nashor icon"
             width={20}
             height={20}
+            sizes="20px"
           />
           <span className="text-sm">{baron}</span>
         </div>
         <div className="flex items-center gap-2">
-          <Image src={dragonIcon} alt="Dragon icon" width={20} height={20} />
+          <Image src={dragonIcon} alt="Dragon icon" width={20} height={20} sizes="20px" />
           <span className="text-sm">{dragon}</span>
         </div>
         <div className="flex items-center gap-2">
-          <Image src={turretIcon} alt="Turret icon" width={20} height={20} />
+          <Image src={turretIcon} alt="Turret icon" width={20} height={20} sizes="20px" />
           <span className="text-sm">{turret}</span>
         </div>
       </div>
@@ -172,7 +173,7 @@ const BaronDragonTurretBans = ({
                   width={36}
                   height={36}
                   className="w-full h-full object-contain"
-                  unoptimized
+                  sizes="36px"
                 />
               </div>
             </React.Fragment>
@@ -211,7 +212,7 @@ const ItemsSection = ({ player }: { player: Participant }) => {
               width={31}
               height={31}
               className="w-full h-full object-contain"
-              unoptimized
+              sizes="31px"
               title={`Item ${item}`}
             />
           )}
@@ -269,7 +270,7 @@ const PlayerRow = ({
             height={70}
             alt={`${player.championName} champion icon`}
             className="rounded border border-border/60"
-            unoptimized
+            sizes="70px"
           />
         </div>
         <div className="flex flex-col gap-2">
@@ -284,7 +285,7 @@ const PlayerRow = ({
               width={30}
               height={30}
               className="rounded border border-border/60"
-              unoptimized
+              sizes="30px"
             />
           )}
           {spell2Url && (
@@ -298,7 +299,7 @@ const PlayerRow = ({
               width={30}
               height={30}
               className="rounded border border-border/60"
-              unoptimized
+              sizes="30px"
             />
           )}
         </div>

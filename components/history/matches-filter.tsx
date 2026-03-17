@@ -109,6 +109,7 @@ export function MatchesFilter({
                     alt={option.name}
                     width={36}
                     height={36}
+                    sizes="36px"
                     className="rounded-md border border-border"
                   />
                 )}

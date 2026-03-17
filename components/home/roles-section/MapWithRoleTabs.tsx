@@ -29,7 +29,7 @@ function RoleTabButton({
       style={{ top: position.top, left: position.left }}
     >
       <span className="mr-2 inline-flex h-6 w-6 md:h-7 md:w-7 items-center justify-center overflow-hidden rounded">
-        <Image src={icon} alt={`${label} icon`} width={28} height={28} />
+        <Image src={icon} alt={`${label} icon`} width={28} height={28} sizes="28px" />
       </span>
       {label}
     </button>
@@ -54,6 +54,7 @@ export function MapWithRoleTabs({
           width={500}
           height={500}
           className="h-auto w-full select-none rounded-xl border border-primary/30"
+          sizes="(min-width: 768px) 450px, 100vw"
           priority
         />
 
