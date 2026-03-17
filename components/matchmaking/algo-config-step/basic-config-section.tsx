@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { NumberStepper } from "@/components/ui/number-stepper";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface BasicConfigSectionProps {
   matchOptions: number;
@@ -23,16 +24,17 @@ export function BasicConfigSection({
   onMatchOptionsChange,
   onToleranceChange,
 }: BasicConfigSectionProps) {
+  const t = useTranslations();
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Basic Configuration Settings</CardTitle>
-        <CardDescription>Configure matchmaking parameters</CardDescription>
+        <CardTitle>{t("matchmaking.basicConfigTitle")}</CardTitle>
+        <CardDescription>{t("matchmaking.basicConfigDescription")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex gap-4">
           <div className="space-y-2">
-            <Label>Match Options</Label>
+            <Label>{t("matchmaking.matchOptions")}</Label>
             <NumberStepper
               value={matchOptions}
               onChange={onMatchOptionsChange}
@@ -40,12 +42,12 @@ export function BasicConfigSection({
               max={10}
             />
             <p className="text-xs text-muted-foreground">
-              Number of team combinations
+              {t("matchmaking.matchOptionsHelp")}
             </p>
           </div>
 
           <div className="space-y-2">
-            <Label>Tolerance</Label>
+            <Label>{t("matchmaking.tolerance")}</Label>
             <NumberStepper
               value={tolerance}
               onChange={onToleranceChange}
@@ -53,7 +55,7 @@ export function BasicConfigSection({
               max={10}
             />
             <p className="text-xs text-muted-foreground">
-              Skill balance variance
+              {t("matchmaking.toleranceHelp")}
             </p>
           </div>
         </div>

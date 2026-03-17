@@ -5,20 +5,22 @@ import { Button } from "@/components/ui/button";
 import { Plus, X } from "lucide-react";
 import { useMatchmaking } from "../matchmaking-context";
 import type { Lane, AvoidRoleRule } from "../matchmaking-context";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface AvoidRolesFormProps {
   enabled: boolean;
 }
 
-const laneOptions: { value: Lane; label: string }[] = [
-  { value: "top", label: "Top" },
-  { value: "jungle", label: "Jungle" },
-  { value: "mid", label: "Mid" },
-  { value: "adc", label: "ADC" },
-  { value: "support", label: "Support" },
-];
+const laneKeys: Record<Lane, string> = {
+  top: "roles.top",
+  jungle: "roles.jungle",
+  mid: "roles.mid",
+  adc: "roles.adc",
+  support: "roles.support",
+};
 
 export function AvoidRolesForm({ enabled }: AvoidRolesFormProps) {
+  const t = useTranslations();
   const { selectedPlayers, config, setConfig } = useMatchmaking();
 
   // Get all selected players (preset lane players can also have avoid role rules)
@@ -66,7 +68,7 @@ export function AvoidRolesForm({ enabled }: AvoidRolesFormProps) {
     <div className="space-y-3">
       {config.avoidRoles.rules.length === 0 && (
         <p className="text-sm text-muted-foreground">
-          Click &quot;Add Rule&quot; to configure role avoidance
+          {t("matchmaking.noAdvancedRules")}
         </p>
       )}
 
@@ -85,16 +87,16 @@ export function AvoidRolesForm({ enabled }: AvoidRolesFormProps) {
             ))}
           </Select>
 
-          <span className="text-muted-foreground">avoids</span>
+          <span className="text-muted-foreground">{t("matchmaking.avoids")}</span>
 
           <Select
             value={rule.lane}
             onChange={(e) => updateRule(index, "lane", e.target.value as Lane)}
             className="flex-1"
           >
-            {laneOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
+            {(Object.keys(laneKeys) as Lane[]).map((lane) => (
+              <option key={lane} value={lane}>
+                {t(laneKeys[lane])}
               </option>
             ))}
           </Select>
@@ -113,7 +115,7 @@ export function AvoidRolesForm({ enabled }: AvoidRolesFormProps) {
 
       <Button type="button" variant="outline" size="sm" onClick={addRule}>
         <Plus className="h-4 w-4 mr-2" />
-        Add Rule
+        {t("matchmaking.addRule")}
       </Button>
     </div>
   );

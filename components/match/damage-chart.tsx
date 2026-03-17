@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Image from "next/image";
 import { CHAMPIONICONURL } from "@/lib/resources";
 import { formatNumber } from "./match-utils";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface DamageChartProps {
   matchData: unknown;
@@ -34,8 +35,6 @@ const tabKey = [
 ] as const;
 
 const tabEmojis = ["⚔️", "🛡️", "💰", "👀"];
-
-const tabLabels = ["Damage", "Damage Taken", "Gold", "Vision"];
 
 const Tab = ({
   setTabState,
@@ -135,7 +134,14 @@ const TeamSection = ({
 };
 
 export function DamageChart({ matchData }: DamageChartProps) {
+  const t = useTranslations();
   const [tabState, setTabState] = useState(0);
+  const tabLabels = [
+    t("match.damage"),
+    t("match.damageTaken"),
+    t("match.gold"),
+    t("match.vision"),
+  ];
 
   const match = matchData as MatchData | null | undefined;
 
@@ -150,7 +156,7 @@ export function DamageChart({ matchData }: DamageChartProps) {
   if (!match || !match.participants) {
     return (
       <div className="text-center py-8">
-        <p className="text-muted-foreground text-sm">No match data available</p>
+        <p className="text-muted-foreground text-sm">{t("common.noMatchDataAvailable")}</p>
       </div>
     );
   }
@@ -175,7 +181,7 @@ export function DamageChart({ matchData }: DamageChartProps) {
       <div className="border-l border-r border-border p-2.5">
         <TeamSection
           team={blueTeam}
-          teamName="Blue Team"
+          teamName={t("team.blueTeam")}
           tabState={tabState}
           max={max}
           isBlueTeam={true}
@@ -183,7 +189,7 @@ export function DamageChart({ matchData }: DamageChartProps) {
         <div className="h-0.5 bg-linear-to-r from-blue-500 via-muted-foreground to-red-500 rounded my-6" />
         <TeamSection
           team={redTeam}
-          teamName="Red Team"
+          teamName={t("team.redTeam")}
           tabState={tabState}
           max={max}
           isBlueTeam={false}

@@ -9,12 +9,14 @@ import type {
   MatchmakingResult,
 } from "@/lib/matchmaking-algorithm";
 import { useMatchmaking } from "../matchmaking-context";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface MatchDisplayProps {
   matchResults: MatchmakingResult | null;
 }
 
 export function MatchDisplay({ matchResults }: MatchDisplayProps) {
+  const t = useTranslations();
   const [copied, setCopied] = useState(false);
   const { config } = useMatchmaking();
 
@@ -100,7 +102,7 @@ export function MatchDisplay({ matchResults }: MatchDisplayProps) {
   return (
     <div className="flex flex-col items-center space-y-3 w-full max-w-[370px] mx-auto">
       <div className="flex items-center justify-between w-full">
-        <h3 className="text-base font-semibold">Match Results</h3>
+        <h3 className="text-base font-semibold">{t("matchmaking.matchResults")}</h3>
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
@@ -109,7 +111,7 @@ export function MatchDisplay({ matchResults }: MatchDisplayProps) {
             className="flex items-center gap-2"
           >
             <RotateCcw className="h-4 w-4" />
-            Rebola
+            {t("matchmaking.regenerate")}
           </Button>
           <Button
             variant="outline"
@@ -120,12 +122,12 @@ export function MatchDisplay({ matchResults }: MatchDisplayProps) {
             {copied ? (
               <>
                 <Check className="h-4 w-4" />
-                Copied!
+                {t("matchmaking.copied")}
               </>
             ) : (
               <>
                 <Copy className="h-4 w-4" />
-                Copy
+                {t("matchmaking.copy")}
               </>
             )}
           </Button>
@@ -145,7 +147,7 @@ export function MatchDisplay({ matchResults }: MatchDisplayProps) {
           />
         ) : (
           <div className="text-sm text-muted-foreground italic">
-            No matches found
+            {t("matchmaking.noMatchesFound")}
           </div>
         )}
       </Card>

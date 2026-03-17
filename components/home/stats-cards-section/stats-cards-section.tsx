@@ -1,6 +1,8 @@
 import { PlayerMvpPerformanceInGames } from "@/lib/types";
 import { StatsCard } from "./stats-card";
 import { TimeSinceLastMatch } from "./time-since-last-match";
+import { getLocale, getTranslations, t } from "@/lib/i18n";
+import { LOCALE_MAP } from "@/lib/i18n/types";
 
 interface StatsCardsSectionProps {
   numberOfGames: number;
@@ -9,39 +11,41 @@ interface StatsCardsSectionProps {
   recentMVP: PlayerMvpPerformanceInGames | undefined;
 }
 
-export function StatsCardsSection({
+export async function StatsCardsSection({
   numberOfGames,
   totalPlayers,
   mostRecentGameTimestamp,
   recentMVP,
 }: StatsCardsSectionProps) {
-  // Format the date for description
+  const locale = await getLocale();
+  const trans = getTranslations(locale);
+  const intlLocale = LOCALE_MAP[locale];
+
   const lastMatchDescription = mostRecentGameTimestamp
-    ? `Last match was on ${new Date(mostRecentGameTimestamp).toLocaleDateString(
-        "pt-BR",
-        {
-          year: "numeric",
-          month: "short",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit",
-          timeZone: "America/Sao_Paulo",
-        }
-      )}`
-    : "No matches yet";
+    ? `${t(trans, "common.lastMatchWasOn")} ${new Date(
+        mostRecentGameTimestamp
+      ).toLocaleDateString(intlLocale, {
+        year: "numeric",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: "America/Sao_Paulo",
+      })}`
+    : t(trans, "common.noMatchesYet");
 
   return (
     <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
       <StatsCard
-        title="Number of matches"
+        title={t(trans, "common.numberOfMatches")}
         value={numberOfGames}
-        description="Number of matches played"
+        description={t(trans, "common.numberOfMatchesPlayed")}
         linkTo="/history"
       />
       <StatsCard
-        title="Total Players"
+        title={t(trans, "common.totalPlayers")}
         value={totalPlayers}
-        description="All registered players"
+        description={t(trans, "common.allRegisteredPlayers")}
         linkTo="/player-list"
       />
       <TimeSinceLastMatch
@@ -49,9 +53,9 @@ export function StatsCardsSection({
         description={lastMatchDescription}
       />
       <StatsCard
-        title="Recent MVP"
+        title={t(trans, "common.recentMvp")}
         value={recentMVP?.gameName || "???"}
-        description="Best performing player in the last 10 games"
+        description={t(trans, "common.bestPerformingPlayer")}
         linkTo="/stats/mvp-table"
       />
     </div>

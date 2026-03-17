@@ -5,6 +5,7 @@ import { useMemo } from "react";
 import type { MatchWithId, ReducedParticipant } from "@/lib/types";
 import { CHAMPIONICONURL } from "@/lib/resources";
 import { WinRateCircularProgress } from "@/components/ui/win-rate-circular-progress";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface SummaryLastGamesProps {
   matches: MatchWithId[];
@@ -19,6 +20,7 @@ export function SummaryLastGames({
   matches,
   playerSummonerId,
 }: SummaryLastGamesProps) {
+  const t = useTranslations();
   // Filter matches to only include this player's matches
   const playerMatches = useMemo(() => {
     return matches.filter((match) =>
@@ -99,8 +101,9 @@ export function SummaryLastGames({
   }, [playerGameData]);
 
   const getAvg = (value: number) => (value / playerGameData.length).toFixed(1);
-  const kdaRatio =
+  const kdaRatioRaw =
     deaths > 0 ? ((kills + assists) / deaths).toFixed(2) : "Perfect";
+  const kdaRatio = kdaRatioRaw === "Perfect" ? t("common.perfect") : kdaRatioRaw;
 
   if (playerGameData.length === 0) {
     return null;
@@ -137,7 +140,7 @@ export function SummaryLastGames({
             {getAvg(kills)} / {getAvg(deaths)} / {getAvg(assists)}
           </p>
           <p className="text-foreground text-sm font-semibold">
-            {kdaRatio}:1 KDA
+            {kdaRatio}:1 {t("common.kda")}
           </p>
         </div>
 

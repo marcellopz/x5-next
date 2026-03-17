@@ -1,16 +1,19 @@
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { statRoutes } from "./stat-routes";
+import { t, getTranslations } from "@/lib/i18n";
 
 interface StatsBreadcrumbProps {
   currentPage?: string;
+  locale?: "en" | "pt";
 }
 
-export function StatsBreadcrumb({ currentPage }: StatsBreadcrumbProps) {
+export function StatsBreadcrumb({ currentPage, locale = "en" }: StatsBreadcrumbProps) {
+  const trans = getTranslations(locale);
   const routeInfo = currentPage ? statRoutes[currentPage] : null;
   const items = [
-    { label: "Statistics", href: "/stats" },
+    { label: t(trans, "stats.title"), href: "/stats" },
     ...(routeInfo
-      ? [{ label: routeInfo.title }]
+      ? [{ label: t(trans, routeInfo.titleKey) }]
       : currentPage
       ? [{ label: currentPage }]
       : []),

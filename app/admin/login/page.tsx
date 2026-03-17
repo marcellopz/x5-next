@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { loginAction } from "../actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,7 @@ import {
 } from "@/components/ui/card";
 
 export default function AdminLoginPage() {
+  const t = useTranslations();
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -39,15 +41,13 @@ export default function AdminLoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-background">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Admin Login</CardTitle>
-          <CardDescription>
-            Enter the admin password to access the admin panel
-          </CardDescription>
+          <CardTitle>{t("admin.login")}</CardTitle>
+          <CardDescription>{t("admin.loginDescription")}</CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">{t("admin.password")}</Label>
               <Input
                 id="password"
                 name="password"
@@ -55,7 +55,7 @@ export default function AdminLoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter admin password"
+                placeholder={t("admin.passwordPlaceholder")}
                 disabled={isPending}
               />
             </div>
@@ -67,7 +67,7 @@ export default function AdminLoginPage() {
             )}
 
             <Button type="submit" disabled={isPending} className="w-full">
-              {isPending ? "Logging in..." : "Login"}
+              {isPending ? t("admin.loggingIn") : t("admin.loginButton")}
             </Button>
           </form>
         </CardContent>

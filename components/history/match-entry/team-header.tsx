@@ -4,6 +4,7 @@ import * as React from "react";
 import { memo } from "react";
 import type { ReducedTeamData } from "@/lib/types";
 import Image from "next/image";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface TeamHeaderProps {
   team: ReducedTeamData;
@@ -22,8 +23,9 @@ export function TeamHeader({
   totalDeaths,
   totalAssists,
 }: TeamHeaderProps) {
-  // Icon sizes
+  const t = useTranslations();
   const ICON_SIZE = 16;
+  const teamLabel = team.teamId === 100 ? t("team.team1") : t("team.team2");
 
   // CSS filters for coloring icons
   const winningFilter =
@@ -40,59 +42,59 @@ export function TeamHeader({
           : "bg-red-500/15 border border-red-500/30 text-red-300"
       }`}
     >
-      <span className="font-medium" title={isWinning ? "Victory" : "Defeat"}>
-        Team {team.teamId / 100}: {isWinning ? "Victory" : "Defeat"}
+      <span className="font-medium" title={isWinning ? t("common.victory") : t("common.defeat")}>
+        {teamLabel}: {isWinning ? t("common.victory") : t("common.defeat")}
       </span>
       <div className="hidden lg:flex items-center gap-4">
         <div className="flex items-center gap-1">
           <Image
             src="/game-entities/icon-dragon.svg"
-            alt="Dragons"
+            alt={t("match.dragon")}
             width={ICON_SIZE}
             height={ICON_SIZE}
             sizes="16px"
             className="brightness-0 saturate-100"
             style={{ filter: iconFilter }}
-            title="Dragons"
+            title={t("match.dragon")}
           />
           <span>{team.dragonKills || 0}</span>
         </div>
         <div className="flex items-center gap-1">
           <Image
             src="/game-entities/icon-baron.svg"
-            alt="Baron"
+            alt={t("match.baron")}
             width={ICON_SIZE}
             height={ICON_SIZE}
             sizes="16px"
             className="brightness-0 saturate-100"
             style={{ filter: iconFilter }}
-            title="Baron"
+            title={t("match.baron")}
           />
           <span>{team.baronKills || 0}</span>
         </div>
         <div className="flex items-center gap-1">
           <Image
             src="/game-entities/icon-tower.svg"
-            alt="Towers"
+            alt={t("match.turret")}
             width={ICON_SIZE}
             height={ICON_SIZE}
             sizes="16px"
             className="brightness-0 saturate-100"
             style={{ filter: iconFilter }}
-            title="Towers"
+            title={t("match.turret")}
           />
           <span>{team.towerKills || 0}</span>
         </div>
         <div className="flex items-center">
           <Image
             src="/game-entities/icon-gold.svg"
-            alt="Gold Earned"
+            alt={t("match.goldEarned")}
             width={ICON_SIZE}
             height={ICON_SIZE}
             sizes="16px"
             className="brightness-0 saturate-100 mr-1.5"
             style={{ filter: iconFilter }}
-            title="Gold Earned"
+            title={t("match.goldEarned")}
           />
           <span>{(goldEarned / 1000).toFixed(1) || 0}k</span>
         </div>

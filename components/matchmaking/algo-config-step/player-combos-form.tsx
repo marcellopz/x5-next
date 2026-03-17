@@ -4,12 +4,14 @@ import { Select } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { X, Users } from "lucide-react";
 import { useMatchmaking } from "../matchmaking-context";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface PlayerCombosFormProps {
   enabled: boolean;
 }
 
 export function PlayerCombosForm({ enabled }: PlayerCombosFormProps) {
+  const t = useTranslations();
   const { selectedPlayers, config, setConfig } = useMatchmaking();
 
   // Get all selected players (preset lane players can also be in combos)
@@ -71,14 +73,14 @@ export function PlayerCombosForm({ enabled }: PlayerCombosFormProps) {
     <div className="space-y-4">
       {config.playerCombos.combos.length === 0 ? (
         <p className="text-sm text-muted-foreground">
-          Add players to create a team combo
+          {t("matchmaking.addPlayersToCombo")}
         </p>
       ) : (
         <div className="space-y-3">
           <div className="flex items-center gap-2 pt-2">
             <Users className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm font-medium">
-              Team Combo ({config.playerCombos.combos[0].players.length}/5)
+              {t("matchmaking.teamComboCount").replace("{{count}}", String(config.playerCombos.combos[0].players.length))}
             </span>
           </div>
 
@@ -119,7 +121,7 @@ export function PlayerCombosForm({ enabled }: PlayerCombosFormProps) {
                 }}
                 className="flex-1"
               >
-                <option value="">Add player...</option>
+                <option value="">{t("matchmaking.addPlayerToCombo")}...</option>
                 {getAvailablePlayersForCombo().map((player) => (
                   <option key={player.name_id} value={player.name_id}>
                     {player.name}

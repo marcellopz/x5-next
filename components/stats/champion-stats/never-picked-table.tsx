@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { CHAMPIONICONURL } from "@/lib/resources";
 import {
   Table,
@@ -21,10 +22,11 @@ interface NeverPickedTableProps {
 }
 
 export function NeverPickedTable({ champions }: NeverPickedTableProps) {
+  const t = useTranslations();
   if (champions.length === 0) {
     return (
       <div className="text-center py-8 text-sm text-muted-foreground">
-        No never-picked champions found.
+        {t("stats.noNeverPickedChampionsFound")}
       </div>
     );
   }
@@ -34,7 +36,7 @@ export function NeverPickedTable({ champions }: NeverPickedTableProps) {
       <TableHeader>
         <TableRow>
           <TableHead className="w-12">#</TableHead>
-          <TableHead>Champion</TableHead>
+          <TableHead>{t("common.champion")}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

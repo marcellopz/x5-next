@@ -12,6 +12,7 @@ import {
   getStatOptions,
   getStatGroups,
 } from "./options-utils";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 const roleOptions: Array<Role | "all"> = [
   "all",
@@ -21,13 +22,14 @@ const roleOptions: Array<Role | "all"> = [
   "adc",
   "support",
 ];
-const roleLabels: Record<Role | "all", string> = {
-  all: "All Roles",
-  top: "Top Lane",
-  jungle: "Jungle",
-  mid: "Mid Lane",
-  adc: "Bot Lane",
-  support: "Support",
+
+const roleLabelKeys: Record<Role | "all", string> = {
+  all: "stats.allRoles",
+  top: "stats.topLane",
+  jungle: "stats.jungleLane",
+  mid: "stats.midLane",
+  adc: "stats.botLane",
+  support: "stats.supportLane",
 };
 
 interface RolePlayerStatsProps {
@@ -35,6 +37,14 @@ interface RolePlayerStatsProps {
 }
 
 export function RolePlayerStats({ data }: RolePlayerStatsProps) {
+  const t = useTranslations();
+  const roleLabels: Record<Role | "all", string> = useMemo(
+    () =>
+      Object.fromEntries(
+        (roleOptions as Array<Role | "all">).map((r) => [r, t(roleLabelKeys[r])])
+      ) as Record<Role | "all", string>,
+    [t]
+  );
   const statOptions = useMemo(() => getStatOptions(data), [data]);
   const statGroups = useMemo(() => getStatGroups(statOptions), [statOptions]);
 

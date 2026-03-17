@@ -1,7 +1,7 @@
-export function formatNumber(num: number | string): string {
+export function formatNumber(num: number | string, locale = "en-US"): string {
   const numValue = typeof num === "string" ? parseFloat(num) : num;
   if (isNaN(numValue)) return "0";
-  return numValue.toLocaleString("en-US");
+  return numValue.toLocaleString(locale);
 }
 
 export function floatToPercentageString(value: number): string {

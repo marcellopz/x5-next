@@ -12,6 +12,7 @@ import {
 import { PlayerMvpPerformanceInGames } from "@/lib/types";
 import { ScoreBadge } from "@/components/ui/score-badge";
 import Link from "next/link";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface MVPTableProps {
   players: PlayerMvpPerformanceInGames[];
@@ -72,6 +73,7 @@ function MVPTableRows() {
 }
 
 export function MVPTable({ players }: MVPTableProps) {
+  const t = useTranslations();
   return (
     <Table
       data={players}
@@ -87,22 +89,22 @@ export function MVPTable({ players }: MVPTableProps) {
         <TableRow>
           <TableHead className="w-12 text-center">#</TableHead>
           <TableHead sortable sortKey="gameName">
-            Player
+            {t("stats.mvpTablePlayer")}
           </TableHead>
           <TableHead sortable sortKey="wins" className="text-center">
-            Wins
+            {t("stats.mvpTableWins")}
           </TableHead>
           <TableHead sortable sortKey="meanScore" className="text-center">
-            Mean Score
+            {t("stats.mvpTableMeanScore")}
           </TableHead>
           <TableHead sortable sortKey="numberOfGames" className="text-center">
-            Games
+            {t("stats.mvpTableGames")}
           </TableHead>
-          <TableHead className="text-center">Top</TableHead>
-          <TableHead className="text-center">Jungle</TableHead>
-          <TableHead className="text-center">Mid</TableHead>
-          <TableHead className="text-center">ADC</TableHead>
-          <TableHead className="text-center">Support</TableHead>
+          <TableHead className="text-center">{t("roles.top")}</TableHead>
+          <TableHead className="text-center">{t("roles.jungle")}</TableHead>
+          <TableHead className="text-center">{t("roles.mid")}</TableHead>
+          <TableHead className="text-center">{t("roles.adc")}</TableHead>
+          <TableHead className="text-center">{t("roles.support")}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

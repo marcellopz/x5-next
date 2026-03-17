@@ -4,6 +4,7 @@ import * as React from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Search, User, X } from "lucide-react";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { groupChangesByDate } from "@/lib/utils";
 import { PatchNotesList } from "./patch-notes-list";
 import { PatchStats } from "@/components/home/hero-section/patch-notes/patch-stats";
@@ -27,6 +28,7 @@ export function PatchNotesPageContent({
   initialRankChangeLog,
   playerList,
 }: PatchNotesPageContentProps) {
+  const t = useTranslations();
   const [searchQuery, setSearchQuery] = React.useState("");
   const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
   const [selectedPlayerId, setSelectedPlayerId] = React.useState<number | null>(
@@ -145,13 +147,19 @@ export function PatchNotesPageContent({
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Patch Notes</h1>
+            <h1 className="text-2xl font-bold tracking-tight">{t("pages.patchNotes")}</h1>
             <div className="mt-2">
               <PatchStats
                 patches={stats.patches}
                 buffs={stats.buffs}
                 nerfs={stats.nerfs}
                 newPlayers={stats.newPlayers}
+                labels={{
+                  patches: t("home.patches"),
+                  buffs: t("home.buffs"),
+                  nerfs: t("home.nerfs"),
+                  players: t("home.players"),
+                }}
               />
             </div>
           </div>
@@ -159,7 +167,7 @@ export function PatchNotesPageContent({
             <div className="relative w-full">
               <Input
                 type="text"
-                placeholder="Search players..."
+                placeholder={t("home.searchPlayersPlaceholder")}
                 value={searchQuery}
                 onChange={handleInputChange}
                 onFocus={handleInputFocus}

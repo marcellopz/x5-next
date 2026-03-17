@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { chartTheme } from "@/components/home/activity-section/chart-theme";
 
@@ -19,13 +20,13 @@ export function SideStatBox({
   redSideStat,
   blueSideStat,
 }: SideStatBoxProps) {
+  const t = useTranslations();
   const total = redSideStat + blueSideStat;
 
-  // Prepare data for pie chart
   const data = [
-    { name: "Red Side", value: redSideStat, color: RED_COLOR },
-    { name: "Blue Side", value: blueSideStat, color: BLUE_COLOR },
-  ].filter((item) => item.value > 0); // Only show if value > 0
+    { name: t("stats.mapSide.redSide"), value: redSideStat, color: RED_COLOR },
+    { name: t("stats.mapSide.blueSide"), value: blueSideStat, color: BLUE_COLOR },
+  ].filter((item) => item.value > 0);
 
   // Custom tooltip
   const CustomTooltip = ({
@@ -73,7 +74,7 @@ export function SideStatBox({
       <CardContent className="pb-4!">
         {total === 0 ? (
           <div className="text-center text-muted-foreground py-8">
-            No data available
+            {t("stats.noDataAvailable")}
           </div>
         ) : (
           <div className="space-y-4">

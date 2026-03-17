@@ -12,12 +12,14 @@ import {
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { GameDurationHistogram } from "@/lib/types";
 import { chartTheme } from "./chart-theme";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface GameDurationChartProps {
   data: GameDurationHistogram;
 }
 
 export function GameDurationChart({ data }: GameDurationChartProps) {
+  const t = useTranslations();
   // Transform data for recharts and sort by duration
   const chartData = Object.entries(data)
     .map(([range, games]) => {
@@ -35,7 +37,7 @@ export function GameDurationChart({ data }: GameDurationChartProps) {
   return (
     <Card className="flex flex-col h-[350px]">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base">Game duration distribution</CardTitle>
+        <CardTitle className="text-base">{t("home.gameDurationDistribution")}</CardTitle>
       </CardHeader>
       <CardContent className="flex-1 min-h-0">
         <ResponsiveContainer width="100%" height="100%">

@@ -10,6 +10,7 @@ import {
   ITEMICONURL,
   summonerSpellsUrl,
 } from "@/lib/resources";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface SummaryMatchItemProps {
   match: MatchWithId;
@@ -28,8 +29,8 @@ function getDaysSince(date: Date): number {
   return Math.floor(diffInSeconds / 86400);
 }
 
-function formatMatchDate(date: Date): string {
-  return date.toLocaleDateString("en-US", {
+function formatMatchDate(date: Date, locale = "en-US"): string {
+  return date.toLocaleDateString(locale, {
     month: "short",
     day: "numeric",
     year:
@@ -46,15 +47,17 @@ export function SummaryMatchItem({
   match,
   participant,
 }: SummaryMatchItemProps) {
+  const t = useTranslations();
   const isWin = participant.stats.win;
   const gameDate = new Date(match.date);
   const daysSince = getDaysSince(gameDate);
   const matchDateStr = formatMatchDate(gameDate);
-  const kda = getKDA(
+  const kdaRaw = getKDA(
     participant.stats.kills,
     participant.stats.deaths,
     participant.stats.assists
   );
+  const kda = kdaRaw === "Perfect" ? t("common.perfect") : kdaRaw;
 
   // Get items
   const items = useMemo(() => {
@@ -124,14 +127,14 @@ export function SummaryMatchItem({
               isWin ? "text-green-500" : "text-red-500"
             }`}
           >
-            {isWin ? "Victory" : "Defeat"}
+            {isWin ? t("common.victory") : t("common.defeat")}
           </div>
           <Link
             href={`/match/${match.matchId}`}
             className="inline-flex items-center justify-center gap-1.5 whitespace-nowrap rounded-md border border-input bg-background px-2 py-1 text-xs font-medium transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 h-6"
-            title="View match details"
+            title={t("common.viewMatchDetails")}
           >
-            Details
+            {t("common.details")}
             <ExternalLink className="w-3 h-3" />
           </Link>
         </div>
@@ -198,7 +201,7 @@ export function SummaryMatchItem({
               {participant.stats.assists}
             </div>
             <div className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground text-center">
-              {kda} KDA
+              {kda} {t("common.kda")}
             </div>
           </div>
         </div>
@@ -215,7 +218,7 @@ export function SummaryMatchItem({
                 {item > 0 && (
                   <Image
                     src={`${ITEMICONURL}${item}.png`}
-                    alt={`Item ${item}`}
+                    alt={`${t("common.itemAlt")} ${item}`}
                     width={32}
                     height={32}
                     className="w-full h-full xl:w-9 xl:h-9"

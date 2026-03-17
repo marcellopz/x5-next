@@ -2,6 +2,7 @@
 
 import { getTimeElapsed } from "@/lib/utils";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { useLocale, useTranslations } from "@/lib/i18n/locale-context";
 
 interface TimeSinceLastMatchProps {
   mostRecentGameTimestamp: number | undefined;
@@ -12,14 +13,16 @@ export function TimeSinceLastMatch({
   mostRecentGameTimestamp,
   description,
 }: TimeSinceLastMatchProps) {
+  const { locale } = useLocale();
+  const t = useTranslations();
   const timeSinceLastMatch = mostRecentGameTimestamp
-    ? getTimeElapsed(mostRecentGameTimestamp)
-    : "Unknown";
+    ? getTimeElapsed(mostRecentGameTimestamp, locale)
+    : t("common.unknown");
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg">Time since last match</CardTitle>
+        <CardTitle className="text-lg">{t("common.timeSinceLastMatch")}</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="text-2xl font-bold text-primary mb-1">

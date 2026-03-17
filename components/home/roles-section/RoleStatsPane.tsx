@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useMemo } from "react";
 import MiniStatCard from "./MiniStatCard";
 import { ROLE_META, RoleKey, RoleStat, TITLE_TO_API_MAPPING } from "./roleMeta";
@@ -6,6 +8,7 @@ import {
   RoleLeaderboardData,
   RoleLeaderboardStats,
 } from "@/lib/types";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface RoleStatsPaneProps {
   activeRole: RoleKey;
@@ -16,6 +19,7 @@ export function RoleStatsPane({
   activeRole,
   roleLeaderboard,
 }: RoleStatsPaneProps) {
+  const t = useTranslations();
   const roleStats = ROLE_META[activeRole].stats;
 
   // Transform role leaderboard data into RoleStat format
@@ -52,10 +56,10 @@ export function RoleStatsPane({
     <div className="flex min-w-0 h-full flex-col gap-2">
       <div className="flex gap-2 pb-2 mb-2 border-b border-primary/20">
         <h3 className="text-xl text-primary  ">
-          {ROLE_META[activeRole].label} Stats
+          {t(`roles.${activeRole}`)} {t("home.stats")}
         </h3>
         <h4 className="text-sm text-muted-foreground opacity-80 flex flex-col justify-end">
-          Stats based on the last 5 games for each player
+          {t("home.roleStatsSubtitle")}
         </h4>
       </div>
       <div className="flex-1 grid grid-cols-2 gap-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 auto-rows-fr">

@@ -5,6 +5,7 @@ import type {
   InitialRanksData,
   RankChangeEntry,
 } from "./types";
+import type { Locale } from "./i18n/types";
 
 // Simple className utility without external dependencies
 export function cn(...classes: (string | undefined | null | boolean)[]) {
@@ -28,25 +29,28 @@ export function getPlayerByAccountId(
   return null;
 }
 
-// Calculates time elapsed since a Unix timestamp, returning the largest applicable unit
-export function getTimeElapsed(unixTimestamp: number): string {
+const timeUnits: Record<Locale, { day: [string, string]; hour: [string, string]; minute: [string, string]; justNow: string }> = {
+  en: { day: ["day", "days"], hour: ["hour", "hours"], minute: ["minute", "minutes"], justNow: "Just now" },
+  pt: { day: ["dia", "dias"], hour: ["hora", "horas"], minute: ["minuto", "minutos"], justNow: "Agora mesmo" },
+};
+
+export function getTimeElapsed(unixTimestamp: number, locale: Locale = "en"): string {
   const now = Date.now();
   const diffMs = now - unixTimestamp;
+  const units = timeUnits[locale];
 
-  // Convert to different units
   const minutes = Math.floor(diffMs / (1000 * 60));
   const hours = Math.floor(diffMs / (1000 * 60 * 60));
   const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-  // Return the largest applicable unit
   if (days > 0) {
-    return `${days} day${days === 1 ? "" : "s"}`;
+    return `${days} ${days === 1 ? units.day[0] : units.day[1]}`;
   } else if (hours > 0) {
-    return `${hours} hour${hours === 1 ? "" : "s"}`;
+    return `${hours} ${hours === 1 ? units.hour[0] : units.hour[1]}`;
   } else if (minutes > 0) {
-    return `${minutes} minute${minutes === 1 ? "" : "s"}`;
+    return `${minutes} ${minutes === 1 ? units.minute[0] : units.minute[1]}`;
   } else {
-    return "Just now";
+    return units.justNow;
   }
 }
 

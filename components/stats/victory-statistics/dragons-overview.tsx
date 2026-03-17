@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import type { VictoryStatistics } from "@/lib/types";
 import { formatWinRate } from "./utils";
 import {
@@ -27,14 +28,15 @@ interface DragonsOverviewProps {
   data: VictoryStatistics["dragons"];
 }
 
-const countLabels: Record<string, string> = {
-  one: "1 Dragon",
-  two: "2 Dragons",
-  three: "3 Dragons",
-  four: "4+ Dragons",
-};
-
 export function DragonsOverview({ data }: DragonsOverviewProps) {
+  const t = useTranslations();
+  const countLabels: Record<string, string> = {
+    one: t("stats.victory.dragonCountOne"),
+    two: t("stats.victory.dragonCountTwo"),
+    three: t("stats.victory.dragonCountThree"),
+    four: t("stats.victory.dragonCountFour"),
+  };
+
   const rows = Object.entries(countLabels).map(([key, label]) => ({
     label,
     exact: data.exact[key as keyof typeof data.exact],
@@ -50,11 +52,11 @@ export function DragonsOverview({ data }: DragonsOverviewProps) {
     <div className="flex items-center gap-4 text-xs text-muted-foreground w-full justify-center pl-6">
       <div className="flex items-center gap-1">
         <span className="w-3 h-3 rounded-full bg-[#38bdf8]" />
-        <span>Exact count</span>
+        <span>{t("stats.victory.exactCount")}</span>
       </div>
       <div className="flex items-center gap-1">
         <span className="w-3 h-3 rounded-full bg-[#34d399]" />
-        <span>At least</span>
+        <span>{t("stats.victory.atLeast")}</span>
       </div>
     </div>
   );
@@ -108,7 +110,7 @@ export function DragonsOverview({ data }: DragonsOverviewProps) {
     <Card>
       <CardHeader>
         <CardTitle className="text-lg font-semibold">
-          Dragon Control Overview
+          {t("stats.victory.dragonControlOverview")}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -147,14 +149,14 @@ export function DragonsOverview({ data }: DragonsOverviewProps) {
                 <Legend content={<CustomLegendContent />} />
                 <Bar
                   dataKey="exact"
-                  name="Exact count"
+                  name={t("stats.victory.exactCount")}
                   fill="#38bdf8"
                   radius={[6, 6, 0, 0]}
                   barSize={22}
                 />
                 <Bar
                   dataKey="atLeast"
-                  name="At least"
+                  name={t("stats.victory.atLeast")}
                   fill="#34d399"
                   radius={[6, 6, 0, 0]}
                   barSize={22}
@@ -167,9 +169,9 @@ export function DragonsOverview({ data }: DragonsOverviewProps) {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Dragons Secured</TableHead>
-                  <TableHead className="text-center">Exact WR</TableHead>
-                  <TableHead className="text-center">At Least WR</TableHead>
+                  <TableHead>{t("stats.victory.dragonsSecured")}</TableHead>
+                  <TableHead className="text-center">{t("stats.victory.exactWR")}</TableHead>
+                  <TableHead className="text-center">{t("stats.victory.atLeastWR")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -191,16 +193,16 @@ export function DragonsOverview({ data }: DragonsOverviewProps) {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <div className="border border-border rounded-lg p-4 bg-muted/30">
-            <p className="text-sm text-muted-foreground">Dragon Soul</p>
+            <p className="text-sm text-muted-foreground">{t("stats.victory.dragonSoul")}</p>
             <p className="text-2xl font-semibold mt-1">
               {formatWinRate(dragonSoul.winRate)}
             </p>
             <p className="text-xs text-muted-foreground">
-              {dragonSoul.wins} wins out of {dragonSoul.total} games
+              {t("stats.victory.winsOutOfGames").replace("{{wins}}", String(dragonSoul.wins)).replace("{{total}}", String(dragonSoul.total))}
             </p>
           </div>
           <div className="border border-border rounded-lg p-4 bg-muted/30">
-            <p className="text-sm text-muted-foreground">Average Dragons</p>
+            <p className="text-sm text-muted-foreground">{t("stats.victory.averageDragons")}</p>
             <p className="text-2xl font-semibold mt-1">
               {(
                 (data.exact.one.total +
@@ -217,16 +219,16 @@ export function DragonsOverview({ data }: DragonsOverviewProps) {
               ).toFixed(2)}
             </p>
             <p className="text-xs text-muted-foreground">
-              Weighted average across all games
+              {t("stats.victory.weightedAverageAcrossGames")}
             </p>
           </div>
           <div className="border border-border rounded-lg p-4 bg-muted/30">
-            <p className="text-sm text-muted-foreground">High Control (≥3)</p>
+            <p className="text-sm text-muted-foreground">{t("stats.victory.highControl")}</p>
             <p className="text-2xl font-semibold mt-1">
               {formatWinRate(data.atLeast.three.winRate)}
             </p>
             <p className="text-xs text-muted-foreground">
-              {data.atLeast.three.wins} wins in {data.atLeast.three.total} games
+              {t("stats.victory.winsInGames").replace("{{wins}}", String(data.atLeast.three.wins)).replace("{{total}}", String(data.atLeast.three.total))}
             </p>
           </div>
         </div>

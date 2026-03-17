@@ -5,12 +5,14 @@ interface PatchEntryProps {
   date: string;
   changes: GroupedChangesByDate[string];
   selectedPlayerNameId?: string | null;
+  entryLabels?: { newBadge: string; joined: string };
 }
 
 export function PatchEntry({
   date,
   changes,
   selectedPlayerNameId,
+  entryLabels = { newBadge: "NEW", joined: "joined" },
 }: PatchEntryProps) {
   const formattedDate = new Date(date).toLocaleDateString("en-US", {
     month: "short",
@@ -45,7 +47,7 @@ export function PatchEntry({
                 {change.type === "new_player" ? (
                   <>
                     <span className="inline-flex items-center justify-center rounded bg-emerald-500/20 px-1.5 py-0.5 text-[10px] font-medium text-emerald-400 ring-1 ring-emerald-500/30">
-                      NEW
+                      {entryLabels.newBadge}
                     </span>
                     <Link
                       href={`/player/${change.name_id}`}
@@ -57,7 +59,7 @@ export function PatchEntry({
                     >
                       {change.name}
                     </Link>
-                    <span className="text-muted-foreground">joined</span>
+                    <span className="text-muted-foreground">{entryLabels.joined}</span>
                   </>
                 ) : (
                   <>

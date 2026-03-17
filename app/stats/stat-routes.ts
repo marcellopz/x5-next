@@ -1,32 +1,31 @@
 export interface StatRouteInfo {
-  title: string;
-  description: string;
+  titleKey: string;
+  descriptionKey: string;
 }
 
 export const statRoutes: Record<string, StatRouteInfo> = {
   "mvp-table": {
-    title: "MVP Table",
-    description: "Players with the most wins in the most recent games",
+    titleKey: "stats.mvpTable.title",
+    descriptionKey: "stats.mvpTable.description",
   },
   "player-stats": {
-    title: "Player Stats",
-    description: "Average statistics for players by role or overall",
+    titleKey: "stats.playerStats.title",
+    descriptionKey: "stats.playerStats.description",
   },
   "champion-stats": {
-    title: "Champion Stats",
-    description: "Champion performance statistics by role or overall",
+    titleKey: "stats.championStats.title",
+    descriptionKey: "stats.championStats.description",
   },
   "rank-analysis": {
-    title: "Rank Analysis",
-    description: "Detailed analysis of player rankings and rank changes",
+    titleKey: "stats.rankAnalysis.title",
+    descriptionKey: "stats.rankAnalysis.description",
   },
   "victory-statistics": {
-    title: "Victory Statistics",
-    description: "Win rates, victory patterns, and match outcome analytics",
+    titleKey: "stats.victoryStatistics.title",
+    descriptionKey: "stats.victoryStatistics.description",
   },
   "map-side-comparison": {
-    title: "Map Side Comparison",
-    description:
-      "Compare performance statistics between blue side and red side",
+    titleKey: "stats.mapSideComparison.title",
+    descriptionKey: "stats.mapSideComparison.description",
   },
 };

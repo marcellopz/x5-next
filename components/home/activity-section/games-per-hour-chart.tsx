@@ -11,12 +11,14 @@ import {
 } from "recharts";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { chartTheme } from "./chart-theme";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface GamesPerHourChartProps {
   data: number[];
 }
 
 export function GamesPerHourChart({ data }: GamesPerHourChartProps) {
+  const t = useTranslations();
   // Transform data for recharts
   const chartData = data.map((games, hour) => ({
     hour: `${hour}:00`,
@@ -27,7 +29,7 @@ export function GamesPerHourChart({ data }: GamesPerHourChartProps) {
     <Card className="flex flex-col h-[350px]">
       <CardHeader className="pb-3">
         <CardTitle className="text-base">
-          Games played by hour of the day
+          {t("home.gamesByHour")}
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 min-h-0">

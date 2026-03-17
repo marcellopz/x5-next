@@ -3,6 +3,7 @@
 import Image from "next/image";
 import type { ChampionStats } from "@/lib/types";
 import { CHAMPIONICONURL } from "@/lib/resources";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface ChampionStatItemProps {
   champion: ChampionStats;
@@ -14,11 +15,7 @@ function floatToPercentageString(value: number): string {
 
 function formatKDA(champion: ChampionStats): string {
   const kdaValue = champion.kda ?? 0;
-
-  if (!isFinite(kdaValue)) {
-    return "Perfect";
-  }
-
+  if (!isFinite(kdaValue)) return "Perfect";
   return kdaValue.toFixed(2);
 }
 
@@ -41,8 +38,10 @@ function getKDAColorClass(champion: ChampionStats): string {
 }
 
 export function ChampionStatItem({ champion }: ChampionStatItemProps) {
+  const t = useTranslations();
   const championId = Number(champion.championId);
   const championIconUrl = `${CHAMPIONICONURL}${championId}.png`;
+  const kdaDisplay = formatKDA(champion) === "Perfect" ? t("common.perfect") : formatKDA(champion);
   const winRate =
     champion.winRate ??
     (champion.numberOfMatches && champion.numberOfMatches > 0
@@ -57,7 +56,7 @@ export function ChampionStatItem({ champion }: ChampionStatItemProps) {
         <div className="shrink-0">
           <Image
             src={championIconUrl}
-            alt={champion.championName || `Champion ${championId}`}
+            alt={champion.championName || `${t("common.champion")} ${championId}`}
             width={48}
             height={48}
             sizes="48px"
@@ -68,10 +67,10 @@ export function ChampionStatItem({ champion }: ChampionStatItemProps) {
         {/* Champion Name and KDA */}
         <div className="flex-1 min-w-0">
           <p className="text-foreground font-semibold truncate">
-            {champion.championName || `Champion ${championId}`}
+            {champion.championName || `${t("common.champion")} ${championId}`}
           </p>
           <p className={`text-sm ${getKDAColorClass(champion)}`}>
-            {formatKDA(champion)}
+            {kdaDisplay}
           </p>
         </div>
 
@@ -81,7 +80,7 @@ export function ChampionStatItem({ champion }: ChampionStatItemProps) {
             {floatToPercentageString(winRate)}
           </p>
           <p className="text-muted-foreground text-sm">
-            {numberOfMatches} {numberOfMatches === 1 ? "game" : "games"}
+            {numberOfMatches} {numberOfMatches === 1 ? t("common.game") : t("common.games")}
           </p>
         </div>
       </div>

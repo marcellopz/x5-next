@@ -16,8 +16,11 @@ import {
 import { PageHeader } from "@/components/ui/page-header";
 import { getRoleLeaderboardData } from "@/lib/endpoints";
 import { Player } from "@/lib/types";
+import { getLocale, getTranslations, t } from "@/lib/i18n";
 
 export default async function Home() {
+  const locale = await getLocale();
+  const trans = getTranslations(locale);
   const [
     allPlayersObject,
     rankChangeLog,
@@ -48,8 +51,8 @@ export default async function Home() {
   return (
     <div className="container mx-auto px-4 py-8 flex flex-col gap-6">
       <PageHeader
-        title="x5 dos nerds"
-        description="Custom league of legends analytics dashboard"
+        title={t(trans, "home.title")}
+        description={t(trans, "home.description")}
       />
 
       <HeroSection

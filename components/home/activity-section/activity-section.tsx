@@ -6,6 +6,7 @@ import { GamesPerMonthChart } from "./games-per-month-chart";
 import { GamesPerHourChart } from "./games-per-hour-chart";
 import { GamesPerDayChart } from "./games-per-day-chart";
 import { GameDurationChart } from "./game-duration-chart";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface ActivitySectionData {
   gamesPerMonth: GamesPerMonth;
@@ -15,8 +16,9 @@ interface ActivitySectionData {
 }
 
 export function ActivitySection({ data }: { data: ActivitySectionData }) {
+  const t = useTranslations();
   return (
-    <CollapsibleSection title="Activity Analytics">
+    <CollapsibleSection title={t("home.activityAnalytics")}>
       <div className="grid gap-4 grid-cols-1 lg:grid-cols-2">
         <GamesPerMonthChart data={data.gamesPerMonth} />
         <GamesPerHourChart data={data.gamesPerHour} />

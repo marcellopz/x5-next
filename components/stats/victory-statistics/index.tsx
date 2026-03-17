@@ -1,6 +1,7 @@
 "use client";
 
 import type { VictoryStatistics } from "@/lib/types";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { SummaryCards } from "./summary-cards";
 import { ObjectiveTable } from "./objective-table";
 import { VoidGrubsSection } from "./void-grubs-section";
@@ -13,28 +14,30 @@ interface VictoryStatisticsViewProps {
 }
 
 export function VictoryStatisticsView({ data }: VictoryStatisticsViewProps) {
+  const t = useTranslations();
+
   const summaryItems = [
     {
-      title: "First Blood",
-      description: "Teams securing the first takedown",
+      title: t("stats.victory.firstBlood"),
+      description: t("stats.victory.firstBloodDesc"),
       entry: data.firstBlood,
       icon: "sword" as const,
     },
     {
-      title: "First Tower",
-      description: "Teams destroying the first turret",
+      title: t("stats.victory.firstTower"),
+      description: t("stats.victory.firstTowerDesc"),
       entry: data.firstTower,
       icon: "towerControl" as const,
     },
     {
-      title: "First Dragon",
-      description: "Teams claiming the opening dragon",
+      title: t("stats.victory.firstDragon"),
+      description: t("stats.victory.firstDragonDesc"),
       entry: data.firstDragon,
       icon: "origami" as const,
     },
     {
-      title: "Atakhan",
-      description: "Teams claiming Atakhan",
+      title: t("stats.victory.atakhan"),
+      description: t("stats.victory.atakhanDesc"),
       entry: data.atakhan,
       icon: "skull" as const,
     },
@@ -42,52 +45,52 @@ export function VictoryStatisticsView({ data }: VictoryStatisticsViewProps) {
 
   const firstObjectives: ObjectiveStat[] = [
     {
-      label: "First Blood",
+      label: t("stats.victory.firstBlood"),
       entry: data.firstBlood,
-      description: "Early skirmish momentum",
+      description: t("stats.victory.earlySkirmishMomentum"),
     },
     {
-      label: "First Tower",
+      label: t("stats.victory.firstTower"),
       entry: data.firstTower,
-      description: "Macro map pressure",
+      description: t("stats.victory.macroMapPressure"),
     },
     {
-      label: "First Inhibitor",
+      label: t("stats.victory.firstInhibitor"),
       entry: data.firstInhibitor,
-      description: "Late-game advantage",
+      description: t("stats.victory.firstInhibitorDesc"),
     },
     {
-      label: "First Baron",
+      label: t("stats.victory.firstBaron"),
       entry: data.firstBaron,
-      description: "Late objective control",
+      description: t("stats.victory.firstBaronDesc"),
     },
     {
-      label: "First Dragon",
+      label: t("stats.victory.firstDragon"),
       entry: data.firstDragon,
-      description: "Neutral objective tempo",
+      description: t("stats.victory.neutralObjectiveTempo"),
     },
   ];
 
   const majorObjectives: ObjectiveStat[] = [
     {
-      label: "Rift Herald",
+      label: t("stats.victory.riftHerald"),
       entry: data.riftHerald,
-      description: "Mid-game pacing",
+      description: t("stats.victory.midGamePacing"),
     },
     {
-      label: "Baron Nashor",
+      label: t("stats.victory.baronNashor"),
       entry: data.baron,
-      description: "Siege potential",
+      description: t("stats.victory.siegePotential"),
     },
     {
-      label: "Elder Dragon",
+      label: t("stats.victory.elderDragon"),
       entry: data.elderDragon,
-      description: "Late-game finisher",
+      description: t("stats.victory.lateGameFinisher"),
     },
     {
-      label: "Atakhan",
+      label: t("stats.victory.atakhan"),
       entry: data.atakhan,
-      description: "Massive combat buff",
+      description: t("stats.victory.massiveCombatBuff"),
     },
   ];
 
@@ -97,11 +100,11 @@ export function VictoryStatisticsView({ data }: VictoryStatisticsViewProps) {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <ObjectiveTable
-          title="First Objective Advantage"
+          title={t("stats.victory.firstObjectiveAdvantage")}
           objectives={firstObjectives}
         />
         <ObjectiveTable
-          title="Neutral Objective Control"
+          title={t("stats.victory.neutralObjectiveControl")}
           objectives={majorObjectives}
         />
       </div>

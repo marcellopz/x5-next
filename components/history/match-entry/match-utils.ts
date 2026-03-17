@@ -6,9 +6,9 @@ export function formatMatchDuration(seconds: number): string {
   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
 }
 
-export function formatMatchDate(dateString: string): string {
+export function formatMatchDate(dateString: string, locale = "en-US"): string {
   const date = new Date(dateString);
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat(locale, {
     month: "short",
     day: "numeric",
     hour: "2-digit",

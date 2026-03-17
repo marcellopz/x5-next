@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import type { Role } from "@/lib/types";
 import {
   Table,
@@ -33,6 +34,7 @@ interface PlayerStatRotationProps {
 }
 
 export function PlayerStatRotation({ statSets }: PlayerStatRotationProps) {
+  const t = useTranslations();
   const [activeIndex, setActiveIndex] = useState(0);
 
   // Group stat sets by role
@@ -95,7 +97,7 @@ export function PlayerStatRotation({ statSets }: PlayerStatRotationProps) {
   if (statPairs.length === 0) {
     return (
       <div className="rounded-lg border border-dashed border-border/60 bg-card/40 p-4 text-sm text-muted-foreground">
-        Player stat spotlights will appear once data is available.
+        {t("stats.playerStatSpotlightsComingSoon")}
       </div>
     );
   }
@@ -116,15 +118,15 @@ export function PlayerStatRotation({ statSets }: PlayerStatRotationProps) {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Player</TableHead>
-                    <TableHead className="text-right">Metric</TableHead>
+                    <TableHead>{t("stats.mvpTablePlayer")}</TableHead>
+                    <TableHead className="text-right">{t("stats.metric")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {set.rows.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={2} className="text-center text-sm">
-                        No data for this metric.
+                        {t("stats.noDataForThisMetric")}
                       </TableCell>
                     </TableRow>
                   ) : (

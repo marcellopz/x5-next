@@ -14,6 +14,7 @@ import { Input } from "@/components/ui/input";
 import { ChevronLeft, ChevronRight, Search } from "lucide-react";
 import type { ChampionStats } from "@/lib/types";
 import { ChampionTableBody } from "./champion-table-body";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface ProcessedChampion {
   championId: string;
@@ -41,6 +42,7 @@ export function ChampionTable({
   totalGames,
   itemsPerPage = 7,
 }: ChampionTableProps) {
+  const t = useTranslations();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -119,11 +121,11 @@ export function ChampionTable({
       <CardHeader>
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <CardTitle className="text-base">
-            Highest Presence Champions
+            {t("home.highestPresenceChampions")}
           </CardTitle>
           <div className="w-full sm:w-auto">
             <Input
-              placeholder="Search champions..."
+              placeholder={t("home.searchChampionsPlaceholder")}
               value={searchQuery}
               onChange={handleSearchChange}
               startIcon={<Search className="h-4 w-4" />}
@@ -145,23 +147,23 @@ export function ChampionTable({
               <TableRow>
                 <TableHead className="w-12">#</TableHead>
                 <TableHead sortable sortKey="championName">
-                  Champion
+                  {t("common.champion")}
                 </TableHead>
                 <TableHead sortable sortKey="presence">
-                  Presence
+                  {t("home.presence")}
                 </TableHead>
                 <TableHead sortable sortKey="picks">
-                  Picks
+                  {t("home.picks")}
                 </TableHead>
                 <TableHead sortable sortKey="bans">
-                  Bans
+                  {t("home.bans")}
                 </TableHead>
                 <TableHead>W/L</TableHead>
                 <TableHead sortable sortKey="winRate">
-                  Win Rate
+                  {t("home.winRate")}
                 </TableHead>
                 <TableHead sortable sortKey="kda">
-                  KDA
+                  {t("common.kda")}
                 </TableHead>
               </TableRow>
             </TableHeader>
@@ -174,9 +176,12 @@ export function ChampionTable({
       </CardContent>
       <CardFooter className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pt-2">
         <div className="text-sm text-muted-foreground">
-          Showing {startIndex + 1}-{Math.min(endIndex, filteredData.length)} of{" "}
-          {filteredData.length} champions
-          {searchQuery && ` (filtered from ${data.length})`}
+          {t("home.showingChampions")
+            .replace("{{start}}", String(startIndex + 1))
+            .replace("{{end}}", String(Math.min(endIndex, filteredData.length)))
+            .replace("{{total}}", String(filteredData.length))}
+          {searchQuery &&
+            ` (${t("home.filteredFrom").replace("{{total}}", String(data.length))})`}
         </div>
         <div className="flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start">
           <Button
@@ -186,10 +191,12 @@ export function ChampionTable({
             disabled={currentPage === 1}
           >
             <ChevronLeft className="h-4 w-4" />
-            Previous
+            {t("home.previous")}
           </Button>
           <div className="text-sm font-medium whitespace-nowrap">
-            Page {currentPage} of {totalPages}
+            {t("home.pageOf")
+              .replace("{{current}}", String(currentPage))
+              .replace("{{total}}", String(totalPages))}
           </div>
           <Button
             variant="outline"
@@ -197,7 +204,7 @@ export function ChampionTable({
             onClick={handleNextPage}
             disabled={currentPage === totalPages}
           >
-            Next
+            {t("home.next")}
             <ChevronRight className="h-4 w-4" />
           </Button>
         </div>

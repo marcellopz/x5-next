@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { CHAMPIONICONURL } from "@/lib/resources";
 import type { NeverPickedChampion } from "./types";
 
@@ -7,6 +10,7 @@ interface NeverPickedGridProps {
 }
 
 export function NeverPickedGrid({ champions }: NeverPickedGridProps) {
+  const t = useTranslations();
   if (champions.length === 0) {
     return null;
   }
@@ -15,10 +19,10 @@ export function NeverPickedGrid({ champions }: NeverPickedGridProps) {
     <div className="rounded-lg border border-border bg-card/60 flex flex-col">
       <div className="flex items-center justify-between px-3 py-2 border-b border-border">
         <p className="text-sm font-semibold">
-          Champions that were never picked
+          {t("stats.championsNeverPickedTitle")}
         </p>
         <span className="text-xs text-muted-foreground">
-          {champions.length} total
+          {champions.length} {t("stats.totalLabel")}
         </span>
       </div>
       <div className="flex-1 overflow-y-auto max-h-96 p-3 pr-2">

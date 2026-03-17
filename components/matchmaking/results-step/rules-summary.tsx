@@ -7,8 +7,10 @@ import { Users, Settings, Shield, Target } from "lucide-react";
 import { useMatchmaking } from "../matchmaking-context";
 import { CollapsibleSection } from "@/components/ui/collapsible-section";
 import { RoleBadge } from "./role-badge";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 export const RulesSummary = memo(function RulesSummary() {
+  const t = useTranslations();
   const {
     selectedPlayers,
     config,
@@ -87,14 +89,14 @@ export const RulesSummary = memo(function RulesSummary() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Settings className="h-5 w-5" />
-          Matchmaking Rules Summary
+          {t("matchmaking.rulesSummaryTitle")}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Selected Players */}
         <div className="space-y-2">
           <h4 className="text-sm font-medium text-muted-foreground">
-            Selected Players ({selectedPlayers.length})
+            {t("matchmaking.selectedPlayersLabel")} ({selectedPlayers.length})
           </h4>
           <div className="flex flex-wrap gap-2">
             {selectedPlayers.map((player) => (
@@ -111,24 +113,24 @@ export const RulesSummary = memo(function RulesSummary() {
         {/* Basic Configuration */}
         <div className="space-y-2">
           <h4 className="text-sm font-medium text-muted-foreground">
-            Basic Configuration
+            {t("matchmaking.basicConfiguration")}
           </h4>
           <div className="flex flex-wrap gap-2">
             <Badge variant="secondary">
-              {config.matchOptions} Match Options
+              {config.matchOptions} {t("matchmaking.matchOptions")}
             </Badge>
-            <Badge variant="secondary">Tolerance: {config.tolerance}</Badge>
+            <Badge variant="secondary">{t("matchmaking.tolerance")}: {config.tolerance}</Badge>
           </div>
         </div>
         {/* Match Generation Stats */}
         {matchResults && (
           <div className="space-y-2">
             <h4 className="text-sm font-medium text-muted-foreground">
-              Match Generation
+              {t("matchmaking.matchGeneration")}
             </h4>
             <div className="flex flex-wrap gap-2">
               <Badge variant="outline">
-                {matchResults.allMatches.length} matches meet tolerance
+                {matchResults.allMatches.length} {t("matchmaking.matchesMeetTolerance")}
               </Badge>
               <Badge
                 variant={
@@ -137,7 +139,7 @@ export const RulesSummary = memo(function RulesSummary() {
                     : "destructive"
                 }
               >
-                {matchResults.filteredMatches.length} matches meet constraints
+                {matchResults.filteredMatches.length} {t("matchmaking.matchesMeetConstraints")}
               </Badge>
             </div>
           </div>
@@ -147,7 +149,7 @@ export const RulesSummary = memo(function RulesSummary() {
           <div className="space-y-2">
             <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Target className="h-4 w-4" />
-              Preset Lanes
+              {t("matchmaking.presetLanes")}
             </h4>
             <div className="space-y-1">
               {Object.entries(config.presetLanes.lanes).map(
@@ -157,7 +159,7 @@ export const RulesSummary = memo(function RulesSummary() {
                   return (
                     <div key={lane} className="text-sm flex items-center gap-2">
                       <span className="font-medium capitalize w-16">
-                        {lane}:
+                        {t(`roles.${lane}`)}:
                       </span>
                       <div className="flex items-center gap-2">
                         {players.player1 && (
@@ -170,7 +172,7 @@ export const RulesSummary = memo(function RulesSummary() {
                           </Badge>
                         )}
                         {players.player1 && players.player2 && (
-                          <span className="text-muted-foreground">vs</span>
+                          <span className="text-muted-foreground">{t("matchmaking.vs")}</span>
                         )}
                         {players.player2 && (
                           <Badge variant="outline" className="text-xs">
@@ -194,7 +196,7 @@ export const RulesSummary = memo(function RulesSummary() {
           <div className="space-y-2">
             <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Shield className="h-4 w-4" />
-              Avoid Roles
+              {t("matchmaking.avoidRoles")}
             </h4>
             <div className="space-y-1">
               {validAvoidRoleRules.map((rule, index) => {
@@ -209,7 +211,7 @@ export const RulesSummary = memo(function RulesSummary() {
                       {player.name}
                     </Badge>
                     <span className="text-muted-foreground ml-2">
-                      avoids {rule.lane}
+                      {t("matchmaking.avoids")} {t(`roles.${rule.lane}`)}
                     </span>
                   </div>
                 );
@@ -222,7 +224,7 @@ export const RulesSummary = memo(function RulesSummary() {
           <div className="space-y-2">
             <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
               <Users className="h-4 w-4" />
-              Team Combo
+              {t("matchmaking.teamCombo")}
             </h4>
             <div className="flex flex-wrap gap-2">
               {config.playerCombos.combos[0].players.map((player) => (
@@ -236,19 +238,17 @@ export const RulesSummary = memo(function RulesSummary() {
         {/* No Advanced Rules */}
         {!hasPresetLanes && !hasAvoidRoles && !hasPlayerCombos && (
           <div className="text-sm text-muted-foreground italic">
-            No advanced rules configured
+            {t("matchmaking.noAdvancedRules")}
           </div>
         )}
         {/* Player Role Breakdown (Accordion skeleton) */}
         {!filteredMatchesSuccess && (
           <div className="text-sm text-muted-foreground italic">
-            No filtered matches found
+            {t("matchmaking.noFilteredMatches")}
           </div>
         )}
         <CollapsibleSection
-          title={`${
-            filteredMatchesSuccess ? "Filtered" : "All"
-          } matches: Player role breakdown`}
+          title={`${filteredMatchesSuccess ? t("matchmaking.filtered") : t("matchmaking.all")} ${t("matchmaking.filteredMatchesRoleBreakdown")}`}
           defaultExpanded={false}
           small
         >

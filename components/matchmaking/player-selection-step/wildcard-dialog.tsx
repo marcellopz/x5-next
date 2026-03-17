@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { useMatchmaking } from "../matchmaking-context";
 import type { Player } from "@/lib/types";
 
@@ -21,6 +22,7 @@ interface WildcardDialogProps {
 }
 
 export function WildcardDialog({ open, onOpenChange }: WildcardDialogProps) {
+  const t = useTranslations();
   const { addPlayer } = useMatchmaking();
   const [formData, setFormData] = useState({
     name: "",
@@ -67,19 +69,16 @@ export function WildcardDialog({ open, onOpenChange }: WildcardDialogProps) {
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Wildcard Player</DialogTitle>
-          <DialogDescription>
-            Create a new player entry with custom name and ranks
-          </DialogDescription>
+          <DialogTitle>{t("admin.addWildcardPlayer")}</DialogTitle>
+          <DialogDescription>{t("admin.addWildcardDescription")}</DialogDescription>
         </DialogHeader>
         <form onSubmit={handleSubmit}>
           <div className="space-y-4">
-            {/* Player Name */}
             <div className="space-y-2">
-              <Label htmlFor="name">Player Name</Label>
+              <Label htmlFor="name">{t("admin.playerName")}</Label>
               <Input
                 id="name"
-                placeholder="Enter player name"
+                placeholder={t("admin.enterPlayerName")}
                 value={formData.name}
                 onChange={(e) =>
                   setFormData({ ...formData, name: e.target.value })
@@ -90,7 +89,7 @@ export function WildcardDialog({ open, onOpenChange }: WildcardDialogProps) {
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="top">Top Rank</Label>
+                <Label htmlFor="top">{t("admin.topRank")}</Label>
                 <Input
                   id="top"
                   type="number"
@@ -105,7 +104,7 @@ export function WildcardDialog({ open, onOpenChange }: WildcardDialogProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="jungle">Jungle Rank</Label>
+                <Label htmlFor="jungle">{t("admin.jungleRank")}</Label>
                 <Input
                   id="jungle"
                   type="number"
@@ -120,7 +119,7 @@ export function WildcardDialog({ open, onOpenChange }: WildcardDialogProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="mid">Mid Rank</Label>
+                <Label htmlFor="mid">{t("admin.midRank")}</Label>
                 <Input
                   id="mid"
                   type="number"
@@ -135,7 +134,7 @@ export function WildcardDialog({ open, onOpenChange }: WildcardDialogProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="adc">ADC Rank</Label>
+                <Label htmlFor="adc">{t("admin.adcRank")}</Label>
                 <Input
                   id="adc"
                   type="number"
@@ -150,7 +149,7 @@ export function WildcardDialog({ open, onOpenChange }: WildcardDialogProps) {
               </div>
 
               <div className="space-y-2 col-span-2">
-                <Label htmlFor="support">Support Rank</Label>
+                <Label htmlFor="support">{t("admin.supportRank")}</Label>
                 <Input
                   id="support"
                   type="number"
@@ -171,10 +170,10 @@ export function WildcardDialog({ open, onOpenChange }: WildcardDialogProps) {
               variant="outline"
               onClick={() => onOpenChange(false)}
             >
-              Cancel
+              {t("admin.cancel")}
             </Button>
             <Button type="submit" disabled={!formData.name.trim()}>
-              Create Player
+              {t("admin.createPlayer")}
             </Button>
           </DialogFooter>
         </form>

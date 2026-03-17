@@ -4,20 +4,22 @@ import { Select } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useMatchmaking } from "../matchmaking-context";
 import type { Lane } from "../matchmaking-context";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface PresetLanesFormProps {
   enabled: boolean;
 }
 
-const laneLabels: Record<Lane, string> = {
-  top: "Top",
-  jungle: "Jungle",
-  mid: "Mid",
-  adc: "ADC",
-  support: "Sup",
+const laneKeys: Record<Lane, string> = {
+  top: "roles.top",
+  jungle: "roles.jungle",
+  mid: "roles.mid",
+  adc: "roles.adc",
+  support: "roles.sup",
 };
 
 export function PresetLanesForm({ enabled }: PresetLanesFormProps) {
+  const t = useTranslations();
   const { selectedPlayers, config, updatePresetLane, updatePresetLanesConfig } =
     useMatchmaking();
 
@@ -56,7 +58,7 @@ export function PresetLanesForm({ enabled }: PresetLanesFormProps) {
         return (
           <div key={lane} className="flex items-center gap-3">
             <p className="text-sm font-medium leading-none w-20">
-              {laneLabels[lane]}:
+              {t(laneKeys[lane])}:
             </p>
             <div className="flex items-center gap-2 flex-1">
               <Select
@@ -73,7 +75,7 @@ export function PresetLanesForm({ enabled }: PresetLanesFormProps) {
                   </option>
                 ))}
               </Select>
-              <span className="text-muted-foreground">vs</span>
+              <span className="text-muted-foreground">{t("matchmaking.vs")}</span>
               <Select
                 value={config.presetLanes.lanes[lane].player2 || ""}
                 onChange={(e) =>
@@ -105,7 +107,7 @@ export function PresetLanesForm({ enabled }: PresetLanesFormProps) {
           htmlFor="randomize-sides"
           className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
         >
-          Randomize sides
+          {t("matchmaking.randomizeSides")}
         </label>
       </div>
     </div>

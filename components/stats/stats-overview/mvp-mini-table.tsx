@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import type { MvpRow } from "./index";
 import {
   Table,
@@ -11,10 +14,11 @@ import {
 import { ScoreBadge } from "@/components/ui/score-badge";
 
 export function MvpMiniTable({ rows }: { rows: MvpRow[] }) {
+  const t = useTranslations();
   if (rows.length === 0) {
     return (
       <div className="rounded-lg border border-border bg-card/60 p-4 text-sm text-muted-foreground">
-        MVP leaderboard coming soon.
+        {t("stats.mvpLeaderboardComingSoon")}
       </div>
     );
   }
@@ -24,10 +28,10 @@ export function MvpMiniTable({ rows }: { rows: MvpRow[] }) {
       <TableHeader>
         <TableRow>
           <TableHead className="w-12 text-center">#</TableHead>
-          <TableHead>Player</TableHead>
-          <TableHead className="text-center">Wins</TableHead>
-          <TableHead className="text-center">Rating</TableHead>
-          <TableHead className="text-center">Games</TableHead>
+          <TableHead>{t("stats.mvpTablePlayer")}</TableHead>
+          <TableHead className="text-center">{t("common.wins")}</TableHead>
+          <TableHead className="text-center">{t("stats.mvpTableRating")}</TableHead>
+          <TableHead className="text-center">{t("common.games")}</TableHead>
         </TableRow>
       </TableHeader>
       <TableBody>

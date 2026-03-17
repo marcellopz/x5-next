@@ -15,8 +15,10 @@ import { Plus, Search, Users, Grid3X3, Table as TableIcon } from "lucide-react";
 import { useMatchmaking } from "../matchmaking-context";
 import { WildcardDialog } from "./wildcard-dialog";
 import { PlayersTable } from "./players-table";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 export function AvailablePlayersSection() {
+  const t = useTranslations();
   const [searchTerm, setSearchTerm] = useState("");
   const [wildcardOpen, setWildcardOpen] = useState(false);
   const [viewMode, setViewMode] = useState<"cards" | "table">("cards");
@@ -62,9 +64,9 @@ export function AvailablePlayersSection() {
       <CardHeader>
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
-            <CardTitle>Available Players</CardTitle>
+            <CardTitle>{t("matchmaking.availablePlayers")}</CardTitle>
             <CardDescription>
-              Click on a player card to add them to the match
+              {t("matchmaking.availablePlayersDescription")}
             </CardDescription>
           </div>
           <div className="flex gap-3">
@@ -75,7 +77,7 @@ export function AvailablePlayersSection() {
               onClick={() => setWildcardOpen(true)}
             >
               <Plus className="h-4 w-4" />
-              Wildcard
+              {t("matchmaking.wildcard")}
             </Button>
             <div className="flex gap-1">
               <Button
@@ -96,7 +98,7 @@ export function AvailablePlayersSection() {
               </Button>
             </div>
             <Input
-              placeholder="Search players..."
+              placeholder={t("matchmaking.searchPlayers")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-64"
@@ -141,7 +143,7 @@ export function AvailablePlayersSection() {
                 <div className="text-center py-8">
                   <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
                   <p className="text-muted-foreground">
-                    No players found matching your criteria
+                    {t("matchmaking.noPlayersFound")}
                   </p>
                 </div>
               )}
@@ -157,7 +159,7 @@ export function AvailablePlayersSection() {
           <div className="text-center py-8">
             <Users className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
             <p className="text-muted-foreground">
-              No available players to select
+              {t("matchmaking.noAvailablePlayers")}
             </p>
           </div>
         )}

@@ -3,6 +3,12 @@ interface PatchStatsProps {
   buffs: number;
   nerfs: number;
   newPlayers: number;
+  labels?: {
+    patches: string;
+    buffs: string;
+    nerfs: string;
+    players: string;
+  };
 }
 
 export function PatchStats({
@@ -10,17 +16,23 @@ export function PatchStats({
   buffs,
   nerfs,
   newPlayers,
+  labels = {
+    patches: "Patches",
+    buffs: "Buffs",
+    nerfs: "Nerfs",
+    players: "Players",
+  },
 }: PatchStatsProps) {
   const quickStats = [
     {
-      label: "Patches",
+      label: labels.patches,
       delta: patches.toString(),
       trend: "up" as const,
     },
-    { label: "Buffs", delta: buffs.toString(), trend: "up" as const },
-    { label: "Nerfs", delta: nerfs.toString(), trend: "down" as const },
+    { label: labels.buffs, delta: buffs.toString(), trend: "up" as const },
+    { label: labels.nerfs, delta: nerfs.toString(), trend: "down" as const },
     {
-      label: "Players",
+      label: labels.players,
       delta: newPlayers.toString(),
       trend: "up" as const,
     },

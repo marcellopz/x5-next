@@ -6,6 +6,7 @@ import MapWithRoleTabs from "./MapWithRoleTabs";
 import RoleStatsPane from "./RoleStatsPane";
 import { CollapsibleSection } from "@/components/ui/collapsible-section";
 import { RoleLeaderboardData } from "@/lib/types";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 export interface RolesSectionProps {
   initialRole?: RoleKey;
@@ -16,6 +17,7 @@ export function RolesSection({
   initialRole = "mid",
   roleLeaderboard,
 }: RolesSectionProps) {
+  const t = useTranslations();
   const [activeRole, setActiveRole] = useState<RoleKey>(initialRole);
   const [userSelected, setUserSelected] = useState<boolean>(false);
 
@@ -39,7 +41,7 @@ export function RolesSection({
   };
 
   return (
-    <CollapsibleSection title="Role Specific Stats">
+    <CollapsibleSection title={t("home.roleSpecificStats")}>
       <Card>
         <CardContent className="pt-6">
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-[minmax(450px,auto)_1fr_1fr] items-stretch">

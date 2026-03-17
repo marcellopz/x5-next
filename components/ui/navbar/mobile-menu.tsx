@@ -8,6 +8,7 @@ import { BrandLogo } from "./brand-logo";
 import { LanguageToggle } from "./language-toggle";
 import { cn } from "@/lib/utils";
 import { SeasonSelector } from "./season-selector";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -39,6 +40,18 @@ function MobileNavLink({
     >
       {label}
     </Link>
+  );
+}
+
+function MobileNavLinks({ onClose }: { onClose: () => void }) {
+  const t = useTranslations();
+  return (
+    <nav className="flex-1 py-4">
+      <MobileNavLink href="/history" label={t("nav.history")} onClick={onClose} />
+      <MobileNavLink href="/player-list" label={t("nav.players")} onClick={onClose} />
+      <MobileNavLink href="/patch-notes" label={t("nav.patchNotes")} onClick={onClose} />
+      <MobileNavLink href="/stats" label={t("nav.statistics")} onClick={onClose} />
+    </nav>
   );
 }
 
@@ -99,7 +112,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
           <button
             onClick={onClose}
             className="p-2 rounded-md hover:bg-accent transition-colors"
-            aria-label="Close menu"
+            aria-label={t("common.closeMenu")}
           >
             <svg
               className="w-6 h-6 text-foreground"
@@ -118,20 +131,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         </div>
 
         {/* Navigation Links */}
-        <nav className="flex-1 py-4">
-          <MobileNavLink href="/history" label="History" onClick={onClose} />
-          <MobileNavLink
-            href="/player-list"
-            label="Player List"
-            onClick={onClose}
-          />
-          <MobileNavLink
-            href="/patch-notes"
-            label="Patch Notes"
-            onClick={onClose}
-          />
-          <MobileNavLink href="/stats" label="Statistics" onClick={onClose} />
-        </nav>
+        <MobileNavLinks onClose={onClose} />
 
         {/* Footer */}
         <div className="p-4 border-t border-border">
@@ -148,6 +148,7 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
 }
 
 export function MobileMenuButton() {
+  const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -155,7 +156,7 @@ export function MobileMenuButton() {
       <button
         onClick={() => setIsOpen(true)}
         className="md:hidden p-2 rounded-md hover:bg-accent transition-colors"
-        aria-label="Open menu"
+        aria-label={t("common.openMenu")}
       >
         <svg
           className="w-6 h-6 text-foreground"

@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { Player } from "@/lib/types";
 import { CHAMPIONICONURL, championIds } from "@/lib/resources";
 import Image from "next/image";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface FilterOption {
   id: string;
@@ -39,6 +40,7 @@ export function MatchesFilter({
   onInputBlur,
   onOptionClick,
 }: MatchesFilterProps) {
+  const t = useTranslations();
   const allOptions: FilterOption[] = useMemo(() => {
     const options: FilterOption[] = [];
     playerList.forEach((player) => {
@@ -80,7 +82,7 @@ export function MatchesFilter({
     <div className={cn("relative w-full", className)}>
       <Input
         type="text"
-        placeholder="Search players or champions..."
+        placeholder={t("common.searchPlayersOrChampions")}
         value={searchQuery}
         onChange={handleInputChange}
         onFocus={onInputFocus}

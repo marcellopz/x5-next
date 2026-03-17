@@ -7,12 +7,14 @@ import { RulesSummary } from "./rules-summary";
 import { MatchDisplay } from "./match-display";
 import { useMatchmaking } from "../matchmaking-context";
 import { generateMatches } from "@/lib/matchmaking-algorithm";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface ResultsStepProps {
   onPrevious: () => void;
 }
 
 export function ResultsStep({ onPrevious }: ResultsStepProps) {
+  const t = useTranslations();
   const {
     matchResults,
     config,
@@ -73,16 +75,16 @@ export function ResultsStep({ onPrevious }: ResultsStepProps) {
           <div className="text-center py-8 text-muted-foreground">
             {matchResults?.error ? (
               <>
-                <p>Failed to generate matches.</p>
+                <p>{t("matchmaking.failedToGenerate")}</p>
                 <p className="text-sm mt-1">{matchResults.error}</p>
               </>
             ) : (
               <>
-                <p>Generating matches...</p>
+                <p>{t("matchmaking.generatingMatches")}</p>
                 <p className="text-sm mt-1">
                   {selectedPlayers.length !== 10
-                    ? `Need exactly 10 players (currently ${selectedPlayers.length})`
-                    : "Processing all possible combinations"}
+                    ? t("matchmaking.needExactly10").replace("{{count}}", String(selectedPlayers.length))
+                    : t("matchmaking.processingCombinations")}
                 </p>
               </>
             )}
@@ -93,7 +95,7 @@ export function ResultsStep({ onPrevious }: ResultsStepProps) {
       <div className="flex justify-start">
         <Button variant="outline" onClick={onPrevious}>
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Previous
+          {t("matchmaking.previous")}
         </Button>
       </div>
     </div>

@@ -10,6 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import type { VictoryStatistics } from "@/lib/types";
 import { formatWinRate } from "./utils";
 import {
@@ -25,21 +26,20 @@ interface DragonTypesSectionProps {
   types: VictoryStatistics["dragons"]["types"];
 }
 
-const typeLabels: Record<keyof VictoryStatistics["dragons"]["types"], string> =
-  {
-    fire: "Infernal",
-    water: "Ocean",
-    air: "Cloud",
-    earth: "Mountain",
-    hextech: "Hextech",
-    chemtech: "Chemtech",
-  };
-
-const rows = [
-  { key: "first", label: "First of type" },
-  { key: "any", label: "Any of type" },
-  { key: "multiple", label: "2+ of type" },
+const typeKeys = [
+  "fire",
+  "water",
+  "air",
+  "earth",
+  "hextech",
+  "chemtech",
 ] as const;
+
+const rowKeys = [
+  { key: "first" as const, labelKey: "firstOfType" },
+  { key: "any" as const, labelKey: "anyOfType" },
+  { key: "multiple" as const, labelKey: "multipleOfType" },
+];
 
 const dragonIcons: Record<
   keyof VictoryStatistics["dragons"]["types"],
@@ -54,40 +54,59 @@ const dragonIcons: Record<
 };
 
 export function DragonTypesSection({ types }: DragonTypesSectionProps) {
+  const t = useTranslations();
+  const typeLabels: Record<keyof VictoryStatistics["dragons"]["types"], string> =
+    {
+      fire: t("stats.victory.infernal"),
+      water: t("stats.victory.ocean"),
+      air: t("stats.victory.cloud"),
+      earth: t("stats.victory.mountain"),
+      hextech: t("stats.victory.hextech"),
+      chemtech: t("stats.victory.chemtech"),
+    };
+
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold">Dragon Types Performance</h2>
+      <h2 className="text-lg font-semibold">
+        {t("stats.victory.dragonTypesPerformance")}
+      </h2>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
-        {(
-          Object.keys(types) as Array<
-            keyof VictoryStatistics["dragons"]["types"]
-          >
-        ).map((typeKey) => (
+        {typeKeys.map((typeKey) => (
           <Card key={typeKey}>
             <CardHeader className="pb-3">
               <CardTitle className="text-base flex items-center gap-2">
                 <span className="p-2 rounded-full bg-muted border border-border">
                   {dragonIcons[typeKey] ?? null}
                 </span>
-                <span>{typeLabels[typeKey]} Dragon</span>
+                <span>
+                  {typeLabels[typeKey]} {t("stats.victory.dragon")}
+                </span>
               </CardTitle>
             </CardHeader>
             <CardContent>
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Condition</TableHead>
-                    <TableHead className="text-center">Wins</TableHead>
-                    <TableHead className="text-center">Games</TableHead>
-                    <TableHead className="text-center">Win Rate</TableHead>
+                    <TableHead>{t("stats.victory.condition")}</TableHead>
+                    <TableHead className="text-center">
+                      {t("common.wins")}
+                    </TableHead>
+                    <TableHead className="text-center">
+                      {t("common.games")}
+                    </TableHead>
+                    <TableHead className="text-center">
+                      {t("stats.victory.winRate")}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {rows.map((row) => {
+                  {rowKeys.map((row) => {
                     const entry = types[typeKey][row.key];
                     return (
                       <TableRow key={row.key}>
-                        <TableCell>{row.label}</TableCell>
+                        <TableCell>
+                          {t(`stats.victory.${row.labelKey}`)}
+                        </TableCell>
                         <TableCell className="text-center">
                           {entry.wins}
                         </TableCell>

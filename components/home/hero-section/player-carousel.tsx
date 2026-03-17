@@ -7,6 +7,7 @@ import type { Player } from "@/lib/types";
 import { Search } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface PlayerCarouselProps {
   playerList: Player[] | null;
@@ -17,6 +18,7 @@ export function PlayerCarousel({
   playerList,
   initialIndex,
 }: PlayerCarouselProps) {
+  const t = useTranslations();
   const [searchQuery, setSearchQuery] = useState("");
   const [index, setIndex] = useState(initialIndex);
   const router = useRouter();
@@ -56,10 +58,10 @@ export function PlayerCarousel({
   return (
     <Card className="min-h-[500px] h-full flex flex-col">
       <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="text-xl mb-0">Player Cards</CardTitle>
+        <CardTitle className="text-xl mb-0">{t("home.playerCards")}</CardTitle>
         <Input
           type="text"
-          placeholder="Search players..."
+          placeholder={t("home.searchPlayersPlaceholder")}
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           startIcon={<Search className="w-4 h-4 text-muted-foreground" />}
@@ -78,8 +80,8 @@ export function PlayerCarousel({
         ) : (
           <p className="text-muted-foreground">
             {searchQuery
-              ? "No players match your search"
-              : "No players available to display"}
+              ? t("home.noPlayersMatchSearch")
+              : t("home.noPlayersAvailable")}
           </p>
         )}
       </CardContent>

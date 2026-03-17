@@ -9,6 +9,7 @@ import { ChampionsTable } from "./champions-table";
 import { ChampionDetailsCard } from "./champion-details-card";
 import { NeverPickedTable } from "./never-picked-table";
 import useIsMobile from "@/lib/hooks/useIsMobile";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 type RoleFilter =
   | "all"
@@ -29,14 +30,14 @@ interface ChampionStatsProps {
   neverPickedChampions: NeverPickedChampion[];
 }
 
-const roleLabels: Record<RoleFilter, string> = {
-  all: "All",
-  top: "Top",
-  jungle: "Jungle",
-  mid: "Mid",
-  adc: "Adc",
-  support: "Support",
-  "never-picked": "Never Picked",
+const roleFilterKeys: Record<RoleFilter, string> = {
+  all: "roles.all",
+  top: "roles.top",
+  jungle: "roles.jungle",
+  mid: "roles.mid",
+  adc: "roles.adc",
+  support: "roles.support",
+  "never-picked": "roles.neverPicked",
 };
 
 const roleFilters: RoleFilter[] = [
@@ -53,12 +54,21 @@ export function ChampionStats({
   data,
   neverPickedChampions,
 }: ChampionStatsProps) {
+  const t = useTranslations();
   const [selectedRole, setSelectedRole] = useState<RoleFilter>("all");
   const [selectedChampionId, setSelectedChampionId] = useState<string | null>(
     null
   );
   const [filterMoreThanFive, setFilterMoreThanFive] = useState(false);
   const isMobile = useIsMobile();
+
+  const roleLabels: Record<RoleFilter, string> = useMemo(
+    () =>
+      Object.fromEntries(
+        (roleFilters as RoleFilter[]).map((r) => [r, t(roleFilterKeys[r])])
+      ) as Record<RoleFilter, string>,
+    [t]
+  );
 
   const isNeverPicked = selectedRole === "never-picked";
 

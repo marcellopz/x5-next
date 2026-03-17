@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import type { PlayerRankChangeStats, PlayerList } from "@/lib/types";
 import { RankChangesTable } from "./rank-changes-table";
 import { WinLossByRoleTable } from "./win-loss-by-role-table";
@@ -15,6 +16,7 @@ interface RankAnalysisProps {
 }
 
 export function RankAnalysis({ data, playerList }: RankAnalysisProps) {
+  const t = useTranslations();
   const [viewMode, setViewMode] = useState<ViewMode>("winloss");
 
   const getPlayerName = (nameId: string): string => {
@@ -37,7 +39,7 @@ export function RankAnalysis({ data, playerList }: RankAnalysisProps) {
             viewMode === "winloss" && "ring-2 ring-primary/50"
           )}
         >
-          Win/Loss Since Last Change
+          {t("stats.winLossSinceRankChange")}
         </Button>
         <Button
           size="sm"
@@ -48,7 +50,7 @@ export function RankAnalysis({ data, playerList }: RankAnalysisProps) {
             viewMode === "changes" && "ring-2 ring-primary/50"
           )}
         >
-          Rank Changes
+          {t("stats.rankChanges")}
         </Button>
       </div>
 

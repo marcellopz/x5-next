@@ -1,7 +1,10 @@
+"use client";
+
 import Link from "next/link";
 import type { PlayerHighlight } from "./index";
 import type { Role } from "@/lib/types";
 import { PlaceholderCard } from "./placeholder-card";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface PlayerHighlightsListProps {
   players: PlayerHighlight[];
@@ -12,8 +15,9 @@ export function PlayerHighlightsList({
   players,
   roleLabels,
 }: PlayerHighlightsListProps) {
+  const t = useTranslations();
   if (players.length === 0) {
-    return <PlaceholderCard message="Player highlights coming soon" />;
+    return <PlaceholderCard message={t("stats.playerHighlightsComingSoon")} />;
   }
 
   return (

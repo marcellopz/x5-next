@@ -2,8 +2,10 @@
 
 import { Users } from "lucide-react";
 import { useMatchmaking } from "../matchmaking-context";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 export function StickyProgressBar() {
+  const t = useTranslations();
   const { selectedPlayers } = useMatchmaking();
 
   return (
@@ -12,9 +14,9 @@ export function StickyProgressBar() {
         <div className="flex items-center gap-2">
           <Users className="h-4 w-4 text-muted-foreground" />
           <span className="text-sm font-medium">
-            Selected:{" "}
+            {t("matchmaking.selectedPlayersCount")}:{" "}
             <span className="hidden sm:inline" key={selectedPlayers.length}>
-              {selectedPlayers.length}/10 players
+              {selectedPlayers.length}/10
             </span>
           </span>
         </div>

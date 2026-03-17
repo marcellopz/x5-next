@@ -9,6 +9,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import type { TeamSideStats } from "@/lib/types";
 
 // Alias for consistency (TeamSideStats now includes all fields)
@@ -30,6 +31,7 @@ export function StatsTable({
   redSide,
   blueSide,
 }: StatsTableProps) {
+  const t = useTranslations();
   return (
     <Card>
       <CardHeader>
@@ -39,12 +41,12 @@ export function StatsTable({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Stat</TableHead>
+              <TableHead>{t("stats.mapSide.stat")}</TableHead>
               <TableHead className="text-center text-blue-400!">
-                Blue Side
+                {t("stats.mapSide.blueSide")}
               </TableHead>
               <TableHead className="text-center text-red-400">
-                Red Side
+                {t("stats.mapSide.redSide")}
               </TableHead>
             </TableRow>
           </TableHeader>

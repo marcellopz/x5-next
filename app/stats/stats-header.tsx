@@ -3,12 +3,13 @@
 import { usePathname } from "next/navigation";
 import { Breadcrumb } from "@/components/ui/breadcrumb";
 import { statRoutes } from "./stat-routes";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 export function StatsHeader() {
   const pathname = usePathname();
+  const t = useTranslations();
   const segments = pathname.split("/").filter(Boolean);
 
-  // Check if we're on a sub-route (not the main /stats page)
   const isSubRoute = segments.length > 1 && segments[0] === "stats";
   const currentRoute = isSubRoute ? segments[1] : null;
 
@@ -19,12 +20,12 @@ export function StatsHeader() {
   const routeInfo = currentRoute ? statRoutes[currentRoute] : null;
 
   const breadcrumbItems = [
-    { label: "Statistics", href: "/stats" },
-    ...(routeInfo ? [{ label: routeInfo.title }] : []),
+    { label: t("stats.title"), href: "/stats" },
+    ...(routeInfo ? [{ label: t(routeInfo.titleKey) }] : []),
   ];
 
-  const pageTitle = routeInfo?.title || "Statistics";
-  const pageDescription = routeInfo?.description;
+  const pageTitle = routeInfo ? t(routeInfo.titleKey) : t("stats.title");
+  const pageDescription = routeInfo ? t(routeInfo.descriptionKey) : undefined;
 
   if (currentRoute === "champion-stats") {
     return <Breadcrumb items={breadcrumbItems} className="mb-4" />;

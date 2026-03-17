@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import { Player } from "@/lib/types";
 import Image from "next/image";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface PlayersTableProps {
   players: Player[];
@@ -23,6 +24,7 @@ export function PlayersTable({
   selectedPlayers,
   onSelectionChange,
 }: PlayersTableProps) {
+  const t = useTranslations();
   // Convert selectedPlayers to Set for checkbox functionality
   const selectedPlayerIds = new Set(
     selectedPlayers.map((player) => player.account_id)
@@ -51,7 +53,7 @@ export function PlayersTable({
             <TableHead className="text-center">
               <Image
                 src="/top.png"
-                alt="Top"
+                alt={t("roles.top")}
                 width={20}
                 height={20}
                 sizes="20px"
@@ -61,7 +63,7 @@ export function PlayersTable({
             <TableHead className="text-center">
               <Image
                 src="/jungle.png"
-                alt="Jungle"
+                alt={t("roles.jungle")}
                 width={20}
                 height={20}
                 sizes="20px"
@@ -71,7 +73,7 @@ export function PlayersTable({
             <TableHead className="text-center">
               <Image
                 src="/mid.png"
-                alt="Mid"
+                alt={t("roles.mid")}
                 width={20}
                 height={20}
                 sizes="20px"
@@ -81,7 +83,7 @@ export function PlayersTable({
             <TableHead className="text-center">
               <Image
                 src="/bot.png"
-                alt="Bot"
+                alt={t("roles.adc")}
                 width={20}
                 height={20}
                 sizes="20px"
@@ -91,7 +93,7 @@ export function PlayersTable({
             <TableHead className="text-center">
               <Image
                 src="/supp.png"
-                alt="Support"
+                alt={t("roles.support")}
                 width={20}
                 height={20}
                 sizes="20px"

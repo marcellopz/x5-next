@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "@/lib/i18n/locale-context";
 import {
   Table,
   TableBody,
@@ -17,8 +18,10 @@ interface RankChangesTableProps {
 
 function RankChangesTableRows({
   getPlayerName,
+  t,
 }: {
   getPlayerName: (nameId: string) => string;
+  t: (key: string) => string;
 }) {
   const sortedData = useTableData() as Array<{
     nameId: string;
@@ -30,7 +33,7 @@ function RankChangesTableRows({
       {sortedData.length === 0 ? (
         <TableRow>
           <TableCell colSpan={3} className="text-center text-muted-foreground">
-            No rank changes found
+            {t("stats.noRankChangesFound")}
           </TableCell>
         </TableRow>
       ) : (
@@ -52,7 +55,7 @@ export function RankChangesTable({
   data,
   getPlayerName,
 }: RankChangesTableProps) {
-  // Transform data into array format
+  const t = useTranslations();
   const tableData = Object.entries(data).map(([nameId, changes]) => ({
     nameId,
     changes,
@@ -60,7 +63,7 @@ export function RankChangesTable({
 
   return (
     <div>
-      <h2 className="text-xl font-semibold mb-4">Total Rank Changes</h2>
+      <h2 className="text-xl font-semibold mb-4">{t("stats.totalRankChanges")}</h2>
       <Table
         data={tableData}
         sortConfig={{
@@ -73,15 +76,15 @@ export function RankChangesTable({
           <TableRow>
             <TableHead className="w-12">#</TableHead>
             <TableHead sortable sortKey="nameId">
-              Player
+              {t("stats.mvpTablePlayer")}
             </TableHead>
             <TableHead sortable sortKey="changes" className="text-center">
-              Total Changes
+              {t("stats.totalChanges")}
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          <RankChangesTableRows getPlayerName={getPlayerName} />
+          <RankChangesTableRows getPlayerName={getPlayerName} t={t} />
         </TableBody>
       </Table>
     </div>

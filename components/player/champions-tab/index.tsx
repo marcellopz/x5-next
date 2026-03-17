@@ -15,10 +15,10 @@ import {
 import { CHAMPIONICONURL } from "@/lib/resources";
 import type { ChampionStats } from "@/lib/types";
 
-function formatNumber(num: number | string): string {
+function formatNumber(num: number | string, locale = "en-US"): string {
   const numValue = typeof num === "string" ? parseFloat(num) : num;
   if (isNaN(numValue)) return "0";
-  return numValue.toLocaleString("en-US");
+  return numValue.toLocaleString(locale);
 }
 
 function floatToPercentageString(value: number): string {

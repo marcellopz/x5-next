@@ -16,6 +16,7 @@ import { PresetLanesForm } from "./preset-lanes-form";
 import { AvoidRolesForm } from "./avoid-roles-form";
 import { PlayerCombosForm } from "./player-combos-form";
 import { useMatchmaking } from "../matchmaking-context";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface AlgoConfigStepProps {
   onPrevious: () => void;
@@ -23,6 +24,7 @@ interface AlgoConfigStepProps {
 }
 
 export function AlgoConfigStep({ onPrevious, onNext }: AlgoConfigStepProps) {
+  const t = useTranslations();
   const { config, setConfig, expandedSections, setExpandedSections } =
     useMatchmaking();
 
@@ -82,8 +84,8 @@ export function AlgoConfigStep({ onPrevious, onNext }: AlgoConfigStepProps) {
       {/* Advanced Options */}
       <Card>
         <CardHeader>
-          <CardTitle>Advanced Options</CardTitle>
-          <CardDescription>Additional configuration settings</CardDescription>
+          <CardTitle>{t("matchmaking.advancedOptions")}</CardTitle>
+          <CardDescription>{t("matchmaking.advancedOptionsDescription")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Use Pre-set Lanes */}
@@ -110,7 +112,7 @@ export function AlgoConfigStep({ onPrevious, onNext }: AlgoConfigStepProps) {
                       setExpandedSections((prev) => [...prev, "presetLanes"]);
                     }
                   }}
-                  label="Use pre-set lanes"
+                  label={t("matchmaking.usePresetLanes")}
                 />
               </div>
               <button
@@ -156,7 +158,7 @@ export function AlgoConfigStep({ onPrevious, onNext }: AlgoConfigStepProps) {
                       setExpandedSections((prev) => [...prev, "avoidRoles"]);
                     }
                   }}
-                  label="Avoid roles for players"
+                  label={t("matchmaking.avoidRolesForPlayers")}
                 />
               </div>
               <button
@@ -205,7 +207,7 @@ export function AlgoConfigStep({ onPrevious, onNext }: AlgoConfigStepProps) {
                       setExpandedSections((prev) => [...prev, "playerCombos"]);
                     }
                   }}
-                  label="Set player combos"
+                  label={t("matchmaking.setPlayerCombos")}
                 />
               </div>
               <button
@@ -234,10 +236,10 @@ export function AlgoConfigStep({ onPrevious, onNext }: AlgoConfigStepProps) {
       <div className="flex justify-between">
         <Button variant="outline" onClick={onPrevious}>
           <ArrowLeft className="h-4 w-4 mr-2" />
-          Previous
+          {t("matchmaking.previous")}
         </Button>
         <Button onClick={onNext} className="min-w-32">
-          Next Step
+          {t("matchmaking.nextStep")}
           <ArrowRight className="h-4 w-4 ml-2" />
         </Button>
       </div>

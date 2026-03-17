@@ -9,6 +9,7 @@ import {
   SummarizedOverallData,
 } from "@/lib/types";
 import { useMemo } from "react";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 const defaultChampionLeaderboardEntry: ChampionLeaderboardEntry = {
   championId: "",
@@ -36,12 +37,13 @@ export function ChampionsSection({
   championTableData?: SummarizedOverallData["champions"];
   totalGames?: number;
 }) {
+  const t = useTranslations();
   const championCards = useMemo(
     () => [
       {
         championId: parseInt(championLeaderboard.mostPlayed.championId) || 0,
         championName: championLeaderboard.mostPlayed.championName || "-",
-        stat: "Most Played (Last 20 games)",
+        stat: t("home.mostPlayedLast20"),
         value: championLeaderboard.mostPlayed.value.toString(),
         gamesPlayed: championLeaderboard.mostPlayed.numberOfGames,
         winRate: `${(championLeaderboard.mostPlayed.winRate * 100).toFixed(
@@ -51,7 +53,7 @@ export function ChampionsSection({
       {
         championId: parseInt(championLeaderboard.mostWins.championId) || 0,
         championName: championLeaderboard.mostWins.championName || "-",
-        stat: "Most Wins (Last 20 games)",
+        stat: t("home.mostWinsLast20"),
         value: championLeaderboard.mostWins.value.toString(),
         gamesPlayed: championLeaderboard.mostWins.numberOfGames,
         winRate: `${(championLeaderboard.mostWins.winRate * 100).toFixed(0)}%`,
@@ -59,7 +61,7 @@ export function ChampionsSection({
       {
         championId: parseInt(championLeaderboard.mostBanned.championId) || 0,
         championName: championLeaderboard.mostBanned.championName || "-",
-        stat: "Most Banned (Last 20 games)",
+        stat: t("home.mostBannedLast20"),
         value: championLeaderboard.mostBanned.value.toString(),
         gamesPlayed: championLeaderboard.mostBanned.numberOfGames,
         winRate: `${(championLeaderboard.mostBanned.winRate * 100).toFixed(
@@ -69,7 +71,7 @@ export function ChampionsSection({
       {
         championId: parseInt(championLeaderboard.mostLosses.championId) || 0,
         championName: championLeaderboard.mostLosses.championName || "-",
-        stat: "Most Losses (Last 20 games)",
+        stat: t("home.mostLossesLast20"),
         value: championLeaderboard.mostLosses.value.toString(),
         gamesPlayed: championLeaderboard.mostLosses.numberOfGames,
         winRate: `${(championLeaderboard.mostLosses.winRate * 100).toFixed(
@@ -77,11 +79,11 @@ export function ChampionsSection({
         )}%`,
       },
     ],
-    [championLeaderboard]
+    [championLeaderboard, t]
   );
 
   return (
-    <CollapsibleSection title="Champion Statistics">
+    <CollapsibleSection title={t("home.championStatistics")}>
       <div className="grid gap-4 lg:grid-cols-4 lg:items-stretch min-w-0">
         {/* Left side - Standout picks (2x2 grid) */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-4 lg:content-start">

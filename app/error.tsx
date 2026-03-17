@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface ErrorProps {
   error: Error & { digest?: string };
@@ -9,8 +10,9 @@ interface ErrorProps {
 }
 
 export default function Error({ error, reset }: ErrorProps) {
+  const t = useTranslations();
+
   useEffect(() => {
-    // Log the error to an error reporting service
     console.error("Application error:", error);
   }, [error]);
 
@@ -35,16 +37,16 @@ export default function Error({ error, reset }: ErrorProps) {
           </div>
 
           <h1 className="text-2xl font-bold text-foreground mb-2">
-            Something went wrong
+            {t("error.somethingWentWrong")}
           </h1>
           <p className="text-muted-foreground mb-4">
-            An unexpected error occurred. Please try again.
+            {t("error.unexpectedError")}
           </p>
 
           {process.env.NODE_ENV === "development" && (
             <details className="text-left bg-muted p-4 rounded-md mb-4">
               <summary className="cursor-pointer text-sm font-medium mb-2">
-                Error Details (Development)
+                {t("error.errorDetails")}
               </summary>
               <pre className="text-xs text-muted-foreground whitespace-pre-wrap break-words">
                 {error.message}
@@ -56,7 +58,7 @@ export default function Error({ error, reset }: ErrorProps) {
 
         <div className="space-y-4">
           <Button onClick={reset} className="w-full">
-            Try Again
+            {t("error.tryAgain")}
           </Button>
 
           <Button
@@ -64,7 +66,7 @@ export default function Error({ error, reset }: ErrorProps) {
             onClick={() => (window.location.href = "/")}
             className="w-full"
           >
-            Go Home
+            {t("error.goHome")}
           </Button>
         </div>
       </div>

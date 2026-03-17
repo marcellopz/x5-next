@@ -12,6 +12,7 @@ import { MatchComponent } from "@/components/match/match-component";
 import { DamageChart } from "@/components/match/damage-chart";
 import { PlayerTabs } from "@/components/match/player-tabs";
 import { generatePageMetadata } from "@/lib/metadata";
+import { getLocale, getTranslations, t } from "@/lib/i18n";
 import { calculateMatchPlayerRanks } from "@/lib/rank-utils";
 import type { MatchMetadata, FullMatchData } from "@/lib/types";
 
@@ -21,9 +22,11 @@ interface MatchPageProps {
 
 export async function generateMetadata({ params }: MatchPageProps) {
   const { matchId } = await params;
+  const locale = await getLocale();
+  const trans = getTranslations(locale);
   return generatePageMetadata(
-    `Match ${matchId}`,
-    `Detailed match analysis with player performance and statistics`
+    t(trans, "matchPage.title").replace("{{id}}", matchId),
+    t(trans, "matchPage.description")
   );
 }
 
@@ -55,12 +58,14 @@ export default async function MatchPage({ params }: MatchPageProps) {
   ]);
 
   if (!matchData) {
+    const locale = await getLocale();
+    const trans = getTranslations(locale);
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center py-8">
-          <h1 className="text-2xl font-bold mb-2">Match Not Found</h1>
+          <h1 className="text-2xl font-bold mb-2">{t(trans, "matchPage.matchNotFound")}</h1>
           <p className="text-muted-foreground">
-            The match data is not available yet.
+            {t(trans, "matchPage.matchNotAvailable")}
           </p>
         </div>
       </div>

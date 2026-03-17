@@ -12,16 +12,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface ChampionMiniCardProps {
   champion: ChampionSpotlightEntry | null;
 }
 
 export function ChampionMiniCard({ champion }: ChampionMiniCardProps) {
+  const t = useTranslations();
   if (!champion) {
     return (
       <div className="lg:col-span-2 rounded-lg border border-dashed border-border bg-card/40 p-6 text-center text-sm text-muted-foreground">
-        Select a champion to see details.
+        {t("stats.selectChampionToSeeDetails")}
       </div>
     );
   }
@@ -62,31 +64,31 @@ export function ChampionMiniCard({ champion }: ChampionMiniCardProps) {
       </div>
 
       <div className="grid grid-cols-3 gap-4 text-sm">
-        <StatBlock label="Win Rate" value={`${winRate}%`} />
-        <StatBlock label="KDA" value={kda} />
-        <StatBlock label="Presence" value={`${presence}%`} />
-        <StatBlock label="Bans" value={champion.bans.toString()} />
+        <StatBlock label={t("home.winRate")} value={`${winRate}%`} />
+        <StatBlock label={t("common.kda")} value={kda} />
+        <StatBlock label={t("home.presence")} value={`${presence}%`} />
+        <StatBlock label={t("home.bans")} value={champion.bans.toString()} />
         <StatBlock
-          label="Avg K/D/A"
+          label={t("stats.avgKDA")}
           value={`${champion.kills.toFixed(1)}/${champion.deaths.toFixed(
             1
           )}/${champion.assists.toFixed(1)}`}
         />
-        <StatBlock label="Avg CS" value={champion.creepsKilled.toFixed(1)} />
+        <StatBlock label={t("stats.avgCS")} value={champion.creepsKilled.toFixed(1)} />
       </div>
 
       {playedByEntries.length > 0 && (
         <div className="space-y-2">
           <p className="text-xs uppercase tracking-wide text-muted-foreground">
-            Played By
+            {t("stats.playedBy")}
           </p>
           <div className="border border-border rounded-lg overflow-hidden">
             <Table compact>
               <TableHeader>
                 <TableRow>
-                  <TableHead className="text-xs">Player</TableHead>
-                  <TableHead className="text-xs text-center">Games</TableHead>
-                  <TableHead className="text-xs text-center">W/L</TableHead>
+                  <TableHead className="text-xs">{t("stats.mvpTablePlayer")}</TableHead>
+                  <TableHead className="text-xs text-center">{t("stats.mvpTableGames")}</TableHead>
+                  <TableHead className="text-xs text-center">{t("stats.wlShort")}</TableHead>
                   <TableHead className="text-xs text-center">CS</TableHead>
                 </TableRow>
               </TableHeader>

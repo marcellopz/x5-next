@@ -11,6 +11,7 @@ import {
   TableRow,
   useTableData,
 } from "@/components/ui/table";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import type { PlayerList, PlayerSummary } from "@/lib/types";
 import { useRouter } from "next/navigation";
 
@@ -143,6 +144,7 @@ function PlayerTableContent({
 }: {
   playerSummary: PlayerSummary | null;
 }) {
+  const t = useTranslations();
   const sortedPlayers = useTableData() as PlayerWithNameId[];
   const router = useRouter();
   return (
@@ -150,17 +152,17 @@ function PlayerTableContent({
       <TableHeader>
         <TableRow>
           <TableHead sortable sortKey="name">
-            Name
+            {t("admin.playerName")}
           </TableHead>
           <TableHead sortable sortKey="winRate">
-            Win Rate
+            {t("home.winRate")}
           </TableHead>
           <TableHead>{/* OP.GG column - no header text */}</TableHead>
           <TableHead sortable sortKey="summonerName">
             Summoner Name
           </TableHead>
           <TableHead sortable sortKey="matches">
-            Matches
+            {t("common.matches")}
           </TableHead>
           <TableHead
             sortable
@@ -169,7 +171,7 @@ function PlayerTableContent({
           >
             <Image
               src="/top.png"
-              alt="Top"
+              alt={t("roles.top")}
               width={20}
               height={20}
               sizes="20px"
@@ -183,7 +185,7 @@ function PlayerTableContent({
           >
             <Image
               src="/jungle.png"
-              alt="Jungle"
+              alt={t("roles.jungle")}
               width={20}
               height={20}
               sizes="20px"
@@ -197,7 +199,7 @@ function PlayerTableContent({
           >
             <Image
               src="/mid.png"
-              alt="Mid"
+              alt={t("roles.mid")}
               width={20}
               height={20}
               sizes="20px"
@@ -211,7 +213,7 @@ function PlayerTableContent({
           >
             <Image
               src="/bot.png"
-              alt="Bot"
+              alt={t("roles.adc")}
               width={20}
               height={20}
               sizes="20px"
@@ -225,7 +227,7 @@ function PlayerTableContent({
           >
             <Image
               src="/supp.png"
-              alt="Support"
+              alt={t("roles.support")}
               width={20}
               height={20}
               sizes="20px"

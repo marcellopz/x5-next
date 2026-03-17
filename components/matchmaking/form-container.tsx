@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { FormStepper } from "./form-stepper";
 import { PlayerSelectionStep } from "./player-selection-step";
 import { AlgoConfigStep } from "./algo-config-step";
@@ -11,40 +11,34 @@ import type { Player } from "@/lib/types";
 import { Button } from "../ui/button";
 import { RefreshCcwIcon, ChevronLeft } from "lucide-react";
 import { getPlayerList } from "@/lib/endpoints";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface FormContainerProps {
   players: Player[];
 }
 
-const steps = [
-  {
-    title: "Player Selection",
-    description: "Choose participants",
-  },
-  {
-    title: "Matchmaking Rules",
-    description: "Configure matchmaking rules",
-  },
-  {
-    title: "Results",
-    description: "View generated teams",
-  },
-];
-
-const buttonText = (isRefreshing: number) => {
-  switch (isRefreshing) {
-    case 0:
-      return "Refresh Players";
-    case 1:
-      return "Refreshing...";
-    case 2:
-      return "Refreshed";
-    default:
-      return "Refresh Players";
-  }
-};
-
 function FormContent() {
+  const t = useTranslations();
+  const steps = useMemo(
+    () => [
+      { title: t("matchmaking.playerSelection"), description: t("matchmaking.playerSelectionDescription") },
+      { title: t("matchmaking.matchmakingRules"), description: t("matchmaking.matchmakingRulesDescription") },
+      { title: t("matchmaking.results"), description: t("matchmaking.resultsDescription") },
+    ],
+    [t]
+  );
+  const buttonText = (isRefreshing: number) => {
+    switch (isRefreshing) {
+      case 0:
+        return t("matchmaking.refreshPlayers");
+      case 1:
+        return t("matchmaking.refreshing");
+      case 2:
+        return t("matchmaking.refreshed");
+      default:
+        return t("matchmaking.refreshPlayers");
+    }
+  };
   const [currentStep, setCurrentStep] = useState(1);
   const [isRefreshing, setIsRefreshing] = useState(0); // 0: not refreshing, 1: refreshing, 2: error, 3: refreshed
   const { setPlayers, setRefreshIndex } = useMatchmaking();

@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/ui/navbar";
 import { getSeasonPrefix } from "@/lib/metadata";
+import { getLocale, getTranslations, t } from "@/lib/i18n";
+import { LocaleProvider } from "@/lib/i18n/locale-context";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,31 +16,40 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export const metadata: Metadata = {
-  title: getSeasonPrefix() === "x5s3" ? "x5 season 3" : "x5 season 2",
-  description: "Custom league of legends analytics dashboard",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const locale = await getLocale();
+  const trans = getTranslations(locale);
+  const prefix = getSeasonPrefix();
+  return {
+    title: prefix === "x5s3" ? t(trans, "layout.titleSeason3") : t(trans, "layout.titleSeason2"),
+    description: t(trans, "layout.description"),
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const locale = await getLocale();
+
   return (
-    <html lang="en">
+    <html lang={locale}>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         style={{
           fontFeatureSettings: '"rlig" 1, "calt" 1',
         }}
       >
-        <div
-          id="root-container"
-          className="min-h-screen flex flex-col bg-background"
-        >
-          <Navbar />
-          <main className="flex-1">{children}</main>
-        </div>
+        <LocaleProvider initialLocale={locale}>
+          <div
+            id="root-container"
+            className="min-h-screen flex flex-col bg-background"
+          >
+            <Navbar />
+            <main className="flex-1">{children}</main>
+          </div>
+        </LocaleProvider>
       </body>
     </html>
   );

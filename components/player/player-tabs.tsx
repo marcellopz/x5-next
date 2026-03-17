@@ -3,12 +3,13 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 const tabs = [
-  { label: "Summary", path: "" },
-  { label: "Champions", path: "champions" },
-  { label: "Stats", path: "stats" },
-  { label: "Records", path: "records" },
+  { labelKey: "playerTabs.summary", path: "" },
+  { labelKey: "playerTabs.champions", path: "champions" },
+  { labelKey: "playerTabs.stats", path: "stats" },
+  { labelKey: "playerTabs.records", path: "records" },
 ];
 
 interface PlayerTabsProps {
@@ -17,6 +18,7 @@ interface PlayerTabsProps {
 
 export function PlayerTabs({ slug }: PlayerTabsProps) {
   const pathname = usePathname();
+  const t = useTranslations();
 
   return (
     <div className="border-t border-border">
@@ -40,7 +42,7 @@ export function PlayerTabs({ slug }: PlayerTabsProps) {
                   : "text-muted-foreground hover:text-foreground"
               )}
             >
-              {tab.label}
+              {t(tab.labelKey)}
               {isActive && (
                 <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
               )}

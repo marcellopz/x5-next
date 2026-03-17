@@ -2,6 +2,7 @@
 import Image from "next/image";
 import React from "react";
 import { ROLE_META, RoleKey } from "./roleMeta";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 function RoleTabButton({
   label,
@@ -45,12 +46,13 @@ export function MapWithRoleTabs({
   activeRole,
   onSelect,
 }: MapWithRoleTabsProps) {
+  const t = useTranslations();
   return (
     <div>
       <div className="relative mr-auto w-full md:min-w-[450px]">
         <Image
           src="/map_summoners_rift.svg"
-          alt="Summoner's Rift Map"
+          alt={t("common.summonersRiftMap")}
           width={500}
           height={500}
           className="h-auto w-full select-none rounded-xl border border-primary/30"

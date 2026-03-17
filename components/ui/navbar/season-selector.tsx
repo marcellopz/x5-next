@@ -3,35 +3,37 @@
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { ChevronDown } from "lucide-react";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { cn } from "@/lib/utils";
 
 interface SeasonOption {
-  name: string;
+  nameKey: string;
   url: string;
 }
 
 const SEASON_OPTIONS: SeasonOption[] = [
-  { name: "Season 1", url: "https://x5dosnerds.vercel.app" },
-  { name: "Season 2", url: "https://x5-season-2.vercel.app" },
-  { name: "Season 2 Legacy", url: "https://x5-season-2-legacy.vercel.app" },
-  { name: "Season 3", url: "https://x5-season-3.vercel.app" },
-  { name: "Season 3 Legacy", url: "https://x5-season-3-legacy.vercel.app" },
+  { nameKey: "season.season1", url: "https://x5dosnerds.vercel.app" },
+  { nameKey: "season.season2", url: "https://x5-season-2.vercel.app" },
+  { nameKey: "season.season2Legacy", url: "https://x5-season-2-legacy.vercel.app" },
+  { nameKey: "season.season3", url: "https://x5-season-3.vercel.app" },
+  { nameKey: "season.season3Legacy", url: "https://x5-season-3-legacy.vercel.app" },
 ];
 
-function getCurrentSeasonName(): { full: string; short: string } {
+function getCurrentSeasonKey(): "s3" | "s2" {
   const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "";
-  if (projectId.includes("season-3") || projectId.includes("s3")) {
-    return { full: "season 3", short: "s3" };
-  } else if (projectId.includes("season-2") || projectId.includes("s2")) {
-    return { full: "season 2", short: "s2" };
-  }
-  return { full: "season 3", short: "s3" };
+  if (projectId.includes("season-2") || projectId.includes("s2")) return "s2";
+  return "s3";
 }
 
 export function SeasonSelector() {
+  const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const currentSeason = getCurrentSeasonName();
+  const seasonKey = getCurrentSeasonKey();
+  const currentSeason = {
+    full: seasonKey === "s3" ? t("season.season3") : t("season.season2"),
+    short: seasonKey === "s3" ? t("season.s3") : t("season.s2"),
+  };
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -53,8 +55,7 @@ export function SeasonSelector() {
     };
   }, [isOpen]);
 
-  // Show all seasons, but highlight the current one
-  const allSeasons = SEASON_OPTIONS;
+  const allSeasons = SEASON_OPTIONS.map((opt) => ({ ...opt, name: t(opt.nameKey) }));
 
   if (allSeasons.length === 0) {
     return null; // Don't show if there are no seasons
@@ -83,10 +84,11 @@ export function SeasonSelector() {
           <div className="py-1">
             {allSeasons.map((season) => {
               const isCurrent =
-                season.name.toLowerCase() === currentSeason.full;
+                (seasonKey === "s3" && season.nameKey === "season.season3") ||
+                (seasonKey === "s2" && season.nameKey === "season.season2");
               return (
                 <Link
-                  key={season.name}
+                  key={season.nameKey}
                   href={season.url}
                   className={cn(
                     "block px-4 py-2 text-sm transition",

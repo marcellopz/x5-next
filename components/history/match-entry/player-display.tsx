@@ -7,6 +7,7 @@ import Link from "next/link";
 import { championIds, CHAMPIONICONURL, ITEMICONURL } from "@/lib/resources";
 import type { ReducedMatchData } from "@/lib/types";
 import { FilterIdentifier } from "../matches-container";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 export interface PlayerDisplayProps {
   participant: ReducedMatchData["participants"][0];
@@ -21,6 +22,7 @@ export function PlayerDisplay({
   priority = false,
   filteringBy,
 }: PlayerDisplayProps) {
+  const t = useTranslations();
   const championName =
     championIds[participant.championId as keyof typeof championIds];
   const championIconUrl = `${CHAMPIONICONURL}${participant.championId}.png`;
@@ -63,7 +65,7 @@ export function PlayerDisplay({
         <div className="relative shrink-0 w-8 h-8 xl:w-10 xl:h-10">
           <Image
             src={championIconUrl}
-            alt={championName || "Champion"}
+            alt={championName || t("common.champion")}
             width={40}
             height={40}
             sizes="40px"
@@ -107,7 +109,7 @@ export function PlayerDisplay({
                   : ""
               }`}
             >
-              {championName || `Champion ${participant.championId}`}
+              {championName || `${t("common.champion")} ${participant.championId}`}
             </span>
           </div>
         </div>
@@ -123,7 +125,7 @@ export function PlayerDisplay({
             {item !== 0 && (
               <Image
                 src={`${ITEMICONURL}${item}.png`}
-                alt={`Item ${item}`}
+                alt={`${t("common.itemAlt")} ${item}`}
                 width={32}
                 height={32}
                 sizes="32px"
@@ -148,7 +150,7 @@ export function PlayerDisplay({
           </div>
           <div className="text-muted-foreground">
             {participant.stats.deaths === 0
-              ? "Perfect"
+              ? t("common.perfect")
               : (
                   (participant.stats.kills + participant.stats.assists) /
                   participant.stats.deaths

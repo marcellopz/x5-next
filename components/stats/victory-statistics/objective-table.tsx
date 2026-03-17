@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import type { ObjectiveStat } from "./utils";
 import { formatWinRate } from "./utils";
 
@@ -18,6 +19,7 @@ interface ObjectiveTableProps {
 }
 
 export function ObjectiveTable({ title, objectives }: ObjectiveTableProps) {
+  const t = useTranslations();
   return (
     <Card className="h-full">
       <CardHeader>
@@ -27,10 +29,10 @@ export function ObjectiveTable({ title, objectives }: ObjectiveTableProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Objective</TableHead>
-              <TableHead className="text-center">Wins</TableHead>
-              <TableHead className="text-center">Games</TableHead>
-              <TableHead className="text-center">Win Rate</TableHead>
+              <TableHead>{t("stats.victory.objective")}</TableHead>
+              <TableHead className="text-center">{t("common.wins")}</TableHead>
+              <TableHead className="text-center">{t("common.games")}</TableHead>
+              <TableHead className="text-center">{t("stats.victory.winRate")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

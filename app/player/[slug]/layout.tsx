@@ -9,6 +9,7 @@ import {
   getPlayerRankChanges,
 } from "@/lib/endpoints";
 import { getPlayerByAccountId } from "@/lib/utils";
+import { getLocale, getTranslations, t } from "@/lib/i18n";
 import { PlayerDataProvider } from "@/components/player/player-data-context";
 import { PlayerBanner } from "@/components/player/player-banner";
 import { PlayerTabs } from "@/components/player/player-tabs";
@@ -142,12 +143,14 @@ export default async function PlayerLayout({
   const data = await fetchPlayerData(slug);
 
   if (!data) {
+    const locale = await getLocale();
+    const trans = getTranslations(locale);
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold">Player Not Found</h1>
+          <h1 className="text-2xl font-bold">{t(trans, "playerPage.playerNotFound")}</h1>
           <p className="text-muted-foreground mt-2">
-            The player &quot;{slug}&quot; could not be found.
+            {t(trans, "playerPage.playerNotFoundDetail").replace("{{slug}}", slug)}
           </p>
         </div>
       </div>
@@ -155,12 +158,14 @@ export default async function PlayerLayout({
   }
 
   if (!data.playerInfo) {
+    const locale = await getLocale();
+    const trans = getTranslations(locale);
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="text-center">
-          <h1 className="text-2xl font-bold">No Player Data</h1>
+          <h1 className="text-2xl font-bold">{t(trans, "playerPage.noPlayerData")}</h1>
           <p className="text-muted-foreground mt-2">
-            Player data is not available for this player.
+            {t(trans, "playerPage.noPlayerDataDetail")}
           </p>
         </div>
       </div>

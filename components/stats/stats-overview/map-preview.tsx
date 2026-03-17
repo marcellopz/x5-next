@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { SideStatBox } from "@/components/stats/map-side-comparison/side-stat-box";
 import {
   Table,
@@ -11,21 +12,22 @@ import {
 } from "@/components/ui/table";
 import type { MapSummary, MapObjectiveKey } from "./types";
 
-const objectiveRows: Array<{ key: MapObjectiveKey; label: string }> = [
-  { key: "firstBlood", label: "First Bloods" },
-  { key: "towerKills", label: "Turrets Destroyed" },
-  { key: "baronKills", label: "Barons Killed" },
-  { key: "dragonKills", label: "Dragons Killed" },
-  { key: "voidGrubs", label: "Void Grubs" },
-  { key: "riftHeraldKills", label: "Rift Heralds" },
-  { key: "atakhan", label: "Atakhans Claimed" },
-];
-
 export function MapPreview({ data }: { data: MapSummary | null }) {
+  const t = useTranslations();
+  const objectiveRows: Array<{ key: MapObjectiveKey; label: string }> = [
+    { key: "firstBlood", label: t("stats.mapSide.firstBloods") },
+    { key: "towerKills", label: t("stats.mapSide.turretsDestroyed") },
+    { key: "baronKills", label: t("stats.mapSide.baronsKilled") },
+    { key: "dragonKills", label: t("stats.mapSide.dragonsKilled") },
+    { key: "voidGrubs", label: t("stats.mapSide.voidGrubs") },
+    { key: "riftHeraldKills", label: t("stats.mapSide.riftHeraldsKilled") },
+    { key: "atakhan", label: t("stats.mapSide.atakhans") },
+  ];
+
   if (!data) {
     return (
       <div className="rounded-lg border border-dashed border-border/60 bg-card/40 p-4 text-sm text-muted-foreground">
-        Map side data coming soon.
+        {t("stats.mapSideDataComingSoon")}
       </div>
     );
   }
@@ -34,12 +36,12 @@ export function MapPreview({ data }: { data: MapSummary | null }) {
     <div className="flex flex-col flex-1 gap-4">
       <div className="grid grid-cols-2 gap-4">
         <SideStatBox
-          title="Match Wins"
+          title={t("stats.mapSide.matchWins")}
           blueSideStat={data.wins.blue}
           redSideStat={data.wins.red}
         />
         <SideStatBox
-          title="Total Kills"
+          title={t("stats.mapSide.totalKills")}
           blueSideStat={data.kills.blue}
           redSideStat={data.kills.red}
         />
@@ -48,11 +50,11 @@ export function MapPreview({ data }: { data: MapSummary | null }) {
       <Table compact>
         <TableHeader>
           <TableRow>
-            <TableHead>Objective</TableHead>
+            <TableHead>{t("stats.victory.objective")}</TableHead>
             <TableHead className="text-center text-blue-400!">
-              Blue side
+              {t("stats.mapSide.blueSideLower")}
             </TableHead>
-            <TableHead className="text-center text-red-400">Red side</TableHead>
+            <TableHead className="text-center text-red-400">{t("stats.mapSide.redSideLower")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>

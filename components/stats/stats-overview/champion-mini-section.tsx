@@ -5,12 +5,14 @@ import type { ChampionSpotlightEntry } from "./types";
 import { PlaceholderCard } from "./placeholder-card";
 import { ChampionPortraitGrid } from "./champion-portrait-grid";
 import { ChampionMiniCard } from "./champion-mini-card";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface ChampionMiniSectionProps {
   champions: ChampionSpotlightEntry[];
 }
 
 export function ChampionMiniSection({ champions }: ChampionMiniSectionProps) {
+  const t = useTranslations();
   const orderedChampions = champions;
 
   const [selectedId, setSelectedId] = useState<string | null>(
@@ -35,7 +37,7 @@ export function ChampionMiniSection({ champions }: ChampionMiniSectionProps) {
   }, [orderedChampions, selectedId]);
 
   if (!orderedChampions.length) {
-    return <PlaceholderCard message="Champion stats coming soon" />;
+    return <PlaceholderCard message={t("stats.championStatsComingSoon")} />;
   }
 
   const selectedChampion =

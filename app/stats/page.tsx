@@ -22,13 +22,20 @@ import {
   extractRankNetWins,
   extractMvpRows,
 } from "./utils";
+import { getLocale, getTranslations, t } from "@/lib/i18n";
 
-export const metadata = generatePageMetadata(
-  "Stats",
-  "Overall statistics, leaderboards, and analysis"
-);
+export async function generateMetadata() {
+  const locale = await getLocale();
+  const trans = getTranslations(locale);
+  return generatePageMetadata(
+    t(trans, "stats.title"),
+    t(trans, "stats.description")
+  );
+}
 
 export default async function StatsPage() {
+  const locale = await getLocale();
+  const trans = getTranslations(locale);
   const [
     summarizedOverallData,
     championsAverageRoleStats,
@@ -77,22 +84,26 @@ export default async function StatsPage() {
     <>
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div className="space-y-2">
-          <h1 className="text-2xl font-bold tracking-tight">Statistics</h1>
-          <p className="text-sm text-muted-foreground">
-            An overview of competitive statistics and insights from all matches.
-          </p>
+          <h1 className="text-2xl font-bold tracking-tight">
+            {t(trans, "stats.title")}
+          </h1>
         </div>
         {generalStats ? (
           <div className="w-full lg:w-auto">
             <GeneralSummaryCard
               matches={generalStats.numberOfGames}
               players={generalStats.totalPlayers}
+              labels={{
+                matches: t(trans, "stats.summaryCardMatches"),
+                players: t(trans, "stats.summaryCardPlayers"),
+              }}
             />
           </div>
         ) : null}
       </div>
 
       <StatsOverview
+        t={(key) => t(trans, key)}
         championSpotlight={spotlight}
         neverPickedChampions={neverPicked}
         playerHighlights={playerHighlights}

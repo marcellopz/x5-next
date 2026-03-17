@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { usePlayerData } from "../player-data-context";
 import { StatBox } from "./stat-box";
 import { WinRateChart } from "./win-rate-chart";
@@ -11,6 +12,7 @@ function floatToPercentageString(value: number): string {
 }
 
 export function PlayerStatsTab() {
+  const t = useTranslations();
   const { playerInfo, playerPairs, playerSummary } = usePlayerData();
 
   const sameTeam = useMemo(() => {
@@ -73,12 +75,12 @@ export function PlayerStatsTab() {
           <WinRateChart winsArray={playerInfo?.winsArray} />
           <div className="flex flex-wrap gap-5">
             <StatBox
-              title="Win Rate (Blue Side)"
+              title={t("playerStatsTab.winRateBlueSide")}
               value={floatToPercentageString(blueSideWinRate)}
               numberOfGames={playerInfo?.statsPerSide?.blueSide.games}
             />
             <StatBox
-              title="Win Rate (Red Side)"
+              title={t("playerStatsTab.winRateRedSide")}
               value={floatToPercentageString(redSideWinRate)}
               numberOfGames={playerInfo?.statsPerSide?.redSide.games}
             />
@@ -87,8 +89,8 @@ export function PlayerStatsTab() {
 
         {/* Right Column: Win Rate Tables */}
         <div className="flex-1 flex flex-col flex-wrap xl:flex-row gap-5">
-          <WinRateTable players={sameTeam} title="Win Rate With" />
-          <WinRateTable players={oppositeTeam} title="Win Rate Against" />
+          <WinRateTable players={sameTeam} title={t("playerStatsTab.winRateWith")} />
+          <WinRateTable players={oppositeTeam} title={t("playerStatsTab.winRateAgainst")} />
         </div>
       </div>
     </div>

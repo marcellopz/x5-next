@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -42,6 +43,7 @@ export function CompactLeaderboard({
   collapsedAction,
   renderItem,
 }: CompactLeaderboardProps) {
+  const t = useTranslations();
   const [internalExpanded, setInternalExpanded] = useState(false);
 
   // Determine if component is controlled or uncontrolled
@@ -118,7 +120,7 @@ export function CompactLeaderboard({
               onClick={handleToggle}
               className="w-full text-xs"
             >
-              {expanded ? "Show Less" : "Show More"}
+              {expanded ? t("ui.showLess") : t("common.showMore")}
             </Button>
 
             {/* Animated action buttons */}

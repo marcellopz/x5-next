@@ -81,6 +81,7 @@ export interface ChampionPresenceEntry {
 }
 
 interface StatsOverviewProps {
+  t: (key: string) => string;
   championSpotlight: ChampionSpotlightEntry[];
   neverPickedChampions: NeverPickedChampion[];
   playerHighlights: PlayerHighlight[];
@@ -92,54 +93,17 @@ interface StatsOverviewProps {
   mvpRows: MvpRow[];
 }
 
-const roleLabels: Record<Role, string> = {
-  top: "Top",
-  jungle: "Jungle",
-  mid: "Mid",
-  adc: "ADC",
-  support: "Support",
-};
-
-const detailSections = [
-  {
-    id: "mvp-table",
-    title: "MVP Leaderboard",
-    description: "Identify consistent impact performers across the split",
-    href: "/stats/mvp-table",
-  },
-  {
-    id: "player-stats",
-    title: "Player Statistics",
-    description: "Deep dive by lane, metric, and sample size",
-    href: "/stats/player-stats",
-  },
-  {
-    id: "champion-stats",
-    title: "Champion Statistics",
-    description: "Pick/ban trends and per-role standouts",
-    href: "/stats/champion-stats",
-  },
-  {
-    id: "rank-analysis",
-    title: "Rank Analysis",
-    description: "Ladder movement and role-based win/loss deltas",
-    href: "/stats/rank-analysis",
-  },
-  {
-    id: "victory-statistics",
-    title: "Victory Statistics",
-    description: "Objective control and what closes out games",
-    href: "/stats/victory-statistics",
-  },
-  {
-    id: "map-side-comparison",
-    title: "Map Side Comparison",
-    description: "Blue vs red performance and objective control",
-    href: "/stats/map-side-comparison",
-  },
+const detailSectionKeys = [
+  { id: "mvp-table", titleKey: "stats.mvpTable.title", descKey: "stats.mvpTable.description", href: "/stats/mvp-table" },
+  { id: "player-stats", titleKey: "stats.playerStats.title", descKey: "stats.playerStats.description", href: "/stats/player-stats" },
+  { id: "champion-stats", titleKey: "stats.championStats.title", descKey: "stats.championStats.description", href: "/stats/champion-stats" },
+  { id: "rank-analysis", titleKey: "stats.rankAnalysis.title", descKey: "stats.rankAnalysis.description", href: "/stats/rank-analysis" },
+  { id: "victory-statistics", titleKey: "stats.victoryStatistics.title", descKey: "stats.victoryStatistics.description", href: "/stats/victory-statistics" },
+  { id: "map-side-comparison", titleKey: "stats.mapSideComparison.title", descKey: "stats.mapSideComparison.description", href: "/stats/map-side-comparison" },
 ];
 
 export function StatsOverview({
+  t,
   championSpotlight,
   neverPickedChampions,
   playerHighlights,
@@ -150,13 +114,21 @@ export function StatsOverview({
   rankNetWins,
   mvpRows,
 }: StatsOverviewProps) {
+  const roleLabels: Record<Role, string> = {
+    top: t("roles.top"),
+    jungle: t("roles.jungle"),
+    mid: t("roles.mid"),
+    adc: t("roles.adc"),
+    support: t("roles.support"),
+  };
   return (
     <div className="space-y-8">
       <section className="grid gap-6 xl:grid-cols-3">
         <div className="space-y-4 xl:col-span-2">
           <SectionHeader
-            title="Victory Drivers"
+            title={t("stats.victoryDrivers")}
             link="/stats/victory-statistics"
+            linkText={t("common.viewAll")}
           />
           <VictoryPreview
             cards={victoryHighlight.cards}
@@ -165,8 +137,9 @@ export function StatsOverview({
         </div>
         <div className="space-y-4 flex flex-col">
           <SectionHeader
-            title="Map Side Comparison"
+            title={t("stats.mapSideComparison.title")}
             link="/stats/map-side-comparison"
+            linkText={t("common.viewAll")}
           />
           <MapPreview data={mapSummary} />
         </div>
@@ -174,7 +147,7 @@ export function StatsOverview({
 
       <section className="grid gap-6 lg:grid-cols-3">
         <div className="space-y-4 flex flex-col">
-          <SectionHeader title="Rank Movers" link="/stats/rank-analysis" />
+          <SectionHeader title={t("stats.rankAnalysis.title")} link="/stats/rank-analysis" linkText={t("common.viewAll")} />
           <RankHighlights
             movers={rankTopMovers}
             netWins={rankNetWins}
@@ -182,11 +155,11 @@ export function StatsOverview({
           />
         </div>
         <div className="space-y-4 flex flex-col">
-          <SectionHeader title="MVP Board" link="/stats/mvp-table" />
+          <SectionHeader title={t("stats.mvpTable.title")} link="/stats/mvp-table" linkText={t("common.viewAll")} />
           <MvpMiniTable rows={mvpRows} />
         </div>
         <div className="space-y-4 flex flex-col">
-          <SectionHeader title="Role Standouts" link="/stats/player-stats" />
+          <SectionHeader title={t("stats.playerStats.title")} link="/stats/player-stats" />
           <PlayerHighlightsList
             players={playerHighlights}
             roleLabels={roleLabels}
@@ -196,8 +169,9 @@ export function StatsOverview({
 
       <section className="space-y-4">
         <SectionHeader
-          title="Champion Highlights"
+          title={t("stats.championStats.title")}
           link="/stats/champion-stats"
+          linkText={t("common.viewAll")}
         />
         <ChampionMiniSection champions={championSpotlight} />
         {neverPickedChampions.length > 0 && (
@@ -207,23 +181,23 @@ export function StatsOverview({
 
       <section className="space-y-4">
         <SectionHeader
-          title="Featured Player Metric"
+          title={t("stats.featuredPlayerMetric")}
           link="/stats/player-stats"
         />
         <PlayerStatRotation statSets={playerStatSets} />
       </section>
 
       <section className="space-y-4">
-        <h3 className="text-lg font-semibold">Detailed Stats</h3>
+        <h3 className="text-lg font-semibold">{t("stats.title")}</h3>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {detailSections.map((section) => (
+          {detailSectionKeys.map((section) => (
             <Link key={section.id} href={section.href}>
               <div className="h-full rounded-lg border border-border/70 bg-card/60 p-4 hover:border-primary transition-colors">
-                <p className="font-semibold">{section.title}</p>
+                <p className="font-semibold">{t(section.titleKey)}</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  {section.description}
+                  {t(section.descKey)}
                 </p>
-                <p className="text-xs text-primary mt-3">View full report →</p>
+                <p className="text-xs text-primary mt-3">{t("stats.viewFullReport")}</p>
               </div>
             </Link>
           ))}

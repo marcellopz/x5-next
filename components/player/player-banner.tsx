@@ -7,6 +7,7 @@ import { PlayerCard } from "@/components/ui/player-card";
 import type { Player, PlayerInfo, ChampionStats } from "@/lib/types";
 import { WinRateCircularProgress } from "@/components/ui/win-rate-circular-progress";
 import { usePlayerData } from "./player-data-context";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface PlayerBannerProps {
   champs: ChampionStats[];
@@ -75,13 +76,14 @@ function PlayerInfoSection({
   onOpggClick,
   variant,
 }: PlayerInfoSectionProps) {
+  const t = useTranslations();
   const config = sizeConfigs[variant];
   return (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-3 bg-background/30 py-1 px-2 rounded-lg">
         <div className="flex gap-1">
           <h1 className={cn("font-bold text-foreground", config.nameSize)}>
-            {playerInfo.summonerName || player?.name || "Unknown Player"}
+            {playerInfo.summonerName || player?.name || t("common.unknownPlayer")}
           </h1>
           {playerInfo.tagLine && (
             <p

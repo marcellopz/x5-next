@@ -1,18 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useLocale } from "@/lib/i18n/locale-context";
 import { cn } from "@/lib/utils";
 
 export function LanguageToggle() {
-  const [language, setLanguage] = useState<"en" | "pt">("en");
+  const { locale, setLocale } = useLocale();
 
   return (
     <div className="flex items-center rounded-md border border-border bg-background overflow-hidden">
       <button
-        onClick={() => setLanguage("pt")}
+        onClick={() => setLocale("pt")}
         className={cn(
           "px-3 py-1.5 text-xs font-medium transition-colors",
-          language === "pt"
+          locale === "pt"
             ? "text-foreground bg-accent"
             : "text-muted-foreground hover:text-foreground hover:bg-accent/50 cursor-pointer"
         )}
@@ -20,10 +20,10 @@ export function LanguageToggle() {
         PT
       </button>
       <button
-        onClick={() => setLanguage("en")}
+        onClick={() => setLocale("en")}
         className={cn(
           "px-3 py-1.5 text-xs font-medium transition-colors",
-          language === "en"
+          locale === "en"
             ? "text-foreground bg-accent"
             : "text-muted-foreground hover:text-foreground hover:bg-accent/50 cursor-pointer"
         )}

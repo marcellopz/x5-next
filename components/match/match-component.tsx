@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -21,6 +23,7 @@ import {
   turretLoseUrl,
 } from "@/lib/resources";
 import { Role, RoleLeaderboardStats, RoleStats } from "@/lib/types";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface MatchComponentProps {
   matchData: unknown;
@@ -127,12 +130,14 @@ const BaronDragonTurretBans = ({
   dragon,
   turret,
   bans,
+  t,
 }: {
   win: boolean;
   baron: number;
   dragon: number;
   turret: number;
   bans: Array<{ championId: number }>;
+  t: (key: string) => string;
 }) => {
   const baronIcon = win ? baronWinUrl : baronLoseUrl;
   const dragonIcon = win ? dragonWinUrl : dragonLoseUrl;
@@ -144,7 +149,7 @@ const BaronDragonTurretBans = ({
         <div className="flex items-center gap-2">
           <Image
             src={baronIcon}
-            alt="Baron Nashor icon"
+            alt={t("match.baron")}
             width={20}
             height={20}
             sizes="20px"
@@ -152,11 +157,11 @@ const BaronDragonTurretBans = ({
           <span className="text-sm">{baron}</span>
         </div>
         <div className="flex items-center gap-2">
-          <Image src={dragonIcon} alt="Dragon icon" width={20} height={20} sizes="20px" />
+          <Image src={dragonIcon} alt={t("match.dragon")} width={20} height={20} sizes="20px" />
           <span className="text-sm">{dragon}</span>
         </div>
         <div className="flex items-center gap-2">
-          <Image src={turretIcon} alt="Turret icon" width={20} height={20} sizes="20px" />
+          <Image src={turretIcon} alt={t("match.turret")} width={20} height={20} sizes="20px" />
           <span className="text-sm">{turret}</span>
         </div>
       </div>
@@ -169,7 +174,7 @@ const BaronDragonTurretBans = ({
               <div className="w-10 h-10 bg-background rounded border border-border/60 overflow-hidden">
                 <Image
                   src={`${CHAMPIONICONURL}${ban.championId}.png`}
-                  alt={`Banned champion icon ${ban.championId}`}
+                  alt={`${t("common.champion")} ${ban.championId}`}
                   width={36}
                   height={36}
                   className="w-full h-full object-contain"
@@ -184,7 +189,7 @@ const BaronDragonTurretBans = ({
   );
 };
 
-const ItemsSection = ({ player }: { player: Participant }) => {
+const ItemsSection = ({ player, t }: { player: Participant; t: (key: string) => string }) => {
   const itemList = [
     player.stats.item0,
     player.stats.item1,
@@ -208,12 +213,12 @@ const ItemsSection = ({ player }: { player: Participant }) => {
           {item > 0 && (
             <Image
               src={`${ITEMICONURL}${item}.png`}
-              alt={`Item icon ${item}`}
+              alt={`${t("common.itemAlt")} ${item}`}
               width={31}
               height={31}
               className="w-full h-full object-contain"
               sizes="31px"
-              title={`Item ${item}`}
+              title={`${t("common.itemAlt")} ${item}`}
             />
           )}
         </div>
@@ -228,6 +233,7 @@ const PlayerRow = ({
   role,
   totalKills,
   roleStats,
+  t,
 }: {
   player: Participant & {
     identity?: {
@@ -242,6 +248,7 @@ const PlayerRow = ({
   role?: string;
   totalKills: number;
   roleStats: RoleLeaderboardStats | undefined;
+  t: (key: string) => string;
 }) => {
   const spell1Url =
     summonerSpellsUrl[player.spell1Id as keyof typeof summonerSpellsUrl];
@@ -268,7 +275,7 @@ const PlayerRow = ({
             src={`${CHAMPIONICONURL}${player.championId}.png`}
             width={70}
             height={70}
-            alt={`${player.championName} champion icon`}
+            alt={player.championName ? `${player.championName} ${t("common.champion")}` : t("common.champion")}
             className="rounded border border-border/60"
             sizes="70px"
           />
@@ -358,7 +365,7 @@ const PlayerRow = ({
       </div>
 
       {/* Items */}
-      <ItemsSection player={player} />
+      <ItemsSection player={player} t={t} />
     </div>
   );
 };
@@ -376,11 +383,13 @@ const TeamMatch = ({
   matchRoles,
   playerRanks,
   roleStats,
+  t,
 }: {
   team: ProcessedTeam | null;
   matchRoles: Record<string, string> | null;
   playerRanks: Record<string, Record<Role, number | null>>;
   roleStats: RoleStats | null;
+  t: (key: string) => string;
 }) => {
   const sortedPlayers = (() => {
     if (!team) return [];
@@ -400,16 +409,17 @@ const TeamMatch = ({
 
   if (!team) return null;
 
+  const teamLabel = team.teamId === 100 ? t("team.team1") : t("team.team2");
   return (
     <div className="text-lg">
       {/* Team header */}
       <div className="flex items-center justify-between p-2">
         <div className="flex items-center gap-2">
-          <span>Team {team.teamId / 100}:</span>
+          <span>{teamLabel}:</span>
           {team.win ? (
-            <span className="text-green-500 font-semibold">Victory</span>
+            <span className="text-green-500 font-semibold">{t("common.victory")}</span>
           ) : (
-            <span className="text-red-500 font-semibold">Defeat</span>
+            <span className="text-red-500 font-semibold">{t("common.defeat")}</span>
           )}
         </div>
         <KDA
@@ -426,6 +436,7 @@ const TeamMatch = ({
         turret={team.teamStats.towerKills}
         win={team.teamId === 100}
         bans={team.teamStats.bans}
+        t={t}
       />
 
       {/* Players */}
@@ -459,6 +470,7 @@ const TeamMatch = ({
                 }
                 totalKills={team.stats.kills}
                 roleStats={playerRoleStats}
+                t={t}
               />
             );
           }
@@ -477,10 +489,12 @@ export function MatchComponent({
   const match = matchData as MatchData | null | undefined;
   const { blueTeam, redTeam } = processMatchData(match);
 
+  const t = useTranslations();
+
   if (!match || !blueTeam || !redTeam) {
     return (
       <div className="flex items-center justify-center min-h-[200px]">
-        <p className="text-muted-foreground text-sm">No match data available</p>
+        <p className="text-muted-foreground text-sm">{t("common.noMatchDataAvailable")}</p>
       </div>
     );
   }
@@ -494,6 +508,7 @@ export function MatchComponent({
             matchRoles={matchRoles}
             playerRanks={playerRanks}
             roleStats={roleStats}
+            t={t}
           />
         </div>
         <div className="flex-1">
@@ -502,6 +517,7 @@ export function MatchComponent({
             matchRoles={matchRoles}
             playerRanks={playerRanks}
             roleStats={roleStats}
+            t={t}
           />
         </div>
       </div>

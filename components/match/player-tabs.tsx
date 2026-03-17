@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { CHAMPIONICONURL } from "@/lib/resources";
 import { formatNumber } from "./match-utils";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface PlayerTabsProps {
   matchData: unknown;
@@ -51,11 +52,13 @@ const Tab = ({
   tabState,
   n,
   champId,
+  championAlt,
 }: {
   setTabState: (n: number) => void;
   tabState: number;
   n: number;
   champId: number;
+  championAlt: string;
 }) => (
   <button
     onClick={() => setTabState(n)}
@@ -70,7 +73,7 @@ const Tab = ({
         src={`${CHAMPIONICONURL}${champId}.png`}
         width={40}
         height={40}
-        alt={`Champion icon ${champId}`}
+        alt={`${championAlt} ${champId}`}
         className="rounded border border-border/60"
         sizes="40px"
       />
@@ -112,6 +115,7 @@ const SummonerNameCell = ({
 };
 
 export function PlayerTabs({ matchData }: PlayerTabsProps) {
+  const t = useTranslations();
   const [tabState, setTabState] = useState(0);
 
   const match = matchData as MatchData | null | undefined;
@@ -119,7 +123,7 @@ export function PlayerTabs({ matchData }: PlayerTabsProps) {
   if (!match || !match.participants || match.participants.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-muted-foreground text-sm">No match data available</p>
+        <p className="text-muted-foreground text-sm">{t("common.noMatchDataAvailable")}</p>
       </div>
     );
   }
@@ -161,6 +165,7 @@ export function PlayerTabs({ matchData }: PlayerTabsProps) {
             n={i}
             setTabState={setTabState}
             tabState={tabState}
+            championAlt={t("common.champion")}
           />
         ))}
       </div>
@@ -176,36 +181,36 @@ export function PlayerTabs({ matchData }: PlayerTabsProps) {
         </Link>
 
         <div className="flex flex-wrap gap-4 p-4">
-          <StatBox number={kda} text="KDA" />
-          <StatBox number={curr_p.stats.doubleKills} text="Double Kills" />
-          <StatBox number={curr_p.stats.tripleKills} text="Triple Kills" />
-          <StatBox number={curr_p.stats.quadraKills} text="Quadra Kills" />
-          <StatBox number={curr_p.stats.pentaKills} text="Penta Kills" />
-          <StatBox number={damagePerKill} text="Damage Per Kill" />
+          <StatBox number={kda} text={t("common.kda")} />
+          <StatBox number={curr_p.stats.doubleKills} text={t("match.doubleKills")} />
+          <StatBox number={curr_p.stats.tripleKills} text={t("match.tripleKills")} />
+          <StatBox number={curr_p.stats.quadraKills} text={t("match.quadraKills")} />
+          <StatBox number={curr_p.stats.pentaKills} text={t("match.pentaKills")} />
+          <StatBox number={damagePerKill} text={t("match.damagePerKill")} />
           <StatBox
             number={curr_p.stats.totalDamageDealtToChampions}
-            text="Damage To Champions"
+            text={t("match.damageToChampions")}
           />
           <StatBox
             number={curr_p.stats.damageDealtToTurrets}
-            text="Damage To Turrets"
+            text={t("match.damageToTurrets")}
           />
           <StatBox
             number={curr_p.stats.largestKillingSpree}
-            text="Largest Killing Spree"
+            text={t("match.largestKillingSpree")}
           />
-          <StatBox number={curr_p.stats.goldEarned} text="Gold Earned" />
-          <StatBox number={curr_p.stats.wardsKilled} text="Wards Destroyed" />
-          <StatBox number={curr_p.stats.wardsPlaced} text="Wards Placed" />
-          <StatBox number={curr_p.stats.visionScore} text="Vision Score" />
+          <StatBox number={curr_p.stats.goldEarned} text={t("match.goldEarned")} />
+          <StatBox number={curr_p.stats.wardsKilled} text={t("match.wardsDestroyed")} />
+          <StatBox number={curr_p.stats.wardsPlaced} text={t("match.wardsPlaced")} />
+          <StatBox number={curr_p.stats.visionScore} text={t("match.visionScore")} />
           <StatBox
             number={curr_p.stats.visionWardsBoughtInGame}
-            text="Vision Wards Bought"
+            text={t("match.visionWardsBought")}
           />
-          <StatBox number={curr_p.stats.totalHeal} text="Total Healing" />
+          <StatBox number={curr_p.stats.totalHeal} text={t("match.totalHealing")} />
           <StatBox
             number={curr_p.stats.totalDamageTaken}
-            text="Total Damage Taken"
+            text={t("match.totalDamageTaken")}
           />
         </div>
       </div>

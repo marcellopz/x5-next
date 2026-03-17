@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/table";
 import type { Role } from "@/lib/types";
 import Link from "next/link";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface WinLossByRoleTableProps {
   data: {
@@ -29,18 +30,12 @@ interface WinLossByRoleTableProps {
 
 const roles: Role[] = ["top", "jungle", "mid", "adc", "support"];
 
-const roleLabels: Record<Role, string> = {
-  top: "Top",
-  jungle: "Jungle",
-  mid: "Mid",
-  adc: "ADC",
-  support: "Support",
-};
-
 function WinLossTableRows({
   getPlayerName,
+  noPlayersMessage,
 }: {
   getPlayerName: (nameId: string) => string;
+  noPlayersMessage: string;
 }) {
   const sortedData = useTableData() as Array<{
     nameId: string;
@@ -54,7 +49,7 @@ function WinLossTableRows({
       {sortedData.length === 0 ? (
         <TableRow>
           <TableCell colSpan={5} className="text-center text-muted-foreground">
-            No players found for this role
+            {noPlayersMessage}
           </TableCell>
         </TableRow>
       ) : (
@@ -92,12 +87,12 @@ function WinLossRoleTable({
   role,
   roleData,
   getPlayerName,
+  t,
 }: {
   role: Role;
-  roleData: {
-    [name_id: string]: { wins: number; loses: number; rank: number };
-  };
+  roleData: { [name_id: string]: { wins: number; loses: number; rank: number } };
   getPlayerName: (nameId: string) => string;
+  t: (key: string) => string;
 }) {
   const tableData = Object.entries(roleData).map(([nameId, stats]) => ({
     nameId,
@@ -106,9 +101,8 @@ function WinLossRoleTable({
 
   return (
     <div className="space-y-2 h-100">
-      <h3 className="text-lg font-semibold">{roleLabels[role]}</h3>
+      <h3 className="text-lg font-semibold">{t(`roles.${role}`)}</h3>
       <Table
-        // compact
         data={tableData}
         sortConfig={{
           nameId: (item) => getPlayerName(item.nameId),
@@ -125,18 +119,18 @@ function WinLossRoleTable({
         <TableHeader>
           <TableRow>
             <TableHead sortable sortKey="nameId">
-              Player
+              {t("stats.mvpTablePlayer")}
             </TableHead>
             <TableHead sortable sortKey="wins" className="text-center">
-              W/L
+              {t("stats.wlShort")}
             </TableHead>
             <TableHead sortable sortKey="winRate" className="text-center">
-              Win Rate
+              {t("home.winRate")}
             </TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          <WinLossTableRows getPlayerName={getPlayerName} />
+          <WinLossTableRows getPlayerName={getPlayerName} noPlayersMessage={t("stats.noPlayersForRole")} />
         </TableBody>
       </Table>
     </div>
@@ -147,11 +141,11 @@ export function WinLossByRoleTable({
   data,
   getPlayerName,
 }: WinLossByRoleTableProps) {
+  const t = useTranslations();
   return (
     <div className="space-y-6">
-      <h2 className="text-xl font-semibold">Win/Loss Since Last Rank Change</h2>
+      <h2 className="text-xl font-semibold">{t("stats.winLossSinceRankChange")}</h2>
 
-      {/* Tables Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-3 xl:grid-cols-5 gap-6 gap-y-12">
         {roles.map((role) => (
           <WinLossRoleTable
@@ -159,6 +153,7 @@ export function WinLossByRoleTable({
             role={role}
             roleData={data[role]}
             getPlayerName={getPlayerName}
+            t={t}
           />
         ))}
       </div>

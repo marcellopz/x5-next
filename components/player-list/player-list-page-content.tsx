@@ -3,6 +3,7 @@
 import * as React from "react";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { PlayerListTable } from "./player-list-table";
 import type { PlayerList, PlayerSummary } from "@/lib/types";
 
@@ -15,6 +16,7 @@ export function PlayerListPageContent({
   playerList,
   playerSummary,
 }: PlayerListPageContentProps) {
+  const t = useTranslations();
   const [searchQuery, setSearchQuery] = React.useState("");
 
   // Calculate filtered count for display
@@ -39,17 +41,17 @@ export function PlayerListPageContent({
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Player List</h1>
+            <h1 className="text-2xl font-bold tracking-tight">{t("pages.playerList")}</h1>
             <p className="text-sm text-muted-foreground">
               {searchQuery.trim()
-                ? `${filteredCount} of ${totalCount} players`
-                : `${totalCount} players total`}
+                ? t("playerListPage.playersCount").replace("{{filtered}}", String(filteredCount)).replace("{{total}}", String(totalCount))
+                : t("playerListPage.playersTotal").replace("{{total}}", String(totalCount))}
             </p>
           </div>
           <div className="w-full md:max-w-xs">
             <Input
               type="text"
-              placeholder="Search by name..."
+              placeholder={t("playerListPage.searchByName")}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               startIcon={<Search className="h-4 w-4" />}

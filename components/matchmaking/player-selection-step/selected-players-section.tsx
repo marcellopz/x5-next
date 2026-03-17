@@ -10,8 +10,10 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Users, X } from "lucide-react";
 import { useMatchmaking } from "../matchmaking-context";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 export function SelectedPlayersSection() {
+  const t = useTranslations();
   const { selectedPlayers, removePlayer } = useMatchmaking();
 
   // Separate regular and wildcard players
@@ -25,10 +27,10 @@ export function SelectedPlayersSection() {
           <div>
             <CardTitle className="flex items-center gap-2 text-lg">
               <Users className="h-4 w-4" />
-              Selected Players ({selectedPlayers.length} / 10)
+              {t("matchmaking.selectedPlayersCount")} ({selectedPlayers.length} / 10)
             </CardTitle>
             <CardDescription className="text-sm">
-              Players who will participate in the match
+              {t("matchmaking.selectedPlayersDescription")}
             </CardDescription>
           </div>
 
@@ -117,7 +119,7 @@ export function SelectedPlayersSection() {
         ) : (
           <div className="text-center py-1 mt-[6px]">
             <p className="text-muted-foreground text-sm">
-              No players selected yet. Click on player cards below to add them.
+              {t("matchmaking.noPlayersSelected")}
             </p>
           </div>
         )}

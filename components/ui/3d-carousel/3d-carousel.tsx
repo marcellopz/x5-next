@@ -7,6 +7,7 @@ import React, {
   useMemo,
   useCallback,
 } from "react";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { cn } from "@/lib/utils";
 import { ChevronLeft, ChevronRight, Pause, Play } from "lucide-react";
 
@@ -30,6 +31,7 @@ export function Carousel3D({
   className,
   initialIndex = 0,
 }: Carousel3DProps) {
+  const t = useTranslations();
   const [currentIndex, setCurrentIndex] = useState(initialIndex);
   const [isHovered, setIsHovered] = useState(false);
   const [isPaused, setIsPaused] = useState(false);
@@ -152,7 +154,7 @@ export function Carousel3D({
   if (totalItems === 0) {
     return (
       <div className={cn("flex items-center justify-center", className)}>
-        <p className="text-muted-foreground">No items to display</p>
+        <p className="text-muted-foreground">{t("ui.noItemsToDisplay")}</p>
       </div>
     );
   }
@@ -218,14 +220,14 @@ export function Carousel3D({
             <button
               className="cursor-pointer absolute left-2 top-1/2 transform -translate-y-1/2 z-20 bg-background/80 hover:bg-background rounded-full p-2 transition-all duration-200 hover:scale-110"
               onClick={goToPrevious}
-              title="Previous item"
+              title={t("ui.previousItem")}
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
             <button
               className="cursor-pointer absolute right-2 top-1/2 transform -translate-y-1/2 z-20 bg-background/80 hover:bg-background rounded-full p-2 transition-all duration-200 hover:scale-110"
               onClick={goToNext}
-              title="Next item"
+              title={t("ui.nextItem")}
             >
               <ChevronRight className="w-6 h-6" />
             </button>

@@ -9,6 +9,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import type { VictoryStatistics } from "@/lib/types";
 import { formatWinRate, getLosses } from "./utils";
 import {
@@ -27,26 +28,21 @@ interface VoidGrubsSectionProps {
   data: VictoryStatistics["voidGrubs"];
 }
 
-const tableHeaders = ["Label", "Wins", "Games", "Win Rate"];
-
-const labelMap: Record<string, string> = {
-  one: "1 Grub",
-  two: "2 Grubs",
-  three: "3 Grubs",
-};
-
-const atLeastLabelMap: Record<string, string> = {
-  one: "1+ Grubs",
-  two: "2+ Grubs",
-  three: "3+ Grubs",
-};
-
 const grubOrder = ["one", "two", "three"] as const;
+
+type VoidGrubRow = {
+  label: string;
+  wins: number;
+  total: number;
+  winRate: number;
+};
 
 const buildRows = (
   entries: Record<string, VictoryStatistics["voidGrubs"]["exact"]["one"]>,
+  labelMap: Record<string, string>,
+  atLeastLabelMap: Record<string, string>,
   isAtLeast = false
-) =>
+): VoidGrubRow[] =>
   grubOrder
     .filter((key) => Boolean(entries[key]))
     .map((key) => {
@@ -59,71 +55,89 @@ const buildRows = (
       };
     });
 
-const renderTable = (title: string, rows: ReturnType<typeof buildRows>) => (
-  <div>
-    <p className="text-sm font-semibold mb-2">{title}</p>
-    <div>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            {tableHeaders.map((header) => (
-              <TableHead key={header}>{header}</TableHead>
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.label}>
-              <TableCell>{row.label}</TableCell>
-              <TableCell>{row.wins}</TableCell>
-              <TableCell>{row.total}</TableCell>
-              <TableCell className="text-primary">
-                {formatWinRate(row.winRate)}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-    </div>
-  </div>
-);
-
 export function VoidGrubsSection({ data }: VoidGrubsSectionProps) {
-  const exactRows = buildRows(data.exact);
-  const atLeastRows = buildRows(data.atLeast, true);
+  const t = useTranslations();
+  const tableHeaders = [
+    t("stats.victory.label"),
+    t("common.wins"),
+    t("common.games"),
+    t("stats.victory.winRate"),
+  ];
+  const labelMap: Record<string, string> = {
+    one: t("stats.victory.grubOne"),
+    two: t("stats.victory.grubTwo"),
+    three: t("stats.victory.grubThree"),
+  };
+  const atLeastLabelMap: Record<string, string> = {
+    one: t("stats.victory.grubOnePlus"),
+    two: t("stats.victory.grubTwoPlus"),
+    three: t("stats.victory.grubThreePlus"),
+  };
+
+  const exactRows = buildRows(data.exact, labelMap, atLeastLabelMap);
+  const atLeastRows = buildRows(data.atLeast, labelMap, atLeastLabelMap, true);
 
   const chartData = [
     {
-      label: "Exact 1",
+      label: t("stats.victory.exact1"),
       wins: data.exact.one.wins,
       losses: getLosses(data.exact.one),
     },
     {
-      label: "Exact 2",
+      label: t("stats.victory.exact2"),
       wins: data.exact.two.wins,
       losses: getLosses(data.exact.two),
     },
     {
-      label: "Exact 3",
+      label: t("stats.victory.exact3"),
       wins: data.exact.three.wins,
       losses: getLosses(data.exact.three),
     },
     {
-      label: "At least 1",
+      label: t("stats.victory.atLeast1"),
       wins: data.atLeast.one.wins,
       losses: getLosses(data.atLeast.one),
     },
     {
-      label: "At least 2",
+      label: t("stats.victory.atLeast2"),
       wins: data.atLeast.two.wins,
       losses: getLosses(data.atLeast.two),
     },
     {
-      label: "At least 3",
+      label: t("stats.victory.atLeast3"),
       wins: data.atLeast.three.wins,
       losses: getLosses(data.atLeast.three),
     },
   ];
+
+  const renderTable = (title: string, rows: VoidGrubRow[]) => (
+    <div>
+      <p className="text-sm font-semibold mb-2">{title}</p>
+      <div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              {tableHeaders.map((header) => (
+                <TableHead key={header}>{header}</TableHead>
+              ))}
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {rows.map((row) => (
+              <TableRow key={row.label}>
+                <TableCell>{row.label}</TableCell>
+                <TableCell>{row.wins}</TableCell>
+                <TableCell>{row.total}</TableCell>
+                <TableCell className="text-primary">
+                  {formatWinRate(row.winRate)}
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+    </div>
+  );
 
   const CustomTooltip = ({
     active,
@@ -172,13 +186,13 @@ export function VoidGrubsSection({ data }: VoidGrubsSectionProps) {
     <Card>
       <CardHeader>
         <CardTitle className="text-lg font-semibold">
-          Void Grubs Impact
+          {t("stats.victory.voidGrubsImpact")}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-          {renderTable("Exact number secured", exactRows)}
-          {renderTable("At least this many secured", atLeastRows)}
+          {renderTable(t("stats.victory.exactNumberSecured"), exactRows)}
+          {renderTable(t("stats.victory.atLeastThisManySecured"), atLeastRows)}
         </div>
 
         <div className="h-72">

@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import type { RankHighlight, RankNetWinEntry } from "./index";
 import type { Role } from "@/lib/types";
 
@@ -13,13 +16,14 @@ export function RankHighlights({
   netWins,
   roleLabels,
 }: RankHighlightsProps) {
+  const t = useTranslations();
   return (
     <div className="rounded-lg border border-border bg-card/60 p-4 space-y-4 flex-1">
       <div>
-        <p className="text-sm font-semibold mb-2">Top Movers</p>
+        <p className="text-sm font-semibold mb-2">{t("stats.topMovers")}</p>
         {movers.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            No rank movement recorded yet.
+            {t("stats.noRankMovementYet")}
           </p>
         ) : (
           <div className="space-y-2 text-sm">
@@ -40,10 +44,10 @@ export function RankHighlights({
         )}
       </div>
       <div>
-        <p className="text-sm font-semibold mb-2">Net Wins Since Last Change</p>
+        <p className="text-sm font-semibold mb-2">{t("stats.netWinsSinceLastChange")}</p>
         {netWins.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            Waiting for more games to complete.
+            {t("stats.waitingForMoreGames")}
           </p>
         ) : (
           <div className="flex flex-wrap gap-2">

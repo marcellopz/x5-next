@@ -5,6 +5,7 @@ import { CompactLeaderboard } from "@/components/ui/compact-leaderboard";
 import { CollapsibleSection } from "@/components/ui/collapsible-section";
 import type { LeaderboardItem } from "@/components/ui/compact-leaderboard";
 import { Leaderboard } from "@/lib/types";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 const defaultLeaderboard: Leaderboard = {
   killParticipation: [],
@@ -19,6 +20,7 @@ export function PlayerOverallLeaderboard({
 }: {
   leaderboard?: Leaderboard;
 }) {
+  const t = useTranslations();
   const [expanded, setExpanded] = useState(false);
 
   // Transform leaderboard data to CompactLeaderboard format
@@ -28,9 +30,9 @@ export function PlayerOverallLeaderboard({
         id: entry.summonerId,
         label: entry.legend_name,
         value: `${(entry.value * 100).toFixed(1)}%`,
-        subtitle: `In ${entry.extra} games`,
+        subtitle: t("home.inGames").replace("{{count}}", String(entry.extra)),
       })),
-    [leaderboard?.winRate]
+    [leaderboard?.winRate, t]
   );
 
   const recentWinRateData: LeaderboardItem[] = useMemo(
@@ -39,9 +41,9 @@ export function PlayerOverallLeaderboard({
         id: entry.summonerId,
         label: entry.legend_name,
         value: `${(entry.value * 100).toFixed(1)}%`,
-        subtitle: `In ${entry.extra} games`,
+        subtitle: t("home.inGames").replace("{{count}}", String(entry.extra)),
       })),
-    [leaderboard?.winRateLast20Games]
+    [leaderboard?.winRateLast20Games, t]
   );
 
   const championsPlayedData: LeaderboardItem[] = useMemo(
@@ -50,9 +52,9 @@ export function PlayerOverallLeaderboard({
         id: entry.summonerId,
         label: entry.legend_name,
         value: entry.value.toString(),
-        subtitle: `Champions`,
+        subtitle: t("home.championsLabel"),
       })),
-    [leaderboard?.numberOfChampionsPlayed]
+    [leaderboard?.numberOfChampionsPlayed, t]
   );
 
   const gamesPlayedData: LeaderboardItem[] = useMemo(
@@ -61,38 +63,38 @@ export function PlayerOverallLeaderboard({
         id: entry.summonerId,
         label: entry.legend_name,
         value: entry.value.toString(),
-        subtitle: `Games`,
+        subtitle: t("home.gamesLabel"),
       })),
-    [leaderboard?.numberOfGames]
+    [leaderboard?.numberOfGames, t]
   );
 
   return (
-    <CollapsibleSection title="Player Leaderboard">
+    <CollapsibleSection title={t("home.playerLeaderboard")}>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <CompactLeaderboard
           items={winRateData}
-          title="Highest Win Rate"
+          title={t("home.highestWinRate")}
           expanded={expanded}
           onExpandedChange={setExpanded}
         />
 
         <CompactLeaderboard
           items={recentWinRateData}
-          title="Recent Win Rate"
+          title={t("home.recentWinRate")}
           expanded={expanded}
           onExpandedChange={setExpanded}
         />
 
         <CompactLeaderboard
           items={championsPlayedData}
-          title="Most Champions Played"
+          title={t("home.mostChampionsPlayed")}
           expanded={expanded}
           onExpandedChange={setExpanded}
         />
 
         <CompactLeaderboard
           items={gamesPlayedData}
-          title="Most Games Played"
+          title={t("home.mostGamesPlayed")}
           expanded={expanded}
           onExpandedChange={setExpanded}
         />

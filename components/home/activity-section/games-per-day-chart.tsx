@@ -11,6 +11,7 @@ import {
 } from "recharts";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { chartTheme } from "./chart-theme";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface GamesPerDayChartProps {
   data: number[];
@@ -19,6 +20,7 @@ interface GamesPerDayChartProps {
 const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 export function GamesPerDayChart({ data }: GamesPerDayChartProps) {
+  const t = useTranslations();
   // Transform data for recharts
   const chartData = data.map((games, index) => ({
     day: DAYS[index],
@@ -29,7 +31,7 @@ export function GamesPerDayChart({ data }: GamesPerDayChartProps) {
     <Card className="flex flex-col h-[350px]">
       <CardHeader className="pb-3">
         <CardTitle className="text-base">
-          Games played by day of the week
+          {t("home.gamesByDay")}
         </CardTitle>
       </CardHeader>
       <CardContent className="flex-1 min-h-0">

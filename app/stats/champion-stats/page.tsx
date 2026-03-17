@@ -1,5 +1,6 @@
 import { generatePageMetadata } from "@/lib/metadata";
 import { statRoutes } from "../stat-routes";
+import { t, getLocale, getTranslations } from "@/lib/i18n";
 import {
   getChampionOVerallData,
   getChampionsAverageRoleStats,
@@ -37,18 +38,24 @@ function completeChampionsRoleStats(
   return championsAverageRoleStats;
 }
 
-export const metadata = generatePageMetadata(
-  statRoutes["champion-stats"].title,
-  statRoutes["champion-stats"].description
-);
+export async function generateMetadata() {
+  const locale = await getLocale();
+  const trans = getTranslations(locale);
+  return generatePageMetadata(
+    t(trans, statRoutes["champion-stats"].titleKey),
+    t(trans, statRoutes["champion-stats"].descriptionKey)
+  );
+}
 
 export default async function ChampionStatsPage() {
+  const locale = await getLocale();
+  const trans = getTranslations(locale);
   const championsOverAllData = await getChampionOVerallData();
   const championsAverageRoleStats = await getChampionsAverageRoleStats();
   const numberOfGames = await getNumberOfGames();
 
   if (!championsAverageRoleStats) {
-    return <div>No champions average role stats found</div>;
+    return <div>{t(trans, "stats.noChampionStatsFound")}</div>;
   }
 
   const completedChampionsRoleStats = completeChampionsRoleStats(
