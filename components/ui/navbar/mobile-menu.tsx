@@ -56,6 +56,7 @@ function MobileNavLinks({ onClose }: { onClose: () => void }) {
 }
 
 export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
+  const t = useTranslations();
   const [shouldRender, setShouldRender] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
