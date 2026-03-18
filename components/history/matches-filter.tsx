@@ -117,7 +117,7 @@ export function MatchesFilter({
                 )}
                 <span className="flex-1">{option.name}</span>
                 <span className="text-xs text-muted-foreground capitalize">
-                  {option.type}
+                  {option.type === "player" ? t("history.filterPlayer") : t("history.filterChampion")}
                 </span>
               </button>
             ))}
@@ -131,7 +131,7 @@ export function MatchesFilter({
         autocompleteOptions.length === 0 && (
           <div className="absolute z-50 w-full mt-1 bg-popover border border-border rounded-md shadow-lg">
             <div className="p-3 text-center text-sm text-muted-foreground">
-              No matches found
+              {t("common.noMatchesFound")}
             </div>
           </div>
         )}

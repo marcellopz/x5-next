@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, memo } from "react";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import type { MatchWithId } from "@/lib/types";
 import { MatchEntry } from "./match-entry";
 import { FilterIdentifier } from "./matches-container";
@@ -19,6 +20,7 @@ interface MatchesListProps {
 }
 
 export function MatchesList({ matches, filteringBy }: MatchesListProps) {
+  const t = useTranslations();
   const [visibleItems, setVisibleItems] = useState(INITIAL_ITEMS);
   const canLoadMoreRef = useRef(true);
 
@@ -81,7 +83,7 @@ export function MatchesList({ matches, filteringBy }: MatchesListProps) {
   if (matches.length === 0) {
     return (
       <div className="text-center py-8">
-        <p className="text-muted-foreground">No matches found</p>
+        <p className="text-muted-foreground">{t("common.noMatchesFound")}</p>
       </div>
     );
   }
@@ -103,7 +105,7 @@ export function MatchesList({ matches, filteringBy }: MatchesListProps) {
           <div className="flex items-center space-x-2">
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-500"></div>
             <span className="text-muted-foreground">
-              Loading more matches...
+              {t("history.loadingMoreMatches")}
             </span>
           </div>
         </div>
@@ -112,7 +114,7 @@ export function MatchesList({ matches, filteringBy }: MatchesListProps) {
       {/* End of list indicator */}
       {visibleItems >= matches.length && matches.length > 0 && (
         <div className="flex justify-center py-4">
-          <div className="text-muted-foreground">No more matches to load</div>
+          <div className="text-muted-foreground">{t("history.noMoreMatches")}</div>
         </div>
       )}
     </div>

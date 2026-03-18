@@ -227,6 +227,15 @@
     "playersTotal": "{{total}} jogadores no total",
     "searchByName": "Buscar por nome..."
   },
+  "history": {
+    "matchesCount": "{{filtered}} de {{total}} partidas",
+    "matchesTotal": "{{total}} partidas no total",
+    "filteringMatches": "Filtrando partidas...",
+    "loadingMoreMatches": "Carregando mais partidas...",
+    "noMoreMatches": "Não há mais partidas para carregar",
+    "filterPlayer": "Jogador",
+    "filterChampion": "Campeão"
+  },
   "records": {
     "kills": "Abates",
     "deaths": "Mortes",

@@ -237,6 +237,15 @@
     "playersTotal": "{{total}} players total",
     "searchByName": "Search by name..."
   },
+  "history": {
+    "matchesCount": "{{filtered}} of {{total}} matches",
+    "matchesTotal": "{{total}} matches total",
+    "filteringMatches": "Filtering matches...",
+    "loadingMoreMatches": "Loading more matches...",
+    "noMoreMatches": "No more matches to load",
+    "filterPlayer": "Player",
+    "filterChampion": "Champion"
+  },
   "records": {
     "kills": "Kills",
     "deaths": "Deaths",

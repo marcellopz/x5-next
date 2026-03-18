@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useTransition } from "react";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import { MatchesList } from "./matches-list";
 import { MatchesFilter } from "./matches-filter";
 import type { MatchWithId, Player } from "@/lib/types";
@@ -18,6 +19,7 @@ export function MatchesContainer({
   matches,
   playerList,
 }: MatchesContainerProps) {
+  const t = useTranslations();
   const [searchQuery, setSearchQuery] = useState("");
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [identifier, setIdentifier] = useState<FilterIdentifier | null>(null);
@@ -90,11 +92,11 @@ export function MatchesContainer({
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">Match History</h1>
+            <h1 className="text-2xl font-bold tracking-tight">{t("pages.matchHistory")}</h1>
             <p className="text-sm text-muted-foreground">
               {identifier
-                ? `${filteredMatches.length} of ${matches.length} matches`
-                : `${matches.length} matches total`}
+                ? t("history.matchesCount").replace("{{filtered}}", String(filteredMatches.length)).replace("{{total}}", String(matches.length))
+                : t("history.matchesTotal").replace("{{total}}", String(matches.length))}
             </p>
           </div>
           <div className="w-full md:max-w-xs">
@@ -117,7 +119,7 @@ export function MatchesContainer({
           <div className="flex flex-col items-center justify-center py-12">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mb-4"></div>
             <p className="text-sm text-muted-foreground">
-              Filtering matches...
+              {t("history.filteringMatches")}
             </p>
           </div>
         ) : (
