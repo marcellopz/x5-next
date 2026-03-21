@@ -1,4 +1,5 @@
-export const patch = "15.11.1";
+export const patch = "16.6.1";
+// get latest version from https://ddragon.leagueoflegends.com/api/versions.json
 
 export const GAMEENTITIESURL = "public/game-entities";
 
