@@ -52,71 +52,84 @@ const roles = ["Top", "Jungle", "Mid", "Adc", "Support"] as const;
  */
 function parseConfig(
   config: MatchmakingConfig,
-  allPlayers: Player[]
+  allPlayers: Player[],
 ): ParsedConfig {
   // Parse preset lanes
   const parsedLanes: ParsedConfig["presetLanes"]["lanes"] = {
     top: {
       player1: config.presetLanes.lanes.top.player1
         ? allPlayers.find(
-            (p) => p.name_id === config.presetLanes.lanes.top.player1
+            (p) => p.name_id === config.presetLanes.lanes.top.player1,
           ) || null
         : null,
       player2: config.presetLanes.lanes.top.player2
         ? allPlayers.find(
-            (p) => p.name_id === config.presetLanes.lanes.top.player2
+            (p) => p.name_id === config.presetLanes.lanes.top.player2,
           ) || null
         : null,
     },
     jungle: {
       player1: config.presetLanes.lanes.jungle.player1
         ? allPlayers.find(
-            (p) => p.name_id === config.presetLanes.lanes.jungle.player1
+            (p) => p.name_id === config.presetLanes.lanes.jungle.player1,
           ) || null
         : null,
       player2: config.presetLanes.lanes.jungle.player2
         ? allPlayers.find(
-            (p) => p.name_id === config.presetLanes.lanes.jungle.player2
+            (p) => p.name_id === config.presetLanes.lanes.jungle.player2,
           ) || null
         : null,
     },
     mid: {
       player1: config.presetLanes.lanes.mid.player1
         ? allPlayers.find(
-            (p) => p.name_id === config.presetLanes.lanes.mid.player1
+            (p) => p.name_id === config.presetLanes.lanes.mid.player1,
           ) || null
         : null,
       player2: config.presetLanes.lanes.mid.player2
         ? allPlayers.find(
-            (p) => p.name_id === config.presetLanes.lanes.mid.player2
+            (p) => p.name_id === config.presetLanes.lanes.mid.player2,
           ) || null
         : null,
     },
     adc: {
       player1: config.presetLanes.lanes.adc.player1
         ? allPlayers.find(
-            (p) => p.name_id === config.presetLanes.lanes.adc.player1
+            (p) => p.name_id === config.presetLanes.lanes.adc.player1,
           ) || null
         : null,
       player2: config.presetLanes.lanes.adc.player2
         ? allPlayers.find(
-            (p) => p.name_id === config.presetLanes.lanes.adc.player2
+            (p) => p.name_id === config.presetLanes.lanes.adc.player2,
           ) || null
         : null,
     },
     support: {
       player1: config.presetLanes.lanes.support.player1
         ? allPlayers.find(
-            (p) => p.name_id === config.presetLanes.lanes.support.player1
+            (p) => p.name_id === config.presetLanes.lanes.support.player1,
           ) || null
         : null,
       player2: config.presetLanes.lanes.support.player2
         ? allPlayers.find(
-            (p) => p.name_id === config.presetLanes.lanes.support.player2
+            (p) => p.name_id === config.presetLanes.lanes.support.player2,
           ) || null
         : null,
     },
   };
+
+  // Parse avoid role rules: normalize name_id -> account_id string
+  const parsedAvoidRoles = config.avoidRoles.rules
+    .filter((rule) => rule.playerId !== "")
+    .map((rule) => {
+      const player = allPlayers.find((p) => p.name_id === rule.playerId);
+      if (!player) return null;
+      return {
+        playerId: String(player.account_id),
+        lane: rule.lane,
+      };
+    })
+    .filter((rule): rule is NonNullable<typeof rule> => rule !== null);
 
   // Parse player combos
   const parsedCombos = config.playerCombos.combos.map((combo) => ({
@@ -134,7 +147,10 @@ function parseConfig(
       randomizeSides: config.presetLanes.randomizeSides,
       lanes: parsedLanes,
     },
-    avoidRoles: config.avoidRoles,
+    avoidRoles: {
+      enabled: config.avoidRoles.enabled,
+      rules: parsedAvoidRoles,
+    },
     playerCombos: {
       enabled: config.playerCombos.enabled,
       combos: parsedCombos,
@@ -148,7 +164,7 @@ function parseConfig(
 export function generateMatches(
   players: Player[],
   config_withIds: MatchmakingConfig,
-  allPlayers: Player[]
+  allPlayers: Player[],
 ): MatchmakingResult {
   // Parse config to resolve name_ids to Player objects
   const config = parseConfig(config_withIds, allPlayers);
@@ -186,9 +202,7 @@ export function generateMatches(
     // Check if any advanced configs are enabled before filtering
     const hasAdvancedConfigs =
       config.presetLanes.usePresetLanes ||
-      (config.avoidRoles.enabled &&
-        config.avoidRoles.rules.filter((rule) => rule.playerId !== "").length >
-          0) ||
+      (config.avoidRoles.enabled && config.avoidRoles.rules.length > 0) ||
       (config.playerCombos.enabled && config.playerCombos.combos.length > 0);
 
     // Filter matches by advanced settings only if any are enabled
@@ -217,7 +231,7 @@ export function generateMatches(
  */
 function generateAllToleranceMatches(
   players: Player[],
-  tolerance: number
+  tolerance: number,
 ): MatchResult[] {
   const matches: MatchResult[] = [];
 
@@ -243,9 +257,9 @@ function generateAllToleranceMatches(
         assignment as Array<
           [
             { player: Player; ranks: number[] },
-            { player: Player; ranks: number[] }
+            { player: Player; ranks: number[] },
           ]
-        >
+        >,
       );
       if (match) {
         // Check that team scores are equal (both conditions must be met)
@@ -300,7 +314,7 @@ function generateAllToleranceMatches(
 function createMatchFromRoleAssignment(
   assignment: Array<
     [{ player: Player; ranks: number[] }, { player: Player; ranks: number[] }]
-  >
+  >,
 ): MatchResult | null {
   const pairingsRoles: {
     [role: string]: Array<{ name: string; rank: number }>;
@@ -349,7 +363,7 @@ function createMatchFromRoleAssignment(
  */
 function checkPresetLanesToleranceViolation(
   players: Player[],
-  config: ParsedConfig
+  config: ParsedConfig,
 ): boolean {
   if (!config.presetLanes.usePresetLanes) {
     return false;
@@ -365,7 +379,7 @@ function checkPresetLanesToleranceViolation(
 
   // Check each preset lane for tolerance violations
   for (const [laneKey, laneConfig] of Object.entries(
-    config.presetLanes.lanes
+    config.presetLanes.lanes,
   )) {
     if (laneConfig.player1 && laneConfig.player2) {
       const roleIndex = roleIndexMap[laneKey];
@@ -403,7 +417,7 @@ function checkPresetLanesToleranceViolation(
  */
 function generateMatchesWithPresetLanesTolerance(
   players: Player[],
-  config: ParsedConfig
+  config: ParsedConfig,
 ): MatchResult[] {
   const matches: MatchResult[] = [];
 
@@ -427,7 +441,7 @@ function generateMatchesWithPresetLanesTolerance(
       roleIndex: number;
       bluePlayer: (typeof playerData)[0];
       redPlayer: (typeof playerData)[0];
-    }>
+    }>,
   ): MatchResult[] {
     const localMatches: MatchResult[] = [];
     const assignment: Array<
@@ -441,13 +455,13 @@ function generateMatchesWithPresetLanesTolerance(
       assignment[preset.roleIndex] = [preset.bluePlayer, preset.redPlayer];
       usedPlayers.add(
         playerData.findIndex(
-          (p) => p.player.account_id === preset.bluePlayer.player.account_id
-        )
+          (p) => p.player.account_id === preset.bluePlayer.player.account_id,
+        ),
       );
       usedPlayers.add(
         playerData.findIndex(
-          (p) => p.player.account_id === preset.redPlayer.player.account_id
-        )
+          (p) => p.player.account_id === preset.redPlayer.player.account_id,
+        ),
       );
       presetLaneIndices.add(preset.roleIndex);
     }
@@ -459,9 +473,9 @@ function generateMatchesWithPresetLanesTolerance(
           assignment as Array<
             [
               { player: Player; ranks: number[] },
-              { player: Player; ranks: number[] }
+              { player: Player; ranks: number[] },
             ]
-          >
+          >,
         );
         if (match) {
           // Check that team scores are equal
@@ -530,10 +544,10 @@ function generateMatchesWithPresetLanesTolerance(
         const roleIndex = roleIndexMap[laneKey];
 
         const player1 = playerData.find(
-          (p) => p.player.account_id === laneConfig.player1!.account_id
+          (p) => p.player.account_id === laneConfig.player1!.account_id,
         );
         const player2 = playerData.find(
-          (p) => p.player.account_id === laneConfig.player2!.account_id
+          (p) => p.player.account_id === laneConfig.player2!.account_id,
         );
 
         if (player1 && player2) {
@@ -604,7 +618,7 @@ function generateMatchesWithPresetLanesTolerance(
       roleIndex: number;
       bluePlayer: (typeof playerData)[0];
       redPlayer: (typeof playerData)[0];
-    }>
+    }>,
   ) {
     if (roleIdx === roleIndices.length) {
       combinations.push([...current]);
@@ -636,7 +650,7 @@ function generateMatchesWithPresetLanesTolerance(
  */
 function filterMatchesByConstraints(
   matches: MatchResult[],
-  config: ParsedConfig
+  config: ParsedConfig,
 ): MatchResult[] {
   return matches.filter((match) => {
     // Check preset lanes constraint
@@ -669,7 +683,7 @@ function filterMatchesByConstraints(
  */
 function matchesPresetLanes(
   match: MatchResult,
-  presetLanesConfig: ParsedConfig["presetLanes"]
+  presetLanesConfig: ParsedConfig["presetLanes"],
 ): boolean {
   const roleIndexMap: Record<string, number> = {
     top: 0,
@@ -753,7 +767,7 @@ function matchesPresetLanes(
  */
 function matchesAvoidRoles(
   match: MatchResult,
-  avoidRolesConfig: ParsedConfig["avoidRoles"]
+  avoidRolesConfig: ParsedConfig["avoidRoles"],
 ): boolean {
   const roleIndexMap: Record<string, number> = {
     top: 0,
@@ -775,7 +789,7 @@ function matchesAvoidRoles(
 
   for (const rule of avoidRolesConfig.rules) {
     const avoidedRoleIndex = roleIndexMap[rule.lane];
-    // Normalize rule.playerId to string for consistent comparison
+    // Rules are normalized to account_id strings in parseConfig
     const normalizedPlayerId = String(rule.playerId);
     const playerRoleIndex = playerPositions.get(normalizedPlayerId);
 
@@ -793,7 +807,7 @@ function matchesAvoidRoles(
  */
 function matchesPlayerCombos(
   match: MatchResult,
-  playerCombosConfig: ParsedConfig["playerCombos"]
+  playerCombosConfig: ParsedConfig["playerCombos"],
 ): boolean {
   if (playerCombosConfig.combos.length === 0) {
     return true;
