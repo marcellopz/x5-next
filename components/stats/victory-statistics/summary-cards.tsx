@@ -4,14 +4,27 @@ import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import type { StatEntry } from "@/lib/types";
 import { cn } from "@/lib/utils";
-import { Trophy, Sword, TowerControl, Skull, Origami } from "lucide-react";
+import {
+  Trophy,
+  Sword,
+  TowerControl,
+  Skull,
+  Origami,
+  Crown,
+} from "lucide-react";
 import { formatWinRate } from "./utils";
 
 export interface SummaryCardItem {
   title: string;
   entry: StatEntry;
   description: string;
-  icon?: "trophy" | "sword" | "towerControl" | "skull" | "origami";
+  icon?:
+    | "trophy"
+    | "sword"
+    | "towerControl"
+    | "skull"
+    | "origami"
+    | "crown";
   accent?: string;
 }
 
@@ -21,6 +34,7 @@ const iconMap = {
   towerControl: TowerControl,
   skull: Skull,
   origami: Origami,
+  crown: Crown,
 };
 
 export function SummaryCards({ items }: { items: SummaryCardItem[] }) {

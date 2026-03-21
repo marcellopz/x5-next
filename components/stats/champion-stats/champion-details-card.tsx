@@ -22,6 +22,7 @@ import type {
 } from "@/lib/types";
 import { CHAMPIONICONURL } from "@/lib/resources";
 import Link from "next/link";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface ChampionDetailsCardProps {
   champion: (ChampionStatsEntryRole | ChampionStatsEntryAll) | null;
@@ -34,18 +35,20 @@ function isChampionStatsEntryAll(
 }
 
 export function ChampionDetailsCard({ champion }: ChampionDetailsCardProps) {
+  const t = useTranslations();
+
   if (!champion) {
     return (
       <Card className="sticky top-20">
         <CardHeader>
-          <CardTitle>Select a Champion</CardTitle>
+          <CardTitle>{t("stats.championStatsPage.selectChampionTitle")}</CardTitle>
           <CardDescription>
-            Click on a champion in the table to view details
+            {t("stats.championStatsPage.clickRowForDetails")}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-sm text-muted-foreground text-center py-8">
-            No champion selected
+            {t("stats.championStatsPage.noChampionSelected")}
           </div>
         </CardContent>
       </Card>
@@ -81,21 +84,27 @@ export function ChampionDetailsCard({ champion }: ChampionDetailsCardProps) {
           </div>
           <div className="flex-1 min-w-0 space-y-1">
             <CardTitle>{champion.championName}</CardTitle>
-            <CardDescription>Champion statistics and details</CardDescription>
+            <CardDescription>{t("stats.championStatsPage.cardSubtitle")}</CardDescription>
           </div>
         </div>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Overall Stats */}
         <div>
-          <h3 className="text-sm font-semibold mb-3">Overall Statistics</h3>
+          <h3 className="text-sm font-semibold mb-3">
+            {t("stats.championStatsPage.overallStatistics")}
+          </h3>
           <div className="grid grid-cols-4 gap-3">
             <div className="space-y-1">
-              <div className="text-xs text-muted-foreground">Picks</div>
+              <div className="text-xs text-muted-foreground">
+                {t("home.picks")}
+              </div>
               <div className="text-lg font-semibold">{champion.picks}</div>
             </div>
             <div className="space-y-1">
-              <div className="text-xs text-muted-foreground">Win/Loss</div>
+              <div className="text-xs text-muted-foreground">
+                {t("stats.championStatsPage.winLoss")}
+              </div>
               <div className="text-lg font-semibold">
                 <span className="text-green-300">{champion.wins}</span>{" "}
                 <span className="text-muted-foreground">/</span>{" "}
@@ -105,21 +114,29 @@ export function ChampionDetailsCard({ champion }: ChampionDetailsCardProps) {
               </div>
             </div>
             <div className="space-y-1">
-              <div className="text-xs text-muted-foreground">Win Rate</div>
+              <div className="text-xs text-muted-foreground">
+                {t("home.winRate")}
+              </div>
               <div className="text-lg font-semibold">{winRate}%</div>
             </div>
             <div className="space-y-1">
-              <div className="text-xs text-muted-foreground">KDA</div>
+              <div className="text-xs text-muted-foreground">
+                {t("common.kda")}
+              </div>
               <div className="text-lg font-semibold">{kda}</div>
             </div>
             {isAllRole && (
               <>
                 <div className="space-y-1">
-                  <div className="text-xs text-muted-foreground">Bans</div>
+                  <div className="text-xs text-muted-foreground">
+                    {t("home.bans")}
+                  </div>
                   <div className="text-lg font-semibold">{champion.bans}</div>
                 </div>
                 <div className="space-y-1">
-                  <div className="text-xs text-muted-foreground">Presence</div>
+                  <div className="text-xs text-muted-foreground">
+                    {t("home.presence")}
+                  </div>
                   <div className="text-lg font-semibold">
                     {champion.presence
                       ? (champion.presence * 100).toFixed(1) + "%"
@@ -133,28 +150,38 @@ export function ChampionDetailsCard({ champion }: ChampionDetailsCardProps) {
 
         {/* Average Stats */}
         <div>
-          <h3 className="text-sm font-semibold mb-3">Average Statistics</h3>
+          <h3 className="text-sm font-semibold mb-3">
+            {t("stats.championStatsPage.averageStatistics")}
+          </h3>
           <div className="grid grid-cols-4 gap-3">
             <div className="space-y-1">
-              <div className="text-xs text-muted-foreground">Kills</div>
+              <div className="text-xs text-muted-foreground">
+                {t("records.kills")}
+              </div>
               <div className="text-sm font-medium">
                 {champion.kills.toFixed(2)}
               </div>
             </div>
             <div className="space-y-1">
-              <div className="text-xs text-muted-foreground">Deaths</div>
+              <div className="text-xs text-muted-foreground">
+                {t("records.deaths")}
+              </div>
               <div className="text-sm font-medium">
                 {champion.deaths.toFixed(2)}
               </div>
             </div>
             <div className="space-y-1">
-              <div className="text-xs text-muted-foreground">Assists</div>
+              <div className="text-xs text-muted-foreground">
+                {t("records.assists")}
+              </div>
               <div className="text-sm font-medium">
                 {champion.assists.toFixed(2)}
               </div>
             </div>
             <div className="space-y-1">
-              <div className="text-xs text-muted-foreground">CS</div>
+              <div className="text-xs text-muted-foreground">
+                {t("match.cs")}
+              </div>
               <div className="text-sm font-medium">
                 {champion.creepsKilled.toFixed(1)}
               </div>
@@ -165,19 +192,29 @@ export function ChampionDetailsCard({ champion }: ChampionDetailsCardProps) {
         {/* Played By Table */}
         {playedByEntries.length > 0 && (
           <div>
-            <h3 className="text-sm font-semibold mb-3">Played By</h3>
+            <h3 className="text-sm font-semibold mb-3">{t("stats.playedBy")}</h3>
             <div className="border border-border rounded-lg overflow-hidden">
               <Table compact>
                 <TableHeader>
                   <TableRow>
-                    <TableHead className="text-xs">Player</TableHead>
-                    <TableHead className="text-xs text-center">Games</TableHead>
-                    <TableHead className="text-xs text-center">
-                      Win Rate
+                    <TableHead className="text-xs">
+                      {t("stats.mvpTablePlayer")}
                     </TableHead>
-                    <TableHead className="text-xs text-center">W/L</TableHead>
-                    <TableHead className="text-xs text-center">KDA</TableHead>
-                    <TableHead className="text-xs text-center">CS</TableHead>
+                    <TableHead className="text-xs text-center">
+                      {t("stats.mvpTableGames")}
+                    </TableHead>
+                    <TableHead className="text-xs text-center">
+                      {t("home.winRate")}
+                    </TableHead>
+                    <TableHead className="text-xs text-center">
+                      {t("stats.wlShort")}
+                    </TableHead>
+                    <TableHead className="text-xs text-center">
+                      {t("common.kda")}
+                    </TableHead>
+                    <TableHead className="text-xs text-center">
+                      {t("match.cs")}
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>

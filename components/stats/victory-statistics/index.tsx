@@ -36,10 +36,10 @@ export function VictoryStatisticsView({ data }: VictoryStatisticsViewProps) {
       icon: "origami" as const,
     },
     {
-      title: t("stats.victory.atakhan"),
-      description: t("stats.victory.atakhanDesc"),
-      entry: data.atakhan,
-      icon: "skull" as const,
+      title: t("stats.victory.firstBaron"),
+      description: t("stats.victory.firstBaronDesc"),
+      entry: data.firstBaron,
+      icon: "crown" as const,
     },
   ];
 

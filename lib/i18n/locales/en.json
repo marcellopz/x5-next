@@ -58,6 +58,17 @@
       "title": "Champion Stats",
       "description": "Champion performance statistics by role or overall"
     },
+    "championStatsPage": {
+      "filterMoreThanFiveGames": "Filter for more than 5 games",
+      "noChampionsFound": "No champions found",
+      "selectChampionTitle": "Select a champion",
+      "clickRowForDetails": "Click a row in the table to view details.",
+      "noChampionSelected": "No champion selected",
+      "cardSubtitle": "Champion statistics and details",
+      "overallStatistics": "Overall statistics",
+      "averageStatistics": "Average statistics",
+      "winLoss": "Win/Loss"
+    },
     "rankAnalysis": {
       "title": "Rank Analysis",
       "description": "Detailed analysis of player rankings and rank changes"
@@ -277,11 +288,11 @@
     "showLess": "Show Less"
   },
   "season": {
-    "season1": "Season 1",
-    "season2": "Season 2",
-    "season2Legacy": "Season 2 Legacy",
-    "season3": "Season 3",
-    "season3Legacy": "Season 3 Legacy",
+    "season1": "season 1",
+    "season2": "season 2",
+    "season2Legacy": "season 2 legacy",
+    "season3": "season 3",
+    "season3Legacy": "season 3 legacy",
     "s2": "s2",
     "s3": "s3"
   },

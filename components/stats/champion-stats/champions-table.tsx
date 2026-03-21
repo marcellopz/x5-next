@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { Table, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import type {
   ChampionStatsEntryAll,
   ChampionStatsEntryRole,
@@ -38,6 +39,7 @@ export function ChampionsTable({
   onSelectChampion,
   selectedRole,
 }: ChampionsTableProps) {
+  const t = useTranslations();
   const isAllRole = selectedRole === "all";
 
   // Process data similar to home table
@@ -104,27 +106,27 @@ export function ChampionsTable({
         <TableRow>
           <TableHead className="w-12">#</TableHead>
           <TableHead sortable sortKey="championName">
-            Champion
+            {t("common.champion")}
           </TableHead>
           {isAllRole && (
             <TableHead sortable sortKey="presence" className="text-center">
-              Presence
+              {t("home.presence")}
             </TableHead>
           )}
           <TableHead sortable sortKey="picks" className="text-center">
-            Picks
+            {t("home.picks")}
           </TableHead>
           {isAllRole && (
             <TableHead sortable sortKey="bans" className="text-center">
-              Bans
+              {t("home.bans")}
             </TableHead>
           )}
-          <TableHead className="text-center">W/L</TableHead>
+          <TableHead className="text-center">{t("stats.wlShort")}</TableHead>
           <TableHead sortable sortKey="winRate" className="text-center">
-            Win Rate
+            {t("home.winRate")}
           </TableHead>
           <TableHead sortable sortKey="kda" className="text-center">
-            KDA
+            {t("common.kda")}
           </TableHead>
         </TableRow>
       </TableHeader>

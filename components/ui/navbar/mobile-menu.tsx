@@ -4,11 +4,13 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { ChevronDown } from "lucide-react";
 import { BrandLogo } from "./brand-logo";
 import { LanguageToggle } from "./language-toggle";
 import { cn } from "@/lib/utils";
 import { SeasonSelector } from "./season-selector";
 import { useTranslations } from "@/lib/i18n/locale-context";
+import { statRoutes } from "@/app/stats/stat-routes";
 
 interface MobileMenuProps {
   isOpen: boolean;
@@ -45,12 +47,75 @@ function MobileNavLink({
 
 function MobileNavLinks({ onClose }: { onClose: () => void }) {
   const t = useTranslations();
+  const pathname = usePathname();
+  const [statsOpen, setStatsOpen] = useState(
+    pathname === "/stats" || pathname.startsWith("/stats/")
+  );
+  const isStatsRoute = pathname === "/stats" || pathname.startsWith("/stats/");
+
+  const statsLinks = [
+    { href: "/stats", label: t("nav.statistics") },
+    ...Object.entries(statRoutes).map(([slug, route]) => ({
+      href: `/stats/${slug}`,
+      label: t(route.titleKey),
+    })),
+  ];
+
   return (
     <nav className="flex-1 py-4">
-      <MobileNavLink href="/history" label={t("nav.history")} onClick={onClose} />
-      <MobileNavLink href="/player-list" label={t("nav.players")} onClick={onClose} />
-      <MobileNavLink href="/patch-notes" label={t("nav.patchNotes")} onClick={onClose} />
-      <MobileNavLink href="/stats" label={t("nav.statistics")} onClick={onClose} />
+      <MobileNavLink
+        href="/history"
+        label={t("nav.history")}
+        onClick={onClose}
+      />
+      <MobileNavLink
+        href="/player-list"
+        label={t("nav.players")}
+        onClick={onClose}
+      />
+      <MobileNavLink
+        href="/patch-notes"
+        label={t("nav.patchNotes")}
+        onClick={onClose}
+      />
+
+      <div className="border-t border-border/50 mt-2 pt-2">
+        <button
+          type="button"
+          onClick={() => setStatsOpen((prev) => !prev)}
+          className={cn(
+            "w-full px-4 py-3 text-lg font-medium transition-colors flex items-center justify-between",
+            isStatsRoute
+              ? "text-foreground bg-accent"
+              : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+          )}
+        >
+          <span>{t("nav.statistics")}</span>
+          <ChevronDown
+            className={cn("h-5 w-5 transition-transform", statsOpen && "rotate-180")}
+          />
+        </button>
+
+        {statsOpen && (
+          <div className="pb-2">
+            {statsLinks.map((link) => (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={onClose}
+                className={cn(
+                  "block px-8 py-2 text-sm transition-colors",
+                  pathname === link.href
+                    ? "text-foreground bg-accent/80"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent/40"
+                )}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
     </nav>
   );
 }

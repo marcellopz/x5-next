@@ -58,6 +58,17 @@
       "title": "Estatísticas de Campeões",
       "description": "Estatísticas de desempenho de campeões por posição ou geral"
     },
+    "championStatsPage": {
+      "filterMoreThanFiveGames": "Filtrar com mais de 5 partidas",
+      "noChampionsFound": "Nenhum campeão encontrado",
+      "selectChampionTitle": "Selecione um campeão",
+      "clickRowForDetails": "Clique em uma linha da tabela para ver os detalhes.",
+      "noChampionSelected": "Nenhum campeão selecionado",
+      "cardSubtitle": "Estatísticas e detalhes do campeão",
+      "overallStatistics": "Estatísticas gerais",
+      "averageStatistics": "Estatísticas médias",
+      "winLoss": "Vitórias / Derrotas"
+    },
     "rankAnalysis": {
       "title": "Análise de Ranks",
       "description": "Análise detalhada dos rankings e mudanças de rank dos jogadores"
@@ -164,12 +175,12 @@
       "winRate": "Taxa de Vitória",
       "exactNumberSecured": "Quantidade exata garantida",
       "atLeastThisManySecured": "Pelo menos essa quantidade",
-"grubOne": "1 Grub",
-    "grubTwo": "2 Grubs",
-    "grubThree": "3 Grubs",
-    "grubOnePlus": "1+ Grubs",
-    "grubTwoPlus": "2+ Grubs",
-    "grubThreePlus": "3+ Grubs",
+      "grubOne": "1 Grub",
+      "grubTwo": "2 Grubs",
+      "grubThree": "3 Grubs",
+      "grubOnePlus": "1+ Grubs",
+      "grubTwoPlus": "2+ Grubs",
+      "grubThreePlus": "3+ Grubs",
       "exact1": "Exato 1",
       "exact2": "Exato 2",
       "exact3": "Exato 3",
@@ -267,11 +278,11 @@
     "showLess": "Mostrar menos"
   },
   "season": {
-    "season1": "Season 1",
-    "season2": "Season 2",
-    "season2Legacy": "Season 2 Legacy",
-    "season3": "Season 3",
-    "season3Legacy": "Season 3 Legacy",
+    "season1": "season 1",
+    "season2": "season 2",
+    "season2Legacy": "season 2 legacy",
+    "season3": "season 3",
+    "season3Legacy": "season 3 legacy",
     "s2": "s2",
     "s3": "s3"
   },

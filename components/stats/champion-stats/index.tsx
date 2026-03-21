@@ -150,7 +150,7 @@ export function ChampionStats({
               htmlFor="more-than-five-checkbox"
               className="text-sm text-muted-foreground cursor-pointer select-none"
             >
-              Filter for more than 5 games
+              {t("stats.championStatsPage.filterMoreThanFiveGames")}
             </label>
           </div>
         )}

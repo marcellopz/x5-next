@@ -415,7 +415,8 @@ export function extractPlayerStatSets(
 }
 
 export function extractVictoryHighlight(
-  data: VictoryStatistics | null
+  data: VictoryStatistics | null,
+  translate: (key: string) => string
 ): VictoryHighlight {
   if (!data) {
     return {
@@ -424,10 +425,12 @@ export function extractVictoryHighlight(
     };
   }
 
+  const t = translate;
+
   const cards: SummaryCardItem[] = [
     {
-      title: "First Blood",
-      description: `${data.firstBlood.wins}/${data.firstBlood.total} wins`,
+      title: t("stats.victory.firstBlood"),
+      description: t("stats.victory.firstBloodDesc"),
       entry: {
         total: data.firstBlood.total,
         wins: data.firstBlood.wins,
@@ -436,8 +439,8 @@ export function extractVictoryHighlight(
       icon: "sword",
     },
     {
-      title: "First Tower",
-      description: `${data.firstTower.wins}/${data.firstTower.total} wins`,
+      title: t("stats.victory.firstTower"),
+      description: t("stats.victory.firstTowerDesc"),
       entry: {
         total: data.firstTower.total,
         wins: data.firstTower.wins,
@@ -446,8 +449,8 @@ export function extractVictoryHighlight(
       icon: "towerControl",
     },
     {
-      title: "First Dragon",
-      description: `${data.firstDragon.wins}/${data.firstDragon.total} wins`,
+      title: t("stats.victory.firstDragon"),
+      description: t("stats.victory.firstDragonDesc"),
       entry: {
         total: data.firstDragon.total,
         wins: data.firstDragon.wins,
@@ -456,14 +459,14 @@ export function extractVictoryHighlight(
       icon: "origami",
     },
     {
-      title: "Atakhan",
-      description: `${data.atakhan.wins}/${data.atakhan.total} wins`,
+      title: t("stats.victory.firstBaron"),
+      description: t("stats.victory.firstBaronDesc"),
       entry: {
-        total: data.atakhan.total,
-        wins: data.atakhan.wins,
-        winRate: data.atakhan.winRate ?? 0,
+        total: data.firstBaron.total,
+        wins: data.firstBaron.wins,
+        winRate: data.firstBaron.winRate ?? 0,
       },
-      icon: "skull",
+      icon: "crown",
     },
   ];
 

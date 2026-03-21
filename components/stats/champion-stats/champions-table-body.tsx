@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { useTranslations } from "@/lib/i18n/locale-context";
 import {
   TableBody,
   TableCell,
@@ -36,6 +37,7 @@ export function ChampionsTableBody({
   selectedChampionId,
   onSelectChampion,
 }: ChampionsTableBodyProps) {
+  const t = useTranslations();
   // Get sorted data from table context
   const sortedData = (useTableData() as ProcessedChampion[]) || [];
 
@@ -47,7 +49,7 @@ export function ChampionsTableBody({
             colSpan={isAllRole ? 8 : 6}
             className="text-center text-muted-foreground"
           >
-            No champions found
+            {t("stats.championStatsPage.noChampionsFound")}
           </TableCell>
         </TableRow>
       ) : (

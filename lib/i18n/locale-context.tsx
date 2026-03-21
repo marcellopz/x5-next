@@ -7,6 +7,7 @@ import {
   useCallback,
   type ReactNode,
 } from "react";
+import { useRouter } from "next/navigation";
 import type { Locale, Translations } from "./types";
 import { LOCALE_COOKIE, DEFAULT_LOCALE, LOCALE_MAP } from "./types";
 import en from "./locales/en.json";
@@ -33,12 +34,17 @@ export function LocaleProvider({
   initialLocale: Locale;
   children: ReactNode;
 }) {
+  const router = useRouter();
   const [locale, setLocaleState] = useState<Locale>(initialLocale);
 
   const setLocale = useCallback((newLocale: Locale) => {
+    if (newLocale === locale) {
+      return;
+    }
     setLocaleState(newLocale);
     setCookie(LOCALE_COOKIE, newLocale, 365);
-  }, []);
+    router.refresh();
+  }, [locale, router]);
 
   return (
     <LocaleContext.Provider value={{ locale, setLocale }}>

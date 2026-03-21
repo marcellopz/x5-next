@@ -27,19 +27,17 @@ export function StatsHeader() {
   const pageTitle = routeInfo ? t(routeInfo.titleKey) : t("stats.title");
   const pageDescription = routeInfo ? t(routeInfo.descriptionKey) : undefined;
 
-  if (currentRoute === "champion-stats") {
-    return <Breadcrumb items={breadcrumbItems} className="mb-4" />;
-  }
-
   return (
     <>
       <Breadcrumb items={breadcrumbItems} className="mb-4" />
-      <div className="space-y-2">
-        <h1 className="text-2xl font-bold tracking-tight">{pageTitle}</h1>
-        {pageDescription && (
-          <p className="text-sm text-muted-foreground">{pageDescription}</p>
-        )}
-      </div>
+      {currentRoute !== "champion-stats" && (
+        <div className="space-y-2">
+          <h1 className="text-2xl font-bold tracking-tight">{pageTitle}</h1>
+          {pageDescription && (
+            <p className="text-sm text-muted-foreground">{pageDescription}</p>
+          )}
+        </div>
+      )}
     </>
   );
 }
