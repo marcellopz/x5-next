@@ -145,7 +145,7 @@ export function SummaryMatchItem({
         {/* Champion/Spells and KDA - Stay together on first row on small screens */}
         <div className="flex items-center justify-evenly sm:flex-1 lg:justify-between gap-2 sm:gap-4 w-full sm:w-auto xl:flex-none xl:justify-start xl:gap-5">
           {/* Champion and Spells - Responsive width */}
-          <div className="flex items-center gap-1.5 sm:gap-2 shrink-0 w-[76px] sm:w-[96px] lg:w-[108px] xl:w-[118px]">
+          <div className="flex items-center gap-1.5 shrink-0 sm:w-[96px] lg:w-[108px] xl:w-[118px]">
             <div className="relative shrink-0">
               <Image
                 src={`${CHAMPIONICONURL}${participant.championId}.png`}
