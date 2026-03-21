@@ -141,9 +141,9 @@ export function SummaryMatchItem({
       </div>
 
       {/* Content */}
-      <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-2 lg:gap-3 xl:justify-start xl:gap-x-5 2xl:gap-x-7">
+      <div className="flex flex-wrap items-center justify-between gap-x-2 gap-y-2 lg:gap-3 xl:justify-start xl:gap-x-5 2xl:gap-7">
         {/* Champion/Spells and KDA - Stay together on first row on small screens */}
-        <div className="flex items-center justify-evenly sm:flex-1 lg:justify-between gap-2 sm:gap-4 w-full sm:w-auto xl:flex-none xl:justify-start xl:gap-5">
+        <div className="flex items-center justify-evenly sm:flex-1 lg:justify-between gap-2 sm:gap-4 w-full sm:w-auto xl:flex-none xl:justify-start xl:gap-5 2xl:gap-7">
           {/* Champion and Spells - Responsive width */}
           <div className="flex items-center gap-1.5 shrink-0 sm:w-[96px] lg:w-[108px] xl:w-[118px]">
             <div className="relative shrink-0">
@@ -196,18 +196,18 @@ export function SummaryMatchItem({
 
           {/* KDA Stats - Responsive width */}
           <div className="flex flex-col gap-0.5 sm:w-[80px] items-center justify-center">
-            <div className="text-xs sm:text-sm lg:text-base font-semibold text-foreground text-center whitespace-nowrap">
+            <div className="text-xs sm:text-sm lg:text-base xl:text-lg font-semibold text-foreground text-center whitespace-nowrap">
               {participant.stats.kills} / {participant.stats.deaths} /{" "}
               {participant.stats.assists}
             </div>
-            <div className="text-[10px] sm:text-xs lg:text-sm text-muted-foreground text-center">
+            <div className="text-[10px] sm:text-xs lg:text-sm xl:text-base text-muted-foreground text-center">
               {kda} {t("common.kda")}
             </div>
           </div>
         </div>
 
         {/* Items and Teams - Wrap together to second row on small screens */}
-        <div className="flex flex-wrap items-center justify-evenly gap-5 w-full sm:w-auto sm:flex-nowrap xl:justify-start xl:gap-4 2xl:gap-5 xl:flex-1 xl:min-w-0">
+        <div className="flex flex-wrap items-center justify-evenly gap-5 w-full sm:w-auto sm:flex-nowrap xl:justify-start xl:gap-4 2xl:gap-7 xl:flex-1 xl:min-w-0">
           {/* Items - Responsive width grid */}
           <div className="grid grid-cols-3 xl:grid-cols-6 gap-1.5 xl:gap-2 p-1 sm:p-1.5 shrink-0">
             {itemSlots.map((item, index) => (
