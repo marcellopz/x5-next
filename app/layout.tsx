@@ -5,6 +5,7 @@ import { Navbar } from "@/components/ui/navbar";
 import { getSeasonPrefix } from "@/lib/metadata";
 import { getLocale, getTranslations, t } from "@/lib/i18n";
 import { LocaleProvider } from "@/lib/i18n/locale-context";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -50,6 +51,7 @@ export default async function RootLayout({
             <main className="flex-1">{children}</main>
           </div>
         </LocaleProvider>
+        <Analytics />
       </body>
     </html>
   );
