@@ -119,7 +119,7 @@ export function WinRateChart({ winsArray }: WinRateChartProps) {
                 fontWeight: 600,
               }}
               itemStyle={{ color: chartTheme.tooltip.label }}
-              formatter={(value: number) => formatWinRate(value)}
+              formatter={(value) => formatWinRate(Number(value ?? 0))}
               labelFormatter={(label) => `Game ${label}`}
             />
             <Area
