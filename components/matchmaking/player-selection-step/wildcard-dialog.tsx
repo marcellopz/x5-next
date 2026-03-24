@@ -35,12 +35,19 @@ export function WildcardDialog({ open, onOpenChange }: WildcardDialogProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const now = Date.now();
+    const normalizedBaseNameId =
+      formData.name
+        .toLowerCase()
+        .trim()
+        .replace(/\s+/g, "-")
+        .replace(/[^a-z0-9-]/g, "") || "wildcard";
 
     // Create wildcard player with a unique account_id
     const wildcardPlayer: Player = {
-      account_id: Date.now(), // Unique ID for wildcard
+      account_id: now, // Unique ID for wildcard
       name: formData.name,
-      name_id: formData.name.toLowerCase().replace(/\s+/g, ""), // Generate name_id
+      name_id: `${normalizedBaseNameId}-${now}`, // Keep unique name_id
       top: parseInt(formData.top) || 0,
       jungle: parseInt(formData.jungle) || 0,
       mid: parseInt(formData.mid) || 0,

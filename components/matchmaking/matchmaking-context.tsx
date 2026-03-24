@@ -173,6 +173,15 @@ export function MatchmakingProvider({
   }, [config.presetLanes]);
 
   const addPlayer = (player: Player) => {
+    if (player.isWildcard) {
+      setPlayers((prev) => {
+        if (prev.some((p) => p.name_id === player.name_id)) {
+          return prev;
+        }
+        return [...prev, player];
+      });
+    }
+
     setSelectedPlayerIds((prev) => {
       if (prev.includes(player.name_id)) {
         return prev; // Player already selected
@@ -183,6 +192,9 @@ export function MatchmakingProvider({
 
   const removePlayer = (player: Player) => {
     setSelectedPlayerIds((prev) => prev.filter((id) => id !== player.name_id));
+    if (player.isWildcard) {
+      setPlayers((prev) => prev.filter((p) => p.name_id !== player.name_id));
+    }
   };
 
   const updatePresetLane = (
