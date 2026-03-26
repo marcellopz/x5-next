@@ -9,7 +9,7 @@ import {
 } from "@/lib/admin-auth";
 import { db } from "@/lib/firebase-admin";
 import type { Player, PlayerList, RankChangeEntry } from "@/lib/types";
-import { revalidateAllRoutes } from "@/lib/revalidate";
+import { revalidateAllPublicData } from "@/lib/revalidate";
 
 /**
  * Server action to handle admin login
@@ -173,8 +173,7 @@ export async function addPlayerAction(formData: {
       await photoRef.set(formData.photoB64);
     }
 
-    // Revalidate all routes to reflect the new player data
-    await revalidateAllRoutes();
+    await revalidateAllPublicData();
 
     return { success: true };
   } catch (error) {
@@ -385,8 +384,7 @@ export async function updatePlayerAction(
       await photoRef.set(formData.photoB64);
     }
 
-    // Revalidate all routes to reflect the updated player data
-    await revalidateAllRoutes();
+    await revalidateAllPublicData();
 
     return { success: true };
   } catch (error) {
@@ -481,8 +479,7 @@ export async function batchRoleEditAction(
       await logRef.push(rankChangeEntry);
     }
 
-    // Revalidate all routes to reflect the batch role updates
-    await revalidateAllRoutes();
+    await revalidateAllPublicData();
 
     return { success: true };
   } catch (error) {
