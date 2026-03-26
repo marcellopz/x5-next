@@ -1,0 +1,8 @@
+#!/usr/bin/env sh
+
+if [ "$SKIP_LOCAL_BUILD" = "1" ]; then
+  echo "Skipping local build because SKIP_LOCAL_BUILD=1"
+  exit 0
+fi
+
+NEXT_BUILD_DIR=.next-build-check pnpm run build

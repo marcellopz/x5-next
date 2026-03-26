@@ -6,6 +6,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 const nextConfig: NextConfig = {
+  distDir: process.env.NEXT_BUILD_DIR || ".next",
   outputFileTracingRoot: resolve(__dirname),
   images: {
     formats: ["image/avif", "image/webp"],
