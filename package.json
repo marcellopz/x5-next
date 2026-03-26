@@ -10,6 +10,8 @@
     "lint": "eslint",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
+    "vercel:pull:prod": "vercel pull --yes --environment=production",
+    "vercel:deploy:prod": "pnpm run vercel:pull:prod && vercel deploy --prod --yes",
     "prepare": "husky"
   },
   "dependencies": {
@@ -45,6 +47,7 @@
     "tailwindcss": "4.1.16",
     "tsx": "^4.19.2",
     "typescript": "^5",
+    "vercel": "^50.37.0",
     "vitest": "^3.2.4"
   }
 }

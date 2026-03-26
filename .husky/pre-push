@@ -1,8 +1,21 @@
 #!/usr/bin/env sh
 
-if [ "$SKIP_LOCAL_BUILD" = "1" ]; then
-  echo "Skipping local build because SKIP_LOCAL_BUILD=1"
+if [ "$SKIP_VERCEL_PREPUSH" = "1" ] || [ "$SKIP_LOCAL_BUILD" = "1" ]; then
+  echo "Skipping Vercel pre-push checks"
   exit 0
 fi
 
-NEXT_BUILD_DIR=.next-build-check pnpm run build
+branch="$(git rev-parse --abbrev-ref HEAD)"
+
+if [ "$branch" != "main" ]; then
+  echo "Skipping production deploy on branch $branch"
+  exit 0
+fi
+
+if [ "$SKIP_VERCEL_DEPLOY" = "1" ]; then
+  echo "Skipping production deploy because SKIP_VERCEL_DEPLOY=1"
+  exit 0
+fi
+
+echo "Deploying x5-season-3 to production from main"
+pnpm run vercel:deploy:prod
