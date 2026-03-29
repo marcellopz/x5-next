@@ -2,6 +2,21 @@ import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { revalidateAllPublicData } from "@/lib/revalidate";
 
+const REVALIDATE_ALLOWED_ORIGIN =
+  process.env.REVALIDATE_ALLOWED_ORIGIN ?? "http://localhost:5123";
+
+function getCorsHeaders(origin: string | null) {
+  const allowOrigin =
+    REVALIDATE_ALLOWED_ORIGIN === "*" ? "*" : origin ?? REVALIDATE_ALLOWED_ORIGIN;
+
+  return {
+    "Access-Control-Allow-Origin": allowOrigin,
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, x-revalidate-secret",
+    Vary: "Origin",
+  };
+}
+
 /**
  * API endpoint to trigger cache invalidation for public data
  * Requires either an admin session cookie or a dedicated revalidation secret
@@ -14,7 +29,16 @@ import { revalidateAllPublicData } from "@/lib/revalidate";
  * curl -X POST https://your-domain.com/api/revalidate \
  *   -H "x-revalidate-secret: your-revalidation-secret"
  */
+export async function OPTIONS(request: Request) {
+  return new NextResponse(null, {
+    status: 204,
+    headers: getCorsHeaders(request.headers.get("origin")),
+  });
+}
+
 export async function POST(request: Request) {
+  const origin = request.headers.get("origin");
+
   try {
     // Check session cookie first
     const sessionAuth = await isAdminAuthenticated();
@@ -32,7 +56,10 @@ export async function POST(request: Request) {
           error:
             "Unauthorized. Provide an admin session cookie or x-revalidate-secret header.",
         },
-        { status: 401 }
+        {
+          status: 401,
+          headers: getCorsHeaders(origin),
+        }
       );
     }
 
@@ -44,7 +71,10 @@ export async function POST(request: Request) {
         message: "All public data cache invalidated successfully",
         tags: result.tags,
       },
-      { status: 200 }
+      {
+        status: 200,
+        headers: getCorsHeaders(origin),
+      }
     );
   } catch (error) {
     console.error("Error revalidating public data:", error);
@@ -55,7 +85,10 @@ export async function POST(request: Request) {
             ? error.message
             : "Failed to revalidate public data",
       },
-      { status: 500 }
+      {
+        status: 500,
+        headers: getCorsHeaders(origin),
+      }
     );
   }
 }
