@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { useTranslations } from "@/lib/i18n/locale-context";
 import { cn } from "@/lib/utils";
@@ -19,6 +20,10 @@ const SEASON_OPTIONS: SeasonOption[] = [
   { nameKey: "season.season3Legacy", url: "https://x5-season-3-legacy.vercel.app" },
 ];
 
+function isMainSeason(nameKey: string) {
+  return nameKey === "season.season2" || nameKey === "season.season3";
+}
+
 function getCurrentSeasonKey(): "s3" | "s2" {
   const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "";
   if (projectId.includes("season-2") || projectId.includes("s2")) return "s2";
@@ -29,6 +34,8 @@ export function SeasonSelector() {
   const t = useTranslations();
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const seasonKey = getCurrentSeasonKey();
   const currentSeason = {
     full: seasonKey === "s3" ? t("season.season3") : t("season.season2"),
@@ -56,6 +63,8 @@ export function SeasonSelector() {
   }, [isOpen]);
 
   const allSeasons = SEASON_OPTIONS.map((opt) => ({ ...opt, name: t(opt.nameKey) }));
+  const currentPath = pathname || "/";
+  const currentQuery = searchParams.toString();
 
   if (allSeasons.length === 0) {
     return null; // Don't show if there are no seasons
@@ -86,10 +95,15 @@ export function SeasonSelector() {
               const isCurrent =
                 (seasonKey === "s3" && season.nameKey === "season.season3") ||
                 (seasonKey === "s2" && season.nameKey === "season.season2");
+              const shouldKeepRoute =
+                isMainSeason(season.nameKey) && isMainSeason(`season.${seasonKey === "s3" ? "season3" : "season2"}`);
+              const href = shouldKeepRoute
+                ? `${season.url}${currentPath}${currentQuery ? `?${currentQuery}` : ""}`
+                : season.url;
               return (
                 <Link
                   key={season.nameKey}
-                  href={season.url}
+                  href={href}
                   className={cn(
                     "block px-4 py-2 text-sm transition",
                     isCurrent
