@@ -78,8 +78,8 @@ export function SeasonSelector() {
           "flex items-center gap-1 text-sm font-semibold tracking-tight"
         )}
       >
-        <span className="hidden sm:inline">{currentSeason.full}</span>
-        <span className="sm:hidden">{currentSeason.short}</span>
+        <span className="hidden lg:inline">{currentSeason.full}</span>
+        <span className="lg:hidden">{currentSeason.short}</span>
         <ChevronDown
           className={cn(
             "h-3.5 w-3.5 transition-transform",
