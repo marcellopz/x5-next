@@ -1,4 +1,3 @@
-import { getPlayerPhoto } from "@/lib/endpoints";
 import type { Player } from "@/lib/types";
 import { memo, useEffect, useRef, useState } from "react";
 import { PlayerCardSkeleton } from "./player-card-skeleton";
@@ -30,7 +29,8 @@ function PlayerCardComponent({ player, onClick }: PlayerCardProps) {
 
     setIsLoading(true);
     const fetchPhoto = async () => {
-      const photo = await getPlayerPhoto(player.name_id);
+      const res = await fetch(`/api/player-photo/${player.name_id}`);
+      const photo = await res.json();
       if (photo) {
         setPhotoSrc(photo);
       } else {
