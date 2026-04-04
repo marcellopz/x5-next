@@ -6,6 +6,16 @@
     "statistics": "Estatísticas",
     "createMatch": "Criar Partida"
   },
+  "footer": {
+    "brand": "x5 dos nerds",
+    "tagline": "Feito como projeto de hobby, para um grupo de amigos. Se tiver interesse, entre em contato pelo Discord ou por email.",
+    "contact": "Contato",
+    "explore": "Explorar",
+    "discord": "Discord",
+    "email": "Email",
+    "copyright": "x5 dos nerds",
+    "builtFor": "Projeto de fãs. Sem afiliação com a Riot Games."
+  },
   "playerTabs": {
     "summary": "Resumo",
     "champions": "Campeões",

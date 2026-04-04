@@ -37,7 +37,7 @@ export function PlayerListPageContent({
   const totalCount = playerList ? Object.keys(playerList).length : 0;
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col pb-8">
       <div className="container mx-auto px-4 py-8">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>

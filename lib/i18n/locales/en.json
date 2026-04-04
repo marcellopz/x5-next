@@ -6,6 +6,16 @@
     "statistics": "Statistics",
     "createMatch": "Create Match"
   },
+  "footer": {
+    "brand": "x5 dos nerds",
+    "tagline": "Built as a hobby project, for a group of friends. If you're interested, contact through Discord or email.",
+    "contact": "Contact",
+    "explore": "Explore",
+    "discord": "Discord",
+    "email": "Email",
+    "copyright": "x5 dos nerds",
+    "builtFor": "Fan project. Not affiliated with Riot Games."
+  },
   "playerTabs": {
     "summary": "Summary",
     "champions": "Champions",

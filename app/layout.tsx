@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { Footer } from "@/components/ui/footer";
 import { Navbar } from "@/components/ui/navbar";
 import { getSeasonPrefix } from "@/lib/metadata";
 import { getLocale, getTranslations, t } from "@/lib/i18n";
@@ -49,6 +50,7 @@ export default async function RootLayout({
           >
             <Navbar />
             <main className="flex-1">{children}</main>
+            <Footer />
           </div>
         </LocaleProvider>
         <Analytics />
