@@ -6,13 +6,13 @@ import { useTranslations } from "@/lib/i18n/locale-context";
 
 const contactLinks = [
   {
-    href: "https://discord.gg/example",
+    href: "https://discord.com/users/173620782092517376",
     labelKey: "footer.discord",
     icon: MessageCircleMore,
     external: true,
   },
   {
-    href: "mailto:contact@example.com",
+    href: "mailto:marcellopz8@gmail.com",
     labelKey: "footer.email",
     icon: Mail,
     external: false,
