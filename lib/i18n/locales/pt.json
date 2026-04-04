@@ -22,6 +22,12 @@
     "stats": "Estatísticas",
     "records": "Recordes"
   },
+  "playerBanner": {
+    "winRateSinceRankChange": "Taxa de vitória desde a última mudança de rank",
+    "sinceRankChange": "Desde {{from}} → {{to}}",
+    "sinceRankAt": "Rank {{rank}}",
+    "noRankChangeYet": "Sem mudança de rank"
+  },
   "stats": {
     "title": "Estatísticas",
     "description": "Estatísticas gerais, rankings e análise",

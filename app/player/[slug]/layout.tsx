@@ -7,8 +7,10 @@ import {
   getPlayerSummary,
   getAllReducedData,
   getPlayerRankChanges,
+  getPlayerRankChangeStats,
 } from "@/lib/endpoints";
 import { getPlayerByAccountId } from "@/lib/utils";
+import { getWinLoseSinceLastChangeByRole } from "@/lib/win-loss-since-rank-change";
 import { getLocale, getTranslations, t } from "@/lib/i18n";
 import { PlayerDataProvider } from "@/components/player/player-data-context";
 import { PlayerBanner } from "@/components/player/player-banner";
@@ -83,11 +85,18 @@ async function fetchPlayerData(slug: string) {
         : player.account_id;
   }
 
-  // Fetch player info and rank changes in parallel (they don't depend on each other)
-  const [playerInfo, rankChanges] = await Promise.all([
+  // Player info, per-player rank log, and global rank-change stats (same source as /stats/rank-analysis)
+  const [playerInfo, rankChanges, rankChangeStats] = await Promise.all([
     getPlayerInfo(accountId),
     getPlayerRankChanges(playerKey),
+    getPlayerRankChangeStats(),
   ]);
+
+  const nameIdForStats = player?.name_id ?? playerKey;
+  const winLoseSinceLastChangeByRole = getWinLoseSinceLastChangeByRole(
+    rankChangeStats,
+    nameIdForStats
+  );
 
   // Only fetch matches if playerInfo exists and has match data
   // Fetch other data in parallel
@@ -132,6 +141,7 @@ async function fetchPlayerData(slug: string) {
     champs,
     matches: playerMatches,
     rankChanges,
+    winLoseSinceLastChangeByRole,
   };
 }
 
@@ -184,6 +194,7 @@ export default async function PlayerLayout({
       champs={data.champs}
       matches={data.matches}
       rankChanges={data.rankChanges}
+      winLoseSinceLastChangeByRole={data.winLoseSinceLastChangeByRole}
     >
       <div className="container mx-auto px-4 py-8">
         <Card className="overflow-clip">

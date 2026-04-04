@@ -1,11 +1,13 @@
 "use client";
 
+import { useMemo } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { getChampionSplash } from "@/lib/resources";
 import { PlayerCard } from "@/components/ui/player-card";
 import type { Player, PlayerInfo, ChampionStats } from "@/lib/types";
 import { WinRateCircularProgress } from "@/components/ui/win-rate-circular-progress";
+import { getLatestRankChangeEntryPerRole } from "@/lib/rank-utils";
 import { usePlayerData } from "./player-data-context";
 import { useTranslations } from "@/lib/i18n/locale-context";
 
@@ -15,7 +17,7 @@ interface PlayerBannerProps {
   player: Player | null;
 }
 
-const roles = ["top", "jungle", "mid", "adc", "support"];
+const roles = ["top", "jungle", "mid", "adc", "support"] as const;
 const roleIcons = [
   "/top.png",
   "/jungle.png",
@@ -186,6 +188,13 @@ function RoleStatsList({
   onRoleClick,
   containerClassName,
 }: RoleStatsListProps) {
+  const t = useTranslations();
+  const { winLoseSinceLastChangeByRole, rankChanges } = usePlayerData();
+  const latestByRole = useMemo(
+    () => getLatestRankChangeEntryPerRole(rankChanges),
+    [rankChanges]
+  );
+
   return (
     <div className={cn("flex flex-col gap-1", containerClassName)}>
       {roles.map((role, i) => {
@@ -198,24 +207,81 @@ function RoleStatsList({
           roleMatch.games > 0 ? roleMatch.wins / roleMatch.games : 0;
         const losses = roleMatch.games - roleMatch.wins;
 
+        const sinceStats = winLoseSinceLastChangeByRole[role];
+        const latestChange = latestByRole[role];
+
+        let sinceColTitle: string;
+        let sinceRankLine: string;
+        let sinceRecordLine: string;
+
+        if (!sinceStats) {
+          sinceColTitle = t("playerBanner.noRankChangeYet");
+          sinceRankLine = "—";
+          sinceRecordLine = "—";
+        } else {
+          sinceColTitle = t("playerBanner.winRateSinceRankChange");
+          const wins = sinceStats.wins;
+          const lossCount = sinceStats.loses;
+          const sinceGames = wins + lossCount;
+          sinceRecordLine =
+            sinceGames > 0
+              ? `${wins}W ${lossCount}L (${floatToPercentageString(wins / sinceGames)})`
+              : "0W 0L";
+          if (latestChange) {
+            sinceRankLine = t("playerBanner.sinceRankChange")
+              .replace("{{from}}", String(latestChange.oldRank))
+              .replace("{{to}}", String(latestChange.newRank));
+          } else {
+            sinceRankLine = t("playerBanner.sinceRankAt").replace(
+              "{{rank}}",
+              String(sinceStats.rank)
+            );
+          }
+        }
+
         return (
           <button
             key={role}
+            type="button"
+            title={sinceColTitle}
             onClick={() => onRoleClick(role)}
             className={cn(
-              "flex items-center gap-3 px-3 py-2 rounded-lg border-2 transition-all",
+              "flex w-full min-w-0 items-stretch gap-2 rounded-lg border-2 px-3 py-2 text-left transition-all",
               filteredRole === role
                 ? "border-primary bg-primary/20"
                 : "border-border/50 bg-[hsl(220,60%,7%)]/50 hover:bg-[hsl(220,60%,7%)]/70"
             )}
           >
-            <Image src={roleIcons[i]} alt={role} width={32} height={32} sizes="32px" />
-            <div className="text-foreground text-base flex-1">
-              <p className="font-semibold">
+            <div className="flex size-8 shrink-0 items-center justify-center self-center">
+              <Image
+                src={roleIcons[i]}
+                alt={role}
+                width={32}
+                height={32}
+                sizes="32px"
+              />
+            </div>
+            <div className="flex min-h-11 min-w-0 flex-1 flex-col justify-center gap-0.5 text-foreground text-base">
+              <p className="whitespace-nowrap text-center font-semibold tabular-nums leading-none px-1">
                 {floatToPercentageString(winRate)}
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className="whitespace-nowrap text-center text-xs leading-none text-muted-foreground tabular-nums">
                 {roleMatch.wins}W {losses}L
+              </p>
+            </div>
+            <div
+              className="w-px shrink-0 self-stretch bg-border/70"
+              aria-hidden
+            />
+            <div
+              className="flex min-h-11 min-w-20 shrink-0 flex-col justify-center gap-0.5 text-right leading-tight"
+              title={sinceColTitle}
+            >
+              <p className="whitespace-nowrap text-center text-[10px] font-medium leading-none text-muted-foreground/90 tabular-nums sm:text-[11px]">
+                {sinceRankLine}
+              </p>
+              <p className="whitespace-nowrap text-center text-[10px] leading-none text-muted-foreground/80 tabular-nums sm:text-[11px]">
+                {sinceRecordLine}
               </p>
             </div>
           </button>

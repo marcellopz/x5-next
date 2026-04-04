@@ -6,6 +6,7 @@ import type {
   PlayerList,
   Player,
   MatchParticipantIdentity,
+  PlayerRankChanges,
 } from "./types";
 import { getPlayerByAccountId } from "./utils";
 
@@ -145,4 +146,33 @@ export function calculateMatchPlayerRanks(
   }
 
   return playerRanks;
+}
+
+const ALL_ROLES: Role[] = ["top", "jungle", "mid", "adc", "support"];
+
+/** Latest rank change entry per role for the current player (from player-rank-change-log). */
+export function getLatestRankChangeEntryPerRole(
+  playerRankChanges: PlayerRankChanges | null
+): Record<Role, RankChangeEntry | null> {
+  const out = {} as Record<Role, RankChangeEntry | null>;
+  if (!playerRankChanges) {
+    for (const role of ALL_ROLES) out[role] = null;
+    return out;
+  }
+  for (const role of ALL_ROLES) {
+    const entries = playerRankChanges[role];
+    if (!entries) {
+      out[role] = null;
+      continue;
+    }
+    const list = Object.values(entries);
+    if (list.length === 0) {
+      out[role] = null;
+      continue;
+    }
+    out[role] = list.reduce((a, b) =>
+      a.timestamp >= b.timestamp ? a : b
+    );
+  }
+  return out;
 }

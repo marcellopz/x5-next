@@ -22,6 +22,12 @@
     "stats": "Stats",
     "records": "Records"
   },
+  "playerBanner": {
+    "winRateSinceRankChange": "Win rate since last rank change",
+    "sinceRankChange": "Since {{from}} → {{to}}",
+    "sinceRankAt": "Rank {{rank}}",
+    "noRankChangeYet": "No rank change yet"
+  },
   "stats": {
     "title": "Statistics",
     "description": "Overall statistics, leaderboards, and analysis",
