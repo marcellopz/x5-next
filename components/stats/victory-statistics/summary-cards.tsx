@@ -17,14 +17,8 @@ import { formatWinRate } from "./utils";
 export interface SummaryCardItem {
   title: string;
   entry: StatEntry;
-  description: string;
-  icon?:
-    | "trophy"
-    | "sword"
-    | "towerControl"
-    | "skull"
-    | "origami"
-    | "crown";
+  description?: string;
+  icon?: "trophy" | "sword" | "towerControl" | "skull" | "origami" | "crown";
   accent?: string;
 }
 
@@ -60,7 +54,7 @@ export function SummaryCards({ items }: { items: SummaryCardItem[] }) {
             className={cn(
               "relative border bg-linear-to-br",
               accentClass,
-              "overflow-hidden"
+              "overflow-hidden",
             )}
           >
             <CardHeader className="space-y-1">
@@ -70,9 +64,11 @@ export function SummaryCards({ items }: { items: SummaryCardItem[] }) {
                   <Icon className="h-5 w-5 text-primary" />
                 </div>
               </div>
-              <p className="text-sm text-muted-foreground">
-                {item.description}
-              </p>
+              {item.description && (
+                <p className="text-sm text-muted-foreground">
+                  {item.description}
+                </p>
+              )}
             </CardHeader>
             <CardContent className="space-y-3">
               <div>

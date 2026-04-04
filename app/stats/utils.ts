@@ -31,7 +31,7 @@ const LANES: Role[] = ["top", "jungle", "mid", "adc", "support"];
 export function extractChampionData(
   stats: ChampionsAverageRoleStats | null,
   championsOverAllData: Record<string, ChampionStatsType> | null,
-  totalGames: number
+  totalGames: number,
 ): {
   spotlight: ChampionSpotlightEntry[];
   neverPicked: NeverPickedChampion[];
@@ -45,7 +45,7 @@ export function extractChampionData(
           const presence =
             totalGames > 0 && championData
               ? ((championData.picks + bans) / totalGames) * 100
-              : champ.presence ?? 0;
+              : (champ.presence ?? 0);
 
           return {
             championId: champ.championId,
@@ -80,7 +80,7 @@ export function extractChampionData(
 }
 
 export function extractPlayerHighlights(
-  data: PlayersAverageRoleStats | null
+  data: PlayersAverageRoleStats | null,
 ): PlayerHighlight[] {
   if (!data) return [];
   const highlights: PlayerHighlight[] = [];
@@ -372,7 +372,7 @@ const PLAYER_STAT_CONFIG: Array<{
 ];
 
 export function extractPlayerStatSets(
-  data: PlayersAverageRoleStats | null
+  data: PlayersAverageRoleStats | null,
 ): PlayerStatSet[] {
   if (!data) return [];
   const sets: PlayerStatSet[] = [];
@@ -416,7 +416,7 @@ export function extractPlayerStatSets(
 
 export function extractVictoryHighlight(
   data: VictoryStatistics | null,
-  translate: (key: string) => string
+  translate: (key: string) => string,
 ): VictoryHighlight {
   if (!data) {
     return {
@@ -430,7 +430,7 @@ export function extractVictoryHighlight(
   const cards: SummaryCardItem[] = [
     {
       title: t("stats.victory.firstBlood"),
-      description: t("stats.victory.firstBloodDesc"),
+      // description: t("stats.victory.firstBloodDesc"),
       entry: {
         total: data.firstBlood.total,
         wins: data.firstBlood.wins,
@@ -440,7 +440,7 @@ export function extractVictoryHighlight(
     },
     {
       title: t("stats.victory.firstTower"),
-      description: t("stats.victory.firstTowerDesc"),
+      // description: t("stats.victory.firstTowerDesc"),
       entry: {
         total: data.firstTower.total,
         wins: data.firstTower.wins,
@@ -450,7 +450,7 @@ export function extractVictoryHighlight(
     },
     {
       title: t("stats.victory.firstDragon"),
-      description: t("stats.victory.firstDragonDesc"),
+      // description: t("stats.victory.firstDragonDesc"),
       entry: {
         total: data.firstDragon.total,
         wins: data.firstDragon.wins,
@@ -460,7 +460,7 @@ export function extractVictoryHighlight(
     },
     {
       title: t("stats.victory.firstBaron"),
-      description: t("stats.victory.firstBaronDesc"),
+      // description: t("stats.victory.firstBaronDesc"),
       entry: {
         total: data.firstBaron.total,
         wins: data.firstBaron.wins,
@@ -474,7 +474,7 @@ export function extractVictoryHighlight(
 }
 
 export function extractMapSummary(
-  data: SummarizedOverallData | null
+  data: SummarizedOverallData | null,
 ): MapSummary | null {
   if (!data) return null;
 
@@ -492,12 +492,12 @@ export function extractMapSummary(
       baronKills: toPair(data.blueSide?.baronKills, data.redSide?.baronKills),
       dragonKills: toPair(
         data.blueSide?.dragonKills,
-        data.redSide?.dragonKills
+        data.redSide?.dragonKills,
       ),
       voidGrubs: toPair(data.blueSide?.voidGrubs, data.redSide?.voidGrubs),
       riftHeraldKills: toPair(
         data.blueSide?.riftHeraldKills,
-        data.redSide?.riftHeraldKills
+        data.redSide?.riftHeraldKills,
       ),
       atakhan: toPair(data.blueSide?.atakhans, data.redSide?.atakhans),
     },
@@ -506,7 +506,7 @@ export function extractMapSummary(
 
 export function extractRankTopMovers(
   data: PlayerRankChangeStats | null,
-  playerList: PlayerList | null
+  playerList: PlayerList | null,
 ): RankHighlight[] {
   if (!data) return [];
   return Object.entries(data.number_of_changes ?? {})
@@ -521,7 +521,7 @@ export function extractRankTopMovers(
 
 export function extractRankNetWins(
   data: PlayerRankChangeStats | null,
-  playerList: PlayerList | null
+  playerList: PlayerList | null,
 ): RankNetWinEntry[] {
   if (!data) return [];
   const entries: RankNetWinEntry[] = [];
