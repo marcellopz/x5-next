@@ -283,7 +283,11 @@
     "winRateBlueSide": "Taxa de Vitória (Lado Azul)",
     "winRateRedSide": "Taxa de Vitória (Lado Vermelho)",
     "winRateWith": "Taxa de Vitória Com",
-    "winRateAgainst": "Taxa de Vitória Contra"
+    "winRateAgainst": "Taxa de Vitória Contra",
+    "rankByRoleTitle": "Rank ao longo do tempo por posição",
+    "rankByRoleDescription": "Gráfico em degraus após cada ajuste de rank. As cores coincidem com a legenda.",
+    "rankByRoleGameDots": "Os pontos marcam partidas na posição; quanto maior o ponto, mais partidas naquele dia.",
+    "rankByRoleEmpty": "Não há dados de rank inicial para este jogador."
   },
   "ui": {
     "noItemsToDisplay": "Nenhum item para exibir",

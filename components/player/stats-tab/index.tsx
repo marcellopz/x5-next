@@ -5,6 +5,7 @@ import { useTranslations } from "@/lib/i18n/locale-context";
 import { usePlayerData } from "../player-data-context";
 import { StatBox } from "./stat-box";
 import { WinRateChart } from "./win-rate-chart";
+import { RankByRoleChart } from "./rank-by-role-chart";
 import { WinRateTable } from "./win-rate-table";
 
 function floatToPercentageString(value: number): string {
@@ -13,7 +14,14 @@ function floatToPercentageString(value: number): string {
 
 export function PlayerStatsTab() {
   const t = useTranslations();
-  const { playerInfo, playerPairs, playerSummary } = usePlayerData();
+  const {
+    playerInfo,
+    playerPairs,
+    playerSummary,
+    rankChanges,
+    initialRanksForPlayer,
+    matches,
+  } = usePlayerData();
 
   const sameTeam = useMemo(() => {
     if (!playerPairs) return [];
@@ -69,28 +77,47 @@ export function PlayerStatsTab() {
 
   return (
     <div className="p-4 space-y-5">
-      <div className="flex flex-col lg:flex-row gap-5">
-        {/* Left Column: Chart and Stat Boxes */}
-        <div className="flex-1 flex flex-col gap-5">
+      {/* Win rate + rank charts: side by side on large screens, stacked on small */}
+      <div className="flex flex-col lg:flex-row lg:items-stretch gap-5">
+        <div className="min-w-0 flex-1">
           <WinRateChart winsArray={playerInfo?.winsArray} />
-          <div className="flex flex-wrap gap-5">
-            <StatBox
-              title={t("playerStatsTab.winRateBlueSide")}
-              value={floatToPercentageString(blueSideWinRate)}
-              numberOfGames={playerInfo?.statsPerSide?.blueSide.games}
-            />
-            <StatBox
-              title={t("playerStatsTab.winRateRedSide")}
-              value={floatToPercentageString(redSideWinRate)}
-              numberOfGames={playerInfo?.statsPerSide?.redSide.games}
-            />
-          </div>
         </div>
+        <div className="min-w-0 flex-1">
+          <RankByRoleChart
+            initialRanks={initialRanksForPlayer}
+            rankChanges={rankChanges}
+            matches={matches}
+            summonerId={playerInfo?.summonerId}
+          />
+        </div>
+      </div>
 
-        {/* Right Column: Win Rate Tables */}
-        <div className="flex-1 flex flex-col flex-wrap xl:flex-row gap-5">
-          <WinRateTable players={sameTeam} title={t("playerStatsTab.winRateWith")} />
-          <WinRateTable players={oppositeTeam} title={t("playerStatsTab.winRateAgainst")} />
+      <div className="flex flex-wrap gap-5">
+        <StatBox
+          title={t("playerStatsTab.winRateBlueSide")}
+          value={floatToPercentageString(blueSideWinRate)}
+          numberOfGames={playerInfo?.statsPerSide?.blueSide.games}
+        />
+        <StatBox
+          title={t("playerStatsTab.winRateRedSide")}
+          value={floatToPercentageString(redSideWinRate)}
+          numberOfGames={playerInfo?.statsPerSide?.redSide.games}
+        />
+      </div>
+
+      {/* With / against: side by side on large screens */}
+      <div className="flex flex-col gap-5 lg:flex-row lg:items-start">
+        <div className="min-w-0 flex-1">
+          <WinRateTable
+            players={sameTeam}
+            title={t("playerStatsTab.winRateWith")}
+          />
+        </div>
+        <div className="min-w-0 flex-1">
+          <WinRateTable
+            players={oppositeTeam}
+            title={t("playerStatsTab.winRateAgainst")}
+          />
         </div>
       </div>
     </div>

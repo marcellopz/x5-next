@@ -8,6 +8,7 @@ import {
   getAllReducedData,
   getPlayerRankChanges,
   getPlayerRankChangeStats,
+  getInitialRankChangeLog,
 } from "@/lib/endpoints";
 import { getPlayerByAccountId } from "@/lib/utils";
 import { getWinLoseSinceLastChangeByRole } from "@/lib/win-loss-since-rank-change";
@@ -16,7 +17,7 @@ import { PlayerDataProvider } from "@/components/player/player-data-context";
 import { PlayerBanner } from "@/components/player/player-banner";
 import { PlayerTabs } from "@/components/player/player-tabs";
 import { Card } from "@/components/ui/card";
-import type { Player, ChampionStats } from "@/lib/types";
+import type { InitialRankPlayer, Player, ChampionStats } from "@/lib/types";
 
 interface PlayerLayoutProps {
   children: React.ReactNode;
@@ -100,12 +101,16 @@ async function fetchPlayerData(slug: string) {
 
   // Only fetch matches if playerInfo exists and has match data
   // Fetch other data in parallel
-  const [playerPairs, playerSummary, allMatches] = await Promise.all([
+  const [playerPairs, playerSummary, allMatches, initialRanks] = await Promise.all([
     playerInfo?.summonerId ? getPlayerPairs(playerInfo.summonerId) : null,
     getPlayerSummary(),
     // Only load all matches if we need to filter them (playerInfo exists)
     playerInfo ? getAllReducedData() : Promise.resolve([]),
+    getInitialRankChangeLog(),
   ]);
+
+  const initialRanksForPlayer: InitialRankPlayer | null =
+    initialRanks?.[nameIdForStats] ?? null;
 
   // Filter matches for this player using playerMatchesIds or summonerId
   const playerMatches = playerInfo?.playerMatchesIds
@@ -141,6 +146,7 @@ async function fetchPlayerData(slug: string) {
     champs,
     matches: playerMatches,
     rankChanges,
+    initialRanksForPlayer,
     winLoseSinceLastChangeByRole,
   };
 }
@@ -194,6 +200,7 @@ export default async function PlayerLayout({
       champs={data.champs}
       matches={data.matches}
       rankChanges={data.rankChanges}
+      initialRanksForPlayer={data.initialRanksForPlayer}
       winLoseSinceLastChangeByRole={data.winLoseSinceLastChangeByRole}
     >
       <div className="container mx-auto px-4 py-8">

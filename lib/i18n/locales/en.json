@@ -293,7 +293,11 @@
     "winRateBlueSide": "Win Rate (Blue Side)",
     "winRateRedSide": "Win Rate (Red Side)",
     "winRateWith": "Win Rate With",
-    "winRateAgainst": "Win Rate Against"
+    "winRateAgainst": "Win Rate Against",
+    "rankByRoleTitle": "Rank over time by role",
+    "rankByRoleDescription": "Step chart after each rank adjustment. Colors match the legend below.",
+    "rankByRoleGameDots": "Dots mark games played on each role; larger dots mean more games that calendar day.",
+    "rankByRoleEmpty": "No initial rank data available for this player."
   },
   "ui": {
     "noItemsToDisplay": "No items to display",

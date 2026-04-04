@@ -9,6 +9,7 @@ import type {
   ChampionStats,
   MatchWithId,
   PlayerRankChanges,
+  InitialRankPlayer,
 } from "@/lib/types";
 import type { WinLoseSinceLastChangeByRole } from "@/lib/win-loss-since-rank-change";
 
@@ -20,6 +21,7 @@ interface PlayerDataContextType {
   champs: ChampionStats[];
   matches: MatchWithId[];
   rankChanges: PlayerRankChanges | null;
+  initialRanksForPlayer: InitialRankPlayer | null;
   winLoseSinceLastChangeByRole: WinLoseSinceLastChangeByRole;
   filteredRole: string;
   setFilteredRole: (role: string) => void;
@@ -46,6 +48,7 @@ interface PlayerDataProviderProps {
   champs: ChampionStats[];
   matches: MatchWithId[];
   rankChanges: PlayerRankChanges | null;
+  initialRanksForPlayer: InitialRankPlayer | null;
   winLoseSinceLastChangeByRole: WinLoseSinceLastChangeByRole;
 }
 
@@ -58,6 +61,7 @@ export function PlayerDataProvider({
   champs,
   matches,
   rankChanges,
+  initialRanksForPlayer,
   winLoseSinceLastChangeByRole,
 }: PlayerDataProviderProps) {
   const [filteredRole, setFilteredRole] = useState("");
@@ -72,6 +76,7 @@ export function PlayerDataProvider({
         champs,
         matches,
         rankChanges,
+        initialRanksForPlayer,
         winLoseSinceLastChangeByRole,
         filteredRole,
         setFilteredRole,

@@ -19,13 +19,34 @@ function formatWinRate(value: number): string {
   return `${(value * 100).toFixed(1)}%`;
 }
 
+/** Match `RankByRoleChart` header stack so both cards share the same plot height. */
+function WinRateChartHeader() {
+  return (
+    <>
+      <h3 className="text-sm font-semibold text-foreground mb-1">
+        Win Rate Graph
+      </h3>
+      <p
+        className="text-xs text-muted-foreground mb-2 invisible select-none"
+        aria-hidden
+      >
+        &nbsp;
+      </p>
+      <p
+        className="text-xs text-muted-foreground/80 mb-2 invisible select-none"
+        aria-hidden
+      >
+        &nbsp;
+      </p>
+    </>
+  );
+}
+
 export function WinRateChart({ winsArray }: WinRateChartProps) {
   if (!winsArray || winsArray.length === 0) {
     return (
-      <div className="bg-background/30 border border-border rounded-lg h-[400px] p-4 flex flex-col">
-        <h3 className="text-sm font-semibold text-foreground mb-2">
-          Win Rate Graph
-        </h3>
+      <div className="bg-background/30 border border-border rounded-lg h-[440px] w-full p-4 flex flex-col">
+        <WinRateChartHeader />
         <div className="flex-1 flex items-center justify-center">
           <p className="text-muted-foreground text-sm">
             No games data available
@@ -58,10 +79,8 @@ export function WinRateChart({ winsArray }: WinRateChartProps) {
   const yAxisMax = Math.min(1, maxWinRate + padding);
 
   return (
-    <div className="bg-background/30 border border-border rounded-lg h-[400px] p-4 flex flex-col">
-      <h3 className="text-sm font-semibold text-foreground mb-2">
-        Win Rate Graph
-      </h3>
+    <div className="bg-background/30 border border-border rounded-lg h-[440px] w-full p-4 flex flex-col">
+      <WinRateChartHeader />
       <div className="flex-1 min-h-0">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart
