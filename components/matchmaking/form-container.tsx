@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect, useLayoutEffect, useRef } from "react";
 import { FormStepper } from "./form-stepper";
 import { PlayerSelectionStep } from "./player-selection-step";
 import { AlgoConfigStep } from "./algo-config-step";
@@ -12,6 +12,12 @@ import { Button } from "../ui/button";
 import { RefreshCcwIcon, ChevronLeft } from "lucide-react";
 import { getPlayerList } from "@/lib/endpoints";
 import { useTranslations } from "@/lib/i18n/locale-context";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  decodeMatchmakingStateFromQuery,
+  encodeMatchmakingStateToQuery,
+  MATCHMAKING_QUERY_KEYS,
+} from "./url-state";
 
 interface FormContainerProps {
   players: Player[];
@@ -41,7 +47,62 @@ function FormContent() {
   };
   const [currentStep, setCurrentStep] = useState(1);
   const [isRefreshing, setIsRefreshing] = useState(0); // 0: not refreshing, 1: refreshing, 2: error, 3: refreshed
-  const { setPlayers, setRefreshIndex } = useMatchmaking();
+  const {
+    players,
+    selectedPlayerIds,
+    config,
+    setPlayers,
+    setRefreshIndex,
+    hydrateMatchmakingState,
+  } = useMatchmaking();
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const hasHydratedFromUrlRef = useRef(false);
+  const initialQueryStringRef = useRef(searchParams.toString());
+
+  useLayoutEffect(() => {
+    if (hasHydratedFromUrlRef.current) {
+      return;
+    }
+    const query = new URLSearchParams(initialQueryStringRef.current);
+    const decoded = decodeMatchmakingStateFromQuery(query, players);
+    hydrateMatchmakingState({
+      wildcardPlayers: decoded.wildcardPlayers,
+      selectedPlayerIds: decoded.selectedPlayerIds,
+      config: decoded.config,
+    });
+    setCurrentStep(decoded.step);
+    hasHydratedFromUrlRef.current = true;
+  }, [hydrateMatchmakingState, players]);
+
+  useEffect(() => {
+    if (!hasHydratedFromUrlRef.current) {
+      return;
+    }
+
+    const mergedParams = new URLSearchParams(searchParams.toString());
+    MATCHMAKING_QUERY_KEYS.forEach((key) => mergedParams.delete(key));
+
+    const encodedMatchmakingState = encodeMatchmakingStateToQuery({
+      step: currentStep,
+      selectedPlayerIds,
+      players,
+      config,
+    });
+    encodedMatchmakingState.forEach((value, key) => {
+      mergedParams.set(key, value);
+    });
+
+    const nextQueryString = mergedParams.toString();
+    const currentQueryString = searchParams.toString();
+    if (nextQueryString === currentQueryString) {
+      return;
+    }
+
+    const nextUrl = nextQueryString ? `${pathname}?${nextQueryString}` : pathname;
+    router.replace(nextUrl, { scroll: false });
+  }, [config, currentStep, pathname, players, router, searchParams, selectedPlayerIds]);
 
   const handleRefresh = () => {
     setRefreshIndex((prev: number) => prev + 1);

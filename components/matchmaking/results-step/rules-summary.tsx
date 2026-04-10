@@ -249,7 +249,6 @@ export const RulesSummary = memo(function RulesSummary() {
         )}
         <CollapsibleSection
           title={`${filteredMatchesSuccess ? t("matchmaking.filtered") : t("matchmaking.all")} ${t("matchmaking.filteredMatchesRoleBreakdown")}`}
-          defaultExpanded={false}
           small
         >
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3">

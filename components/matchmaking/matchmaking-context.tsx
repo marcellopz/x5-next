@@ -6,6 +6,7 @@ import {
   useState,
   ReactNode,
   useEffect,
+  useRef,
 } from "react";
 import type { Player } from "@/lib/types";
 import type { MatchmakingResult } from "@/lib/matchmaking-algorithm";
@@ -54,10 +55,16 @@ export interface MatchmakingConfig {
 interface MatchmakingContextType {
   players: Player[];
   setPlayers: (players: Player[]) => void;
+  selectedPlayerIds: string[];
   selectedPlayers: Player[];
   setSelectedPlayers: (players: Player[]) => void;
   addPlayer: (player: Player) => void;
   removePlayer: (player: Player) => void;
+  hydrateMatchmakingState: (payload: {
+    wildcardPlayers: Player[];
+    selectedPlayerIds: string[];
+    config: MatchmakingConfig;
+  }) => void;
   config: MatchmakingConfig;
   setConfig: (
     config: MatchmakingConfig | ((prev: MatchmakingConfig) => MatchmakingConfig)
@@ -82,7 +89,7 @@ const MatchmakingContext = createContext<MatchmakingContextType | undefined>(
   undefined
 );
 
-const initialConfig: MatchmakingConfig = {
+export const initialMatchmakingConfig: MatchmakingConfig = {
   matchOptions: 5,
   tolerance: 1,
   presetLanes: {
@@ -118,12 +125,13 @@ export function MatchmakingProvider({
   const [players, setPlayers] = useState<Player[]>(players_);
   const [selectedPlayerIds, setSelectedPlayerIds] = useState<string[]>([]);
   const [selectedPlayers, setSelectedPlayers] = useState<Player[]>([]);
-  const [config, setConfig] = useState<MatchmakingConfig>(initialConfig);
+  const [config, setConfig] = useState<MatchmakingConfig>(initialMatchmakingConfig);
   const [expandedSections, setExpandedSections] = useState<string[]>([]);
   const [refreshIndex, setRefreshIndex] = useState<number>(0);
   const [matchResults, setMatchResults] = useState<MatchmakingResult | null>(
     null
   );
+  const skipSelectionResetCountRef = useRef(0);
 
   // Sync selectedPlayers based on selectedPlayerIds and players array
   useEffect(() => {
@@ -144,7 +152,11 @@ export function MatchmakingProvider({
 
   // Reset all configs to default when player selection changes
   useEffect(() => {
-    setConfig(initialConfig);
+    if (skipSelectionResetCountRef.current > 0) {
+      skipSelectionResetCountRef.current -= 1;
+      return;
+    }
+    setConfig(initialMatchmakingConfig);
     setMatchResults(null);
   }, [selectedPlayerIds]);
 
@@ -227,15 +239,50 @@ export function MatchmakingProvider({
     }));
   };
 
+  const hydrateMatchmakingState = (payload: {
+    wildcardPlayers: Player[];
+    selectedPlayerIds: string[];
+    config: MatchmakingConfig;
+  }) => {
+    // Skip reset on both the current render effect pass and the upcoming
+    // selectedPlayerIds change caused by hydration.
+    skipSelectionResetCountRef.current = 2;
+    setMatchResults(null);
+    setPlayers((prev) => {
+      const nonWildcardPlayers = prev.filter((player) => !player.isWildcard);
+      const existingWildcardPlayers = prev.filter((player) => player.isWildcard);
+      const incomingWildcardById = new Map(
+        payload.wildcardPlayers.map((player) => [player.name_id, player])
+      );
+
+      // Keep wildcards that are still selected but not present in URL payload.
+      const selectedIdSet = new Set(payload.selectedPlayerIds);
+      const preservedWildcards = existingWildcardPlayers.filter(
+        (player) =>
+          selectedIdSet.has(player.name_id) && !incomingWildcardById.has(player.name_id)
+      );
+
+      return [
+        ...nonWildcardPlayers,
+        ...preservedWildcards,
+        ...payload.wildcardPlayers,
+      ];
+    });
+    setSelectedPlayerIds(payload.selectedPlayerIds);
+    setConfig(payload.config);
+  };
+
   return (
     <MatchmakingContext.Provider
       value={{
         players,
         setPlayers,
+        selectedPlayerIds,
         selectedPlayers,
         setSelectedPlayers,
         addPlayer,
         removePlayer,
+        hydrateMatchmakingState,
         config,
         setConfig,
         updatePresetLane,
