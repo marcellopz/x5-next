@@ -53,11 +53,17 @@ function PlayerCardComponent({ player, onClick }: PlayerCardProps) {
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
 
-    // Set canvas dimensions
     const width = 250;
     const height = 340;
-    canvas.width = width;
-    canvas.height = height;
+    const dpr = Math.min(
+      typeof window !== "undefined" ? window.devicePixelRatio || 1 : 1,
+      3
+    );
+    canvas.width = Math.round(width * dpr);
+    canvas.height = Math.round(height * dpr);
+    canvas.style.width = `${width}px`;
+    canvas.style.height = `${height}px`;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
     // Load both images
     const templateImg = new Image();
@@ -87,28 +93,38 @@ function PlayerCardComponent({ player, onClick }: PlayerCardProps) {
       // Draw the template on top
       ctx.drawImage(templateImg, 0, 0, width, height);
 
-      // Configure text styling
+      // Configure text styling — Arial first so glyph metrics match across mobile/desktop
       ctx.fillStyle = goldColor;
-      ctx.font = "bold 18px sans-serif";
+      ctx.font = 'bold 18px Arial, "Helvetica Neue", Helvetica, sans-serif';
 
       if (!player) return;
 
+      /**
+       * Align glyph tops to template slots. Prefer actualBoundingBoxAscent — fontBoundingBoxAscent
+       * (em box) is often taller on desktop and pushes text down vs the artwork.
+       */
+      const fillTextFromSlotTop = (text: string, x: number, slotTop: number) => {
+        ctx.textBaseline = "alphabetic";
+        const m = ctx.measureText(text);
+        const a = m.actualBoundingBoxAscent ?? 0;
+        const f = m.fontBoundingBoxAscent ?? 0;
+        const ascent = a > 0 ? a : f > 0 ? f : 14;
+        ctx.fillText(text, x, slotTop + ascent);
+      };
+
       // Draw player name (centered)
       ctx.textAlign = "center";
-      ctx.textBaseline = "top";
-      ctx.fillText(player.name.toUpperCase(), width / 2, 24);
+      fillTextFromSlotTop(player.name.toUpperCase(), width / 2, 24);
 
       // Draw rank numbers - right aligned
       ctx.textAlign = "right";
-      ctx.textBaseline = "top";
-
-      // Position for rank numbers (right side, aligned with role labels)
       const rightOffset = 34;
-      ctx.fillText(player.top.toString(), width - rightOffset, 181);
-      ctx.fillText(player.jungle.toString(), width - rightOffset, 210);
-      ctx.fillText(player.mid.toString(), width - rightOffset, 239);
-      ctx.fillText(player.adc.toString(), width - rightOffset, 268);
-      ctx.fillText(player.support.toString(), width - rightOffset, 298);
+      const x = width - rightOffset;
+      fillTextFromSlotTop(player.top.toString(), x, 181);
+      fillTextFromSlotTop(player.jungle.toString(), x, 210);
+      fillTextFromSlotTop(player.mid.toString(), x, 239);
+      fillTextFromSlotTop(player.adc.toString(), x, 268);
+      fillTextFromSlotTop(player.support.toString(), x, 298);
 
       // Mark as loaded
       setIsLoading(false);
