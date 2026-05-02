@@ -42,6 +42,9 @@ export function PlayerCarousel({
                 .toLowerCase()
                 .includes(searchQuery.toLowerCase());
             })
+            .sort((a, b) =>
+              a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
+            )
             .map((player) => ({
               id: player.account_id,
               content: (
