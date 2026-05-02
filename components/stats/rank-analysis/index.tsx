@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "@/lib/i18n/locale-context";
 import type { PlayerRankChangeStats, PlayerList, Role } from "@/lib/types";
@@ -163,18 +162,14 @@ function buildSusceptibilityByLane(data: PlayerRankChangeStats): LaneSusceptibil
 
 function SusceptibilityList({
   players,
-  emptyMessage,
   getPlayerName,
   t,
 }: {
   players: SusceptiblePlayer[];
-  emptyMessage: string;
   getPlayerName: (nameId: string) => string;
   t: (key: string) => string;
 }) {
-  if (players.length === 0) {
-    return <p className="text-sm text-muted-foreground">{emptyMessage}</p>;
-  }
+  if (players.length === 0) return null;
 
   return (
     <div className="flex flex-wrap gap-2">
@@ -188,11 +183,8 @@ function SusceptibilityList({
               href={`/player/${player.nameId}`}
               className="font-semibold hover:text-primary"
             >
-              {getPlayerName(player.nameId)}
+              {getPlayerName(player.nameId)} ({player.rank}):
             </Link>
-            <span className="text-xs text-muted-foreground">
-              {t("stats.rankLabel")}: {player.rank}
-            </span>
             <span className="text-xs text-muted-foreground">
               {player.wins}/{player.loses}
             </span>
@@ -213,7 +205,6 @@ function SusceptibilityCategory({
   title,
   reviewPlayers,
   guaranteedPlayers,
-  emptyMessage,
   getPlayerName,
   t,
   titleClassName,
@@ -221,44 +212,42 @@ function SusceptibilityCategory({
   title: string;
   reviewPlayers: SusceptiblePlayer[];
   guaranteedPlayers: SusceptiblePlayer[];
-  emptyMessage: string;
   getPlayerName: (nameId: string) => string;
   t: (key: string) => string;
   titleClassName: string;
 }) {
   const hasCandidates = reviewPlayers.length > 0 || guaranteedPlayers.length > 0;
+  if (!hasCandidates) return null;
 
   return (
     <div className="space-y-3">
       <h4 className={cn("text-sm font-semibold", titleClassName)}>{title}</h4>
-      {!hasCandidates ? (
-        <p className="text-sm text-muted-foreground">{emptyMessage}</p>
-      ) : (
-        <div className="space-y-3">
+      <div className="space-y-3">
+        {reviewPlayers.length > 0 && (
           <div>
             <p className="text-xs font-medium mb-2 text-muted-foreground">
               {t("stats.requiresTechnicalReview")}
             </p>
             <SusceptibilityList
               players={reviewPlayers}
-              emptyMessage={t("stats.noPlayersInThisGroup")}
               getPlayerName={getPlayerName}
               t={t}
             />
           </div>
+        )}
+        {guaranteedPlayers.length > 0 && (
           <div>
             <p className="text-xs font-medium mb-2 text-muted-foreground">
               {t("stats.almostGuaranteed")}
             </p>
             <SusceptibilityList
               players={guaranteedPlayers}
-              emptyMessage={t("stats.noPlayersInThisGroup")}
               getPlayerName={getPlayerName}
               t={t}
             />
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
@@ -316,37 +305,63 @@ export function RankAnalysis({ data, playerList }: RankAnalysisProps) {
 
       {/* Content */}
       {viewMode === "susceptibility" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-4">
-          {susceptibilityByLane.map((laneStats) => (
-            <Card key={laneStats.role} className="border border-border/80">
-              <CardHeader className="pb-3">
-                <CardTitle className="text-base">
-                  {t(`roles.${laneStats.role}`)}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-5 pt-0">
-                <SusceptibilityCategory
-                  title={t("stats.progressionCandidates")}
-                  reviewPlayers={laneStats.progression.review}
-                  guaranteedPlayers={laneStats.progression.almostGuaranteed}
-                  emptyMessage={t("stats.noProgressionCandidatesInLane")}
-                  getPlayerName={getPlayerName}
-                  t={t}
-                  titleClassName="text-green-500"
-                />
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-x-6 gap-y-6">
+          {susceptibilityByLane.map((laneStats) => {
+            const hasProgression =
+              laneStats.progression.review.length > 0 ||
+              laneStats.progression.almostGuaranteed.length > 0;
+            const hasRegression =
+              laneStats.regression.review.length > 0 ||
+              laneStats.regression.almostGuaranteed.length > 0;
 
-                <SusceptibilityCategory
-                  title={t("stats.regressionCandidates")}
-                  reviewPlayers={laneStats.regression.review}
-                  guaranteedPlayers={laneStats.regression.almostGuaranteed}
-                  emptyMessage={t("stats.noRegressionCandidatesInLane")}
-                  getPlayerName={getPlayerName}
-                  t={t}
-                  titleClassName="text-red-500"
-                />
-              </CardContent>
-            </Card>
-          ))}
+            return (
+              <div
+                key={laneStats.role}
+                className={cn(
+                  "p-0 md:pl-6",
+                  "md:border-l md:border-border/70 md:nth-[2n+1]:border-l-0 md:nth-[2n+1]:pl-0",
+                  "xl:border-l xl:border-border/70 xl:nth-[2n+1]:border-l xl:nth-[2n+1]:pl-6 xl:nth-[3n+1]:border-l-0 xl:nth-[3n+1]:pl-0",
+                  "2xl:border-l 2xl:border-border/70 2xl:nth-[3n+1]:border-l 2xl:nth-[3n+1]:pl-6 2xl:nth-[5n+1]:border-l-0 2xl:nth-[5n+1]:pl-0"
+                )}
+              >
+                <h3 className="text-base font-semibold mb-4">
+                  {t(`roles.${laneStats.role}`)}
+                </h3>
+
+                <div className="space-y-4">
+                  {!hasProgression && !hasRegression && (
+                    <p className="text-sm text-muted-foreground">
+                      {t("stats.noPlayersForRole")}
+                    </p>
+                  )}
+
+                  {hasProgression && (
+                    <SusceptibilityCategory
+                      title={t("stats.progressionCandidates")}
+                      reviewPlayers={laneStats.progression.review}
+                      guaranteedPlayers={laneStats.progression.almostGuaranteed}
+                      getPlayerName={getPlayerName}
+                      t={t}
+                      titleClassName="text-green-500"
+                    />
+                  )}
+
+                  {hasRegression && (
+                    <div className={cn(hasProgression && "pt-4 border-t border-border/70")}>
+                      <SusceptibilityCategory
+                        title={t("stats.regressionCandidates")}
+                        reviewPlayers={laneStats.regression.review}
+                        guaranteedPlayers={laneStats.regression.almostGuaranteed}
+                        getPlayerName={getPlayerName}
+                        t={t}
+                        titleClassName="text-red-500"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })}
         </div>
       )}
 
