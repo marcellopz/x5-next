@@ -44,12 +44,24 @@ export interface PlayerCombosConfig {
   combos: PlayerCombo[];
 }
 
+export interface PlayerSeparationPair {
+  id: string;
+  player1: string;
+  player2: string;
+}
+
+export interface PlayerSeparationsConfig {
+  enabled: boolean;
+  pairs: PlayerSeparationPair[];
+}
+
 export interface MatchmakingConfig {
   matchOptions: number;
   tolerance: number;
   presetLanes: PresetLanesConfig;
   avoidRoles: AvoidRolesConfig;
   playerCombos: PlayerCombosConfig;
+  playerSeparations: PlayerSeparationsConfig;
 }
 
 interface MatchmakingContextType {
@@ -110,6 +122,10 @@ export const initialMatchmakingConfig: MatchmakingConfig = {
   playerCombos: {
     enabled: false,
     combos: [],
+  },
+  playerSeparations: {
+    enabled: false,
+    pairs: [],
   },
 };
 

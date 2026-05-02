@@ -3,7 +3,7 @@
 import { memo, useMemo } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Users, Settings, Shield, Target } from "lucide-react";
+import { Users, UserX, Settings, Shield, Target } from "lucide-react";
 import { useMatchmaking } from "../matchmaking-context";
 import { CollapsibleSection } from "@/components/ui/collapsible-section";
 import { RoleBadge } from "./role-badge";
@@ -33,6 +33,11 @@ export const RulesSummary = memo(function RulesSummary() {
     config.playerCombos.enabled &&
     config.playerCombos.combos.length > 0 &&
     config.playerCombos.combos[0].players.length > 0;
+  const validRivalPairs = config.playerSeparations.pairs.filter(
+    (pair) => pair.player1 && pair.player2 && pair.player1 !== pair.player2
+  );
+  const hasPlayerSeparations =
+    config.playerSeparations.enabled && validRivalPairs.length > 0;
 
   const filteredMatchesSuccess =
     matchResults &&
@@ -235,12 +240,37 @@ export const RulesSummary = memo(function RulesSummary() {
             </div>
           </div>
         )}
+        {/* Keep Rivals Apart */}
+        {hasPlayerSeparations && (
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+              <UserX className="h-4 w-4" />
+              {t("matchmaking.keepRivalsApart")}
+            </h4>
+            <div className="space-y-1">
+              {validRivalPairs.map((pair) => (
+                <div key={pair.id} className="text-sm flex items-center gap-2">
+                  <Badge variant="outline" className="text-xs">
+                    {allPlayers.find((p) => p.name_id === pair.player1)?.name}
+                  </Badge>
+                  <span className="text-muted-foreground">{t("matchmaking.vs")}</span>
+                  <Badge variant="outline" className="text-xs">
+                    {allPlayers.find((p) => p.name_id === pair.player2)?.name}
+                  </Badge>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
         {/* No Advanced Rules */}
-        {!hasPresetLanes && !hasAvoidRoles && !hasPlayerCombos && (
+        {!hasPresetLanes &&
+          !hasAvoidRoles &&
+          !hasPlayerCombos &&
+          !hasPlayerSeparations && (
           <div className="text-sm text-muted-foreground italic">
             {t("matchmaking.noAdvancedRules")}
           </div>
-        )}
+          )}
         {/* Player Role Breakdown (Accordion skeleton) */}
         {!filteredMatchesSuccess && (
           <div className="text-sm text-muted-foreground italic">

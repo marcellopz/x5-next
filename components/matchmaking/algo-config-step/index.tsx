@@ -15,6 +15,7 @@ import { BasicConfigSection } from "./basic-config-section";
 import { PresetLanesForm } from "./preset-lanes-form";
 import { AvoidRolesForm } from "./avoid-roles-form";
 import { PlayerCombosForm } from "./player-combos-form";
+import { PlayerSeparationsForm } from "./player-separations-form";
 import { useMatchmaking } from "../matchmaking-context";
 import { useTranslations } from "@/lib/i18n/locale-context";
 
@@ -52,6 +53,10 @@ export function AlgoConfigStep({ onPrevious, onNext }: AlgoConfigStepProps) {
       sectionsToExpand.push("playerCombos");
     }
 
+    if (config.playerSeparations.enabled) {
+      sectionsToExpand.push("playerSeparations");
+    }
+
     // Only update if there are changes to avoid infinite loops
     const currentSections = expandedSections.sort();
     const newSections = sectionsToExpand.sort();
@@ -63,6 +68,7 @@ export function AlgoConfigStep({ onPrevious, onNext }: AlgoConfigStepProps) {
     config.presetLanes.usePresetLanes,
     config.avoidRoles.enabled,
     config.playerCombos.enabled,
+    config.playerSeparations.enabled,
     expandedSections,
     setExpandedSections,
   ]);
@@ -226,6 +232,56 @@ export function AlgoConfigStep({ onPrevious, onNext }: AlgoConfigStepProps) {
             {expandedSections.includes("playerCombos") && (
               <div className="ml-6 pl-6 border-l border-border">
                 <PlayerCombosForm enabled={config.playerCombos.enabled} />
+              </div>
+            )}
+          </div>
+
+          {/* Keep Rivals Apart */}
+          <div className="space-y-2">
+            <div className="flex items-center space-x-2">
+              <div className="flex-1">
+                <Checkbox
+                  id="keepRivalsApart"
+                  checked={config.playerSeparations.enabled}
+                  onChange={(e) => {
+                    const isChecked = e.target.checked;
+                    setConfig((prev) => ({
+                      ...prev,
+                      playerSeparations: {
+                        ...prev.playerSeparations,
+                        enabled: isChecked,
+                        pairs:
+                          isChecked && prev.playerSeparations.pairs.length === 0
+                            ? [{ id: `rivals-${Date.now()}`, player1: "", player2: "" }]
+                            : prev.playerSeparations.pairs,
+                      },
+                    }));
+                    if (
+                      isChecked &&
+                      !expandedSections.includes("playerSeparations")
+                    ) {
+                      setExpandedSections((prev) => [...prev, "playerSeparations"]);
+                    }
+                  }}
+                  label={t("matchmaking.keepRivalsApart")}
+                />
+              </div>
+              <button
+                onClick={() => toggleSection("playerSeparations")}
+                className="text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <ChevronDown
+                  className={`h-4 w-4 transition-transform ${
+                    expandedSections.includes("playerSeparations")
+                      ? "rotate-180"
+                      : ""
+                  }`}
+                />
+              </button>
+            </div>
+            {expandedSections.includes("playerSeparations") && (
+              <div className="ml-6 pl-6 border-l border-border">
+                <PlayerSeparationsForm enabled={config.playerSeparations.enabled} />
               </div>
             )}
           </div>

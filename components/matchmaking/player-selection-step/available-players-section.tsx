@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import {
   Card,
   CardContent,
@@ -57,7 +57,17 @@ export function AvailablePlayersSection() {
     return !player.name.toLowerCase().includes(searchTerm.toLowerCase());
   };
 
-  const filteredPlayers = players.filter((player) => !isPlayerFiltered(player));
+  const sortedPlayers = useMemo(
+    () =>
+      [...players].sort((a, b) =>
+        a.name.localeCompare(b.name, undefined, { sensitivity: "base" })
+      ),
+    [players]
+  );
+
+  const filteredPlayers = sortedPlayers.filter(
+    (player) => !isPlayerFiltered(player)
+  );
 
   return (
     <Card>
@@ -120,7 +130,7 @@ export function AvailablePlayersSection() {
                   justifyContent: "center",
                 }}
               >
-                {players.map((player) => {
+                {sortedPlayers.map((player) => {
                   const isSelected = selectedPlayers.some(
                     (selected) => selected.account_id === player.account_id
                   );

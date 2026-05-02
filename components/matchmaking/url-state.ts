@@ -31,6 +31,8 @@ const KEY_AVOID_ROLES_ENABLED = "ar";
 const KEY_AVOID_RULES = "rr";
 const KEY_PLAYER_COMBOS_ENABLED = "pc";
 const KEY_PLAYER_COMBOS = "co";
+const KEY_PLAYER_SEPARATIONS_ENABLED = "pa";
+const KEY_PLAYER_SEPARATIONS = "rv";
 const KEY_WILDCARDS = "w";
 
 export const MATCHMAKING_QUERY_KEYS = [
@@ -45,6 +47,8 @@ export const MATCHMAKING_QUERY_KEYS = [
   KEY_AVOID_RULES,
   KEY_PLAYER_COMBOS_ENABLED,
   KEY_PLAYER_COMBOS,
+  KEY_PLAYER_SEPARATIONS_ENABLED,
+  KEY_PLAYER_SEPARATIONS,
   KEY_WILDCARDS,
 ] as const;
 
@@ -98,6 +102,10 @@ function createInitialConfig(): MatchmakingConfig {
     playerCombos: {
       enabled: initialMatchmakingConfig.playerCombos.enabled,
       combos: [],
+    },
+    playerSeparations: {
+      enabled: initialMatchmakingConfig.playerSeparations.enabled,
+      pairs: [],
     },
   };
 }
@@ -207,6 +215,22 @@ export function encodeMatchmakingStateToQuery(input: EncodedStateInput): URLSear
 
     if (combos.length > 0) {
       params.set(KEY_PLAYER_COMBOS, combos.join(";"));
+    }
+  }
+
+  if (config.playerSeparations.enabled) {
+    params.set(KEY_PLAYER_SEPARATIONS_ENABLED, "1");
+    const pairs = config.playerSeparations.pairs
+      .filter(
+        (pair) =>
+          selectedSet.has(pair.player1) &&
+          selectedSet.has(pair.player2) &&
+          pair.player1 !== pair.player2
+      )
+      .map((pair) => `${encodeString(pair.player1)}:${encodeString(pair.player2)}`);
+
+    if (pairs.length > 0) {
+      params.set(KEY_PLAYER_SEPARATIONS, pairs.join(";"));
     }
   }
 
@@ -333,6 +357,40 @@ export function decodeMatchmakingStateFromQuery(
           return { id: `combo-${index + 1}`, players };
         })
         .filter((combo): combo is { id: string; players: string[] } => combo !== null);
+    }
+  }
+
+  if (query.get(KEY_PLAYER_SEPARATIONS_ENABLED) === "1") {
+    config.playerSeparations.enabled = true;
+    const rawPairs = query.get(KEY_PLAYER_SEPARATIONS);
+    if (rawPairs) {
+      config.playerSeparations.pairs = rawPairs
+        .split(";")
+        .map((rawPair, index) => {
+          const [rawPlayer1, rawPlayer2] = rawPair.split(":");
+          if (!rawPlayer1 || !rawPlayer2) return null;
+
+          const player1 = decodeString(rawPlayer1);
+          const player2 = decodeString(rawPlayer2);
+
+          if (
+            !selectedSet.has(player1) ||
+            !selectedSet.has(player2) ||
+            player1 === player2
+          ) {
+            return null;
+          }
+
+          return {
+            id: `rivals-${index + 1}`,
+            player1,
+            player2,
+          };
+        })
+        .filter(
+          (pair): pair is { id: string; player1: string; player2: string } =>
+            pair !== null
+        );
     }
   }
 

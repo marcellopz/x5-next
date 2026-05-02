@@ -9,8 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { MatchmakingProvider, useMatchmaking } from "./matchmaking-context";
 import type { Player } from "@/lib/types";
 import { Button } from "../ui/button";
-import { RefreshCcwIcon, ChevronLeft } from "lucide-react";
-import { getPlayerList } from "@/lib/endpoints";
+import { ChevronLeft } from "lucide-react";
 import { useTranslations } from "@/lib/i18n/locale-context";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
@@ -33,26 +32,11 @@ function FormContent() {
     ],
     [t]
   );
-  const buttonText = (isRefreshing: number) => {
-    switch (isRefreshing) {
-      case 0:
-        return t("matchmaking.refreshPlayers");
-      case 1:
-        return t("matchmaking.refreshing");
-      case 2:
-        return t("matchmaking.refreshed");
-      default:
-        return t("matchmaking.refreshPlayers");
-    }
-  };
   const [currentStep, setCurrentStep] = useState(1);
-  const [isRefreshing, setIsRefreshing] = useState(0); // 0: not refreshing, 1: refreshing, 2: error, 3: refreshed
   const {
     players,
     selectedPlayerIds,
     config,
-    setPlayers,
-    setRefreshIndex,
     hydrateMatchmakingState,
   } = useMatchmaking();
   const router = useRouter();
@@ -104,28 +88,6 @@ function FormContent() {
     router.replace(nextUrl, { scroll: false });
   }, [config, currentStep, pathname, players, router, searchParams, selectedPlayerIds]);
 
-  const handleRefresh = () => {
-    setRefreshIndex((prev: number) => prev + 1);
-    setIsRefreshing(1);
-    getPlayerList()
-      .then((newPlayers) => {
-        if (newPlayers) {
-          setPlayers(Object.values(newPlayers));
-          setIsRefreshing(3);
-        } else {
-          setIsRefreshing(2); // Error
-        }
-      })
-      .catch(() => {
-        setIsRefreshing(2); // Error
-      })
-      .finally(() => {
-        setTimeout(() => {
-          setIsRefreshing(0);
-        }, 1000);
-      });
-  };
-
   const handleNext = () => {
     if (currentStep < steps.length) {
       setCurrentStep((prev) => prev + 1);
@@ -154,15 +116,6 @@ function FormContent() {
                 )}
                 <h3>{steps[currentStep - 1].title}</h3>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleRefresh}
-                disabled={isRefreshing === 1}
-              >
-                <RefreshCcwIcon className="h-4 w-4" />
-                {buttonText(isRefreshing)}
-              </Button>
             </div>
           </CardTitle>
         </CardHeader>

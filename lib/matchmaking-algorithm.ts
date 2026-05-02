@@ -43,6 +43,14 @@ type ParsedConfig = {
       players: Player[];
     }>;
   };
+  playerSeparations: {
+    enabled: boolean;
+    pairs: Array<{
+      id: string;
+      player1: Player;
+      player2: Player;
+    }>;
+  };
 };
 
 const roles = ["Top", "Jungle", "Mid", "Adc", "Support"] as const;
@@ -139,6 +147,22 @@ function parseConfig(
       .filter((p): p is Player => p !== undefined),
   }));
 
+  // Parse player separation pairs
+  const parsedSeparations = config.playerSeparations.pairs
+    .map((pair) => {
+      const player1 = allPlayers.find((p) => p.name_id === pair.player1);
+      const player2 = allPlayers.find((p) => p.name_id === pair.player2);
+      if (!player1 || !player2 || player1.account_id === player2.account_id) {
+        return null;
+      }
+      return {
+        id: pair.id,
+        player1,
+        player2,
+      };
+    })
+    .filter((pair): pair is NonNullable<typeof pair> => pair !== null);
+
   return {
     matchOptions: config.matchOptions,
     tolerance: config.tolerance,
@@ -154,6 +178,10 @@ function parseConfig(
     playerCombos: {
       enabled: config.playerCombos.enabled,
       combos: parsedCombos,
+    },
+    playerSeparations: {
+      enabled: config.playerSeparations.enabled,
+      pairs: parsedSeparations,
     },
   };
 }
@@ -203,7 +231,8 @@ export function generateMatches(
     const hasAdvancedConfigs =
       config.presetLanes.usePresetLanes ||
       (config.avoidRoles.enabled && config.avoidRoles.rules.length > 0) ||
-      (config.playerCombos.enabled && config.playerCombos.combos.length > 0);
+      (config.playerCombos.enabled && config.playerCombos.combos.length > 0) ||
+      (config.playerSeparations.enabled && config.playerSeparations.pairs.length > 0);
 
     // Filter matches by advanced settings only if any are enabled
     const filteredMatches = hasAdvancedConfigs
@@ -674,6 +703,16 @@ function filterMatchesByConstraints(
       }
     }
 
+    // Check player separations constraint
+    if (
+      config.playerSeparations.enabled &&
+      config.playerSeparations.pairs.length > 0
+    ) {
+      if (!matchesPlayerSeparations(match, config.playerSeparations)) {
+        return false;
+      }
+    }
+
     return true;
   });
 }
@@ -837,4 +876,35 @@ function matchesPlayerCombos(
 
   const allSameTeam = new Set(teams).size === 1;
   return allSameTeam;
+}
+
+/**
+ * Check if a match satisfies player separations constraints
+ */
+function matchesPlayerSeparations(
+  match: MatchResult,
+  playerSeparationsConfig: ParsedConfig["playerSeparations"],
+): boolean {
+  const teamByPlayerId = new Map<number | string, number>();
+
+  for (let i = 0; i < match.pairings.length; i++) {
+    const player = match.pairings[i];
+    teamByPlayerId.set(player.account_id, i < 5 ? 0 : 1);
+  }
+
+  for (const pair of playerSeparationsConfig.pairs) {
+    const team1 = teamByPlayerId.get(pair.player1.account_id);
+    const team2 = teamByPlayerId.get(pair.player2.account_id);
+
+    if (team1 === undefined || team2 === undefined) {
+      return false;
+    }
+
+    // Rival pairs must be on opposite teams.
+    if (team1 === team2) {
+      return false;
+    }
+  }
+
+  return true;
 }
