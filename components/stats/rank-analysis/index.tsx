@@ -1,23 +1,272 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { useTranslations } from "@/lib/i18n/locale-context";
-import type { PlayerRankChangeStats, PlayerList } from "@/lib/types";
+import type { PlayerRankChangeStats, PlayerList, Role } from "@/lib/types";
 import { RankChangesTable } from "./rank-changes-table";
 import { WinLossByRoleTable } from "./win-loss-by-role-table";
 
-type ViewMode = "changes" | "winloss";
+type ViewMode = "changes" | "winloss" | "susceptibility";
+type SusceptibilityLevel = "review" | "almostGuaranteed";
+
+interface SusceptiblePlayer {
+  nameId: string;
+  rank: number;
+  wins: number;
+  loses: number;
+  totalGames: number;
+  winRate: number;
+  level: SusceptibilityLevel;
+}
+
+interface SusceptibilityBuckets {
+  review: SusceptiblePlayer[];
+  almostGuaranteed: SusceptiblePlayer[];
+}
+
+interface LaneSusceptibility {
+  role: Role;
+  progression: SusceptibilityBuckets;
+  regression: SusceptibilityBuckets;
+}
 
 interface RankAnalysisProps {
   data: PlayerRankChangeStats;
   playerList: PlayerList | null;
 }
 
+const roles: Role[] = ["top", "jungle", "mid", "adc", "support"];
+
+function formatWinRate(winRate: number): string {
+  return `${winRate.toFixed(1)}%`;
+}
+
+function getProgressionLevel(
+  wins: number,
+  loses: number,
+  totalGames: number,
+  winRate: number
+): SusceptibilityLevel | null {
+  const almostGuaranteed =
+    (totalGames >= 5 && winRate > 70) || (wins === 4 && loses === 0);
+
+  if (almostGuaranteed) return "almostGuaranteed";
+
+  const reducedSampleProgression = wins === 3 && loses <= 2;
+  const review = (winRate >= 60 && winRate <= 70) || reducedSampleProgression;
+
+  return review ? "review" : null;
+}
+
+function getRegressionLevel(
+  wins: number,
+  loses: number,
+  totalGames: number,
+  winRate: number
+): SusceptibilityLevel | null {
+  const almostGuaranteed =
+    (totalGames >= 5 && winRate < 30) || (wins === 0 && loses === 4);
+
+  if (almostGuaranteed) return "almostGuaranteed";
+
+  const reducedSampleRegression = wins <= 2 && loses === 3;
+  const review = (winRate >= 30 && winRate <= 40) || reducedSampleRegression;
+
+  return review ? "review" : null;
+}
+
+function sortProgression(players: SusceptiblePlayer[]): SusceptiblePlayer[] {
+  return [...players].sort(
+    (a, b) => b.winRate - a.winRate || b.totalGames - a.totalGames
+  );
+}
+
+function sortRegression(players: SusceptiblePlayer[]): SusceptiblePlayer[] {
+  return [...players].sort(
+    (a, b) => a.winRate - b.winRate || b.totalGames - a.totalGames
+  );
+}
+
+function buildSusceptibilityByLane(data: PlayerRankChangeStats): LaneSusceptibility[] {
+  return roles.map((role) => {
+    const progressionReview: SusceptiblePlayer[] = [];
+    const progressionGuaranteed: SusceptiblePlayer[] = [];
+    const regressionReview: SusceptiblePlayer[] = [];
+    const regressionGuaranteed: SusceptiblePlayer[] = [];
+
+    const roleEntries = data.win_loses_since_last_change[role];
+
+    for (const [nameId, stats] of Object.entries(roleEntries)) {
+      const totalGames = stats.wins + stats.loses;
+      if (totalGames === 0) continue;
+
+      const winRate = (stats.wins / totalGames) * 100;
+      const playerData = {
+        nameId,
+        rank: stats.rank,
+        wins: stats.wins,
+        loses: stats.loses,
+        totalGames,
+        winRate,
+      };
+
+      const progressionLevel = getProgressionLevel(
+        stats.wins,
+        stats.loses,
+        totalGames,
+        winRate
+      );
+      const regressionLevel = getRegressionLevel(
+        stats.wins,
+        stats.loses,
+        totalGames,
+        winRate
+      );
+
+      if (progressionLevel === "review") {
+        progressionReview.push({ ...playerData, level: "review" });
+      }
+      if (progressionLevel === "almostGuaranteed") {
+        progressionGuaranteed.push({
+          ...playerData,
+          level: "almostGuaranteed",
+        });
+      }
+      if (regressionLevel === "review") {
+        regressionReview.push({ ...playerData, level: "review" });
+      }
+      if (regressionLevel === "almostGuaranteed") {
+        regressionGuaranteed.push({
+          ...playerData,
+          level: "almostGuaranteed",
+        });
+      }
+    }
+
+    return {
+      role,
+      progression: {
+        review: sortProgression(progressionReview),
+        almostGuaranteed: sortProgression(progressionGuaranteed),
+      },
+      regression: {
+        review: sortRegression(regressionReview),
+        almostGuaranteed: sortRegression(regressionGuaranteed),
+      },
+    };
+  });
+}
+
+function SusceptibilityList({
+  players,
+  emptyMessage,
+  getPlayerName,
+  t,
+}: {
+  players: SusceptiblePlayer[];
+  emptyMessage: string;
+  getPlayerName: (nameId: string) => string;
+  t: (key: string) => string;
+}) {
+  if (players.length === 0) {
+    return <p className="text-sm text-muted-foreground">{emptyMessage}</p>;
+  }
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {players.map((player) => (
+        <div
+          key={`${player.nameId}-${player.level}-${player.wins}-${player.loses}`}
+          className="w-fit max-w-full rounded-lg border border-border px-3 py-2"
+        >
+          <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
+            <Link
+              href={`/player/${player.nameId}`}
+              className="font-semibold hover:text-primary"
+            >
+              {getPlayerName(player.nameId)}
+            </Link>
+            <span className="text-xs text-muted-foreground">
+              {t("stats.rankLabel")}: {player.rank}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {player.wins}/{player.loses}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {formatWinRate(player.winRate)}
+            </span>
+            <span className="text-xs text-muted-foreground">
+              {player.totalGames} {t("stats.gamesLabel")}
+            </span>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function SusceptibilityCategory({
+  title,
+  reviewPlayers,
+  guaranteedPlayers,
+  emptyMessage,
+  getPlayerName,
+  t,
+  titleClassName,
+}: {
+  title: string;
+  reviewPlayers: SusceptiblePlayer[];
+  guaranteedPlayers: SusceptiblePlayer[];
+  emptyMessage: string;
+  getPlayerName: (nameId: string) => string;
+  t: (key: string) => string;
+  titleClassName: string;
+}) {
+  const hasCandidates = reviewPlayers.length > 0 || guaranteedPlayers.length > 0;
+
+  return (
+    <div className="space-y-3">
+      <h4 className={cn("text-sm font-semibold", titleClassName)}>{title}</h4>
+      {!hasCandidates ? (
+        <p className="text-sm text-muted-foreground">{emptyMessage}</p>
+      ) : (
+        <div className="space-y-3">
+          <div>
+            <p className="text-xs font-medium mb-2 text-muted-foreground">
+              {t("stats.requiresTechnicalReview")}
+            </p>
+            <SusceptibilityList
+              players={reviewPlayers}
+              emptyMessage={t("stats.noPlayersInThisGroup")}
+              getPlayerName={getPlayerName}
+              t={t}
+            />
+          </div>
+          <div>
+            <p className="text-xs font-medium mb-2 text-muted-foreground">
+              {t("stats.almostGuaranteed")}
+            </p>
+            <SusceptibilityList
+              players={guaranteedPlayers}
+              emptyMessage={t("stats.noPlayersInThisGroup")}
+              getPlayerName={getPlayerName}
+              t={t}
+            />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export function RankAnalysis({ data, playerList }: RankAnalysisProps) {
   const t = useTranslations();
-  const [viewMode, setViewMode] = useState<ViewMode>("winloss");
+  const [viewMode, setViewMode] = useState<ViewMode>("susceptibility");
+  const susceptibilityByLane = buildSusceptibilityByLane(data);
 
   const getPlayerName = (nameId: string): string => {
     if (!playerList || !playerList[nameId]) {
@@ -30,6 +279,17 @@ export function RankAnalysis({ data, playerList }: RankAnalysisProps) {
     <div className="space-y-6">
       {/* View Mode Toggle */}
       <div className="flex flex-wrap gap-2">
+        <Button
+          size="sm"
+          variant={viewMode === "susceptibility" ? "default" : "outline"}
+          onClick={() => setViewMode("susceptibility")}
+          className={cn(
+            "transition-colors rounded-xl!",
+            viewMode === "susceptibility" && "ring-2 ring-primary/50"
+          )}
+        >
+          {t("stats.rankChangeSusceptibilityTitle")}
+        </Button>
         <Button
           size="sm"
           variant={viewMode === "winloss" ? "default" : "outline"}
@@ -55,6 +315,41 @@ export function RankAnalysis({ data, playerList }: RankAnalysisProps) {
       </div>
 
       {/* Content */}
+      {viewMode === "susceptibility" && (
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-4">
+          {susceptibilityByLane.map((laneStats) => (
+            <Card key={laneStats.role} className="border border-border/80">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-base">
+                  {t(`roles.${laneStats.role}`)}
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-5 pt-0">
+                <SusceptibilityCategory
+                  title={t("stats.progressionCandidates")}
+                  reviewPlayers={laneStats.progression.review}
+                  guaranteedPlayers={laneStats.progression.almostGuaranteed}
+                  emptyMessage={t("stats.noProgressionCandidatesInLane")}
+                  getPlayerName={getPlayerName}
+                  t={t}
+                  titleClassName="text-green-500"
+                />
+
+                <SusceptibilityCategory
+                  title={t("stats.regressionCandidates")}
+                  reviewPlayers={laneStats.regression.review}
+                  guaranteedPlayers={laneStats.regression.almostGuaranteed}
+                  emptyMessage={t("stats.noRegressionCandidatesInLane")}
+                  getPlayerName={getPlayerName}
+                  t={t}
+                  titleClassName="text-red-500"
+                />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      )}
+
       {viewMode === "changes" && (
         <RankChangesTable
           data={data.number_of_changes}
