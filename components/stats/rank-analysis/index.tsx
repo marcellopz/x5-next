@@ -305,7 +305,7 @@ export function RankAnalysis({ data, playerList }: RankAnalysisProps) {
 
       {/* Content */}
       {viewMode === "susceptibility" && (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-x-6 gap-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-5 gap-4 2xl:gap-x-6 2xl:gap-y-0">
           {susceptibilityByLane.map((laneStats) => {
             const hasProgression =
               laneStats.progression.review.length > 0 ||
@@ -318,10 +318,9 @@ export function RankAnalysis({ data, playerList }: RankAnalysisProps) {
               <div
                 key={laneStats.role}
                 className={cn(
-                  "p-0 md:pl-6",
-                  "md:border-l md:border-border/70 md:nth-[2n+1]:border-l-0 md:nth-[2n+1]:pl-0",
-                  "xl:border-l xl:border-border/70 xl:nth-[2n+1]:border-l xl:nth-[2n+1]:pl-6 xl:nth-[3n+1]:border-l-0 xl:nth-[3n+1]:pl-0",
-                  "2xl:border-l 2xl:border-border/70 2xl:nth-[3n+1]:border-l 2xl:nth-[3n+1]:pl-6 2xl:nth-[5n+1]:border-l-0 2xl:nth-[5n+1]:pl-0"
+                  "rounded-lg border border-border/70 p-4",
+                  "2xl:rounded-none 2xl:border-0 2xl:p-0 2xl:pl-6",
+                  "2xl:border-l 2xl:border-border/70 2xl:nth-[5n+1]:border-l-0 2xl:nth-[5n+1]:pl-0"
                 )}
               >
                 <h3 className="text-base font-semibold mb-4">
