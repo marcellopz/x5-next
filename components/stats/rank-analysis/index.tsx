@@ -39,6 +39,7 @@ interface RankAnalysisProps {
 }
 
 const roles: Role[] = ["top", "jungle", "mid", "adc", "support"];
+const MIN_GAMES_FOR_SUSCEPTIBILITY = 4;
 
 function formatWinRate(winRate: number): string {
   return `${winRate.toFixed(1)}%`;
@@ -101,7 +102,7 @@ function buildSusceptibilityByLane(data: PlayerRankChangeStats): LaneSusceptibil
 
     for (const [nameId, stats] of Object.entries(roleEntries)) {
       const totalGames = stats.wins + stats.loses;
-      if (totalGames === 0) continue;
+      if (totalGames < MIN_GAMES_FOR_SUSCEPTIBILITY) continue;
 
       const winRate = (stats.wins / totalGames) * 100;
       const playerData = {
