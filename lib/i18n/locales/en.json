@@ -28,6 +28,16 @@
     "sinceRankAt": "Rank {{rank}}",
     "noRankChangeYet": "No rank change yet"
   },
+  "playerSummary": {
+    "roleDistribution": "Role Distribution",
+    "winRateLastGamesTitle": "Win Rate (Last {{count}} Games)",
+    "statsOfLastGames": "Stats of Last {{count}} Games",
+    "noGamesData": "No games data available",
+    "gameAgo": "{{count}} game ago",
+    "gamesAgo": "{{count}} games ago",
+    "topChampions": "Top Champions",
+    "seeAllChampions": "See all champions"
+  },
   "stats": {
     "title": "Statistics",
     "description": "Overall statistics, leaderboards, and analysis",
@@ -446,6 +456,8 @@
     "itemAlt": "Item",
     "kda": "KDA",
     "team": "Team",
+    "daysAgo": "{{days}} days ago",
+    "daysAgoShort": "{{days}}d",
     "summonersRiftMap": "Summoner's Rift Map",
     "closeMenu": "Close menu",
     "openMenu": "Open menu",

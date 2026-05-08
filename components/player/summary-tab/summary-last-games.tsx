@@ -113,7 +113,10 @@ export function SummaryLastGames({
     <div className="flex flex-col">
       {/* Header */}
       <h3 className="text-sm font-semibold text-foreground mb-4">
-        Stats of Last {playerGameData.length} Games
+        {t("playerSummary.statsOfLastGames").replace(
+          "{{count}}",
+          String(playerGameData.length),
+        )}
       </h3>
 
       {/* Stats Section with Champions Inline */}

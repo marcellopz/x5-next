@@ -3,6 +3,7 @@
 import { useRouter } from "next/navigation";
 import type { ChampionStats, Player } from "@/lib/types";
 import { ChampionStatItem } from "./champion-stat-item";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface ChampionStatsListProps {
   champs: ChampionStats[];
@@ -15,13 +16,14 @@ export function ChampionStatsList({
   player,
   numberOfChampionsToShow = 5,
 }: ChampionStatsListProps) {
+  const t = useTranslations();
   const router = useRouter();
   const slug = player?.name_id || player?.account_id?.toString() || "";
 
   return (
     <div className="border border-border rounded-lg overflow-hidden">
       <h3 className="text-sm font-semibold text-foreground p-4 pb-3 border-white/10">
-        Top Champions
+        {t("playerSummary.topChampions")}
       </h3>
       <div className="space-y-0">
         {champs.slice(0, numberOfChampionsToShow).map((champ, index) => (
@@ -36,7 +38,7 @@ export function ChampionStatsList({
             onClick={() => router.push(`/player/${slug}/champions`)}
             className="mx-auto px-4 py-2 text-primary hover:text-primary/80 transition-colors"
           >
-            See all champions
+            {t("playerSummary.seeAllChampions")}
           </button>
         </div>
       )}

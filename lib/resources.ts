@@ -11,10 +11,7 @@ export const CHAMPIONICONURL =
 export const RUNEICONURL =
   "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/v1/";
 export const CHAMPIONSPLASHURL =
-  "https://raw.communitydragon.org/14.9/plugins/rcp-be-lol-game-data/global/default/v1/champion-splashes/";
-
-export const getChampionSplash = (champId: number) =>
-  `${CHAMPIONSPLASHURL}${champId}/${champId}000.jpg`;
+  "https://raw.communitydragon.org/latest/plugins/rcp-be-lol-game-data/global/default/assets/characters/";
 
 export const championIds = {
   1: "Annie",
@@ -189,6 +186,34 @@ export const championIds = {
   904: "Zaahen",
   910: "Hwei",
   950: "Naafiri",
+};
+
+const championSplashNameIdOverrides: Record<number, string> = {
+  62: "monkeyking",
+};
+
+const championSplashNameIds: Record<number, string> = Object.fromEntries(
+  Object.entries(championIds).map(([id, championName]) => {
+    const numericId = Number(id);
+    const overriddenNameId = championSplashNameIdOverrides[numericId];
+    const normalizedNameId =
+      overriddenNameId ??
+      championName
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+
+    return [numericId, normalizedNameId];
+  }),
+) as Record<number, string>;
+
+export const getChampionSplash = (champId: number) => {
+  const championNameId = championSplashNameIds[champId];
+
+  if (!championNameId) {
+    return "";
+  }
+
+  return `${CHAMPIONSPLASHURL}${championNameId}/skins/base/images/${championNameId}_splash_centered_0.jpg`;
 };
 
 export const romanNumbers = {

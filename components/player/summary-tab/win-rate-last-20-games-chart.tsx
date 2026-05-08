@@ -10,6 +10,7 @@ import {
 } from "recharts";
 import type { PlayerInfo } from "@/lib/types";
 import { chartTheme } from "@/components/home/activity-section/chart-theme";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 interface WinRateLast20GamesChartProps {
   playerInfo: PlayerInfo;
@@ -18,6 +19,7 @@ interface WinRateLast20GamesChartProps {
 export function WinRateLast20GamesChart({
   playerInfo,
 }: WinRateLast20GamesChartProps) {
+  const t = useTranslations();
   const winsArray = playerInfo.winsArray ?? [];
   const totalGames = winsArray.length;
 
@@ -26,11 +28,11 @@ export function WinRateLast20GamesChart({
     return (
       <div className="bg-background/30 border border-border rounded-lg h-[240px] p-4 flex flex-col">
         <h3 className="text-sm font-semibold text-foreground mb-2">
-          Win Rate (Last 20 Games)
+          {t("playerSummary.winRateLastGamesTitle").replace("{{count}}", "20")}
         </h3>
         <div className="flex-1 flex items-center justify-center">
           <p className="text-muted-foreground text-sm">
-            No games data available
+            {t("playerSummary.noGamesData")}
           </p>
         </div>
       </div>
@@ -76,7 +78,10 @@ export function WinRateLast20GamesChart({
   return (
     <div className="bg-background/30 border border-border rounded-lg h-[220px] p-4 flex flex-col">
       <h3 className="text-sm font-semibold text-foreground mb-2">
-        Win Rate (Last {gamesToShow} Games)
+        {t("playerSummary.winRateLastGamesTitle").replace(
+          "{{count}}",
+          String(gamesToShow),
+        )}
       </h3>
       <div className="flex-1 min-h-0">
         <ResponsiveContainer width="100%" height="100%">
@@ -129,7 +134,17 @@ export function WinRateLast20GamesChart({
               labelFormatter={(label, payload) => {
                 if (payload && payload[0]?.payload?.gamesAgo) {
                   const gamesAgo = payload[0].payload.gamesAgo;
-                  return `${gamesAgo} ${gamesAgo === 1 ? "game" : "games"} ago`;
+                  if (gamesAgo === 1) {
+                    return t("playerSummary.gameAgo").replace(
+                      "{{count}}",
+                      String(gamesAgo),
+                    );
+                  }
+
+                  return t("playerSummary.gamesAgo").replace(
+                    "{{count}}",
+                    String(gamesAgo),
+                  );
                 }
                 return label;
               }}

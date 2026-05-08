@@ -43,6 +43,19 @@ function getKDA(kills: number, deaths: number, assists: number): string {
   return ((kills + assists) / deaths).toFixed(2);
 }
 
+function getShortRoleName(role?: string): string {
+  const normalizedRole = role?.toLowerCase();
+  const shortRoleMap: Record<string, string> = {
+    top: "Top",
+    jungle: "Jng",
+    mid: "Mid",
+    adc: "Adc",
+    support: "Sup",
+  };
+
+  return shortRoleMap[normalizedRole || ""] || (role ?? "");
+}
+
 export function SummaryMatchItem({
   match,
   participant,
@@ -55,9 +68,15 @@ export function SummaryMatchItem({
   const kdaRaw = getKDA(
     participant.stats.kills,
     participant.stats.deaths,
-    participant.stats.assists
+    participant.stats.assists,
   );
   const kda = kdaRaw === "Perfect" ? t("common.perfect") : kdaRaw;
+  const shortRoleName = getShortRoleName(participant.role);
+  const daysAgoText = t("common.daysAgo").replace("{{days}}", String(daysSince));
+  const daysAgoShortText = t("common.daysAgoShort").replace(
+    "{{days}}",
+    String(daysSince),
+  );
 
   // Get items
   const items = useMemo(() => {
@@ -110,13 +129,22 @@ export function SummaryMatchItem({
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-1 text-xs text-muted-foreground">
-        <div className="flex items-center gap-2">
-          <span className="capitalize font-semibold text-foreground">
+        <div className="flex items-center gap-1.5 md:gap-2">
+          <span className="font-semibold text-foreground md:hidden">
+            {shortRoleName}
+          </span>
+          <span className="capitalize font-semibold text-foreground hidden md:inline">
             {participant.role}
           </span>
           <span>•</span>
-          <span>
-            {matchDateStr} ({daysSince}d ago)
+          <span className="flex items-center gap-1">
+            {matchDateStr}
+            <span className="text-muted-foreground hidden md:inline">
+              ({daysAgoText})
+            </span>
+            <span className="text-muted-foreground md:hidden">
+              ({daysAgoShortText})
+            </span>
           </span>
           <span>•</span>
           <span>{formatGameDuration(match.gameDuration)}</span>

@@ -3,6 +3,7 @@
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import type { PlayerInfo } from "@/lib/types";
 import { chartTheme } from "@/components/home/activity-section/chart-theme";
+import { useTranslations } from "@/lib/i18n/locale-context";
 
 const roles = ["top", "jungle", "mid", "adc", "support"];
 const roleColors = [
@@ -28,6 +29,8 @@ interface RoleDistributionChartProps {
 export function RoleDistributionChart({
   playerInfo,
 }: RoleDistributionChartProps) {
+  const t = useTranslations();
+
   // Prepare data for pie chart
   const roleData = roles
     .map((role, index) => {
@@ -47,7 +50,7 @@ export function RoleDistributionChart({
   return (
     <div className="bg-background/30 border border-border rounded-lg p-4 flex flex-col">
       <h3 className="text-sm font-semibold text-foreground mb-2">
-        Role Distribution
+        {t("playerSummary.roleDistribution")}
       </h3>
       <div className="flex items-center flex-1 gap-6">
         {/* Pie Chart */}

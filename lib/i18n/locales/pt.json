@@ -28,6 +28,16 @@
     "sinceRankAt": "Rank {{rank}}",
     "noRankChangeYet": "Sem mudança de rank"
   },
+  "playerSummary": {
+    "roleDistribution": "Distribuição de Posições",
+    "winRateLastGamesTitle": "Taxa de Vitória (Últimos {{count}} Jogos)",
+    "statsOfLastGames": "Estatísticas dos Últimos {{count}} Jogos",
+    "noGamesData": "Nenhum dado de jogos disponível",
+    "gameAgo": "há {{count}} jogo",
+    "gamesAgo": "há {{count}} jogos",
+    "topChampions": "Top Campeões",
+    "seeAllChampions": "Ver todos os campeões"
+  },
   "stats": {
     "title": "Estatísticas",
     "description": "Estatísticas gerais, rankings e análise",
@@ -436,6 +446,8 @@
     "itemAlt": "Item",
     "kda": "KDA",
     "team": "Time",
+    "daysAgo": "há {{days}} dias",
+    "daysAgoShort": "{{days}}d",
     "summonersRiftMap": "Mapa da Rota do Invocador",
     "closeMenu": "Fechar menu",
     "openMenu": "Abrir menu",
