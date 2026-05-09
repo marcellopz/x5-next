@@ -1,7 +1,9 @@
 import type {
   AllReducedData,
   ChampionsAverageRoleStats,
+  CondensedMatchTimeline,
   InitialRanksData,
+  MatchTimelineData,
   MatchWithId,
   MvpPlayers,
   Player,
@@ -19,6 +21,8 @@ import type {
   VictoryStatistics,
 } from "../types";
 import { ALL_PUBLIC_DATA_TAG } from "../cache-tags";
+import { unstable_cache } from "next/cache";
+import { condenseTimeline } from "../match/condense-timeline";
 
 // For client-side access, use NEXT_PUBLIC_ prefix
 // For server-side only, use regular env variable (without NEXT_PUBLIC_)
@@ -198,4 +202,27 @@ export async function getMatchRoles(
   return fetchFromFirebase<Record<string, string>>(
     `pre-processed-data/match-roles/${matchId}`
   );
+}
+
+// Fetches raw timeline data by match ID
+// The matchId should be in format "match{number}" (e.g., "match123")
+export async function getMatchTimeline(
+  matchId: string
+): Promise<MatchTimelineData | null> {
+  return fetchFromFirebase<MatchTimelineData>(`timelines/${matchId}`);
+}
+
+const getCondensedMatchTimelineCached = unstable_cache(
+  async (matchId: string): Promise<CondensedMatchTimeline | null> => {
+    const timeline = await getMatchTimeline(matchId);
+    return condenseTimeline(timeline);
+  },
+  ["match-timeline-condensed"],
+  { tags: [ALL_PUBLIC_DATA_TAG] }
+);
+
+export async function getCondensedMatchTimeline(
+  matchId: string
+): Promise<CondensedMatchTimeline | null> {
+  return getCondensedMatchTimelineCached(matchId);
 }

@@ -502,7 +502,11 @@
     "damage": "Damage",
     "damageTaken": "Damage Taken",
     "gold": "Gold",
-    "vision": "Vision"
+    "vision": "Vision",
+    "goldDifferenceTimeline": "Gold Difference Timeline",
+    "blueTeamUpGold": "Blue team up {{value}} gold",
+    "redTeamUpGold": "Red team up {{value}} gold",
+    "evenGold": "Even gold"
   },
   "home": {
     "title": "x5 dos nerds",

@@ -542,6 +542,140 @@ export interface FullMatchData extends MatchMetadata {
   [key: string]: unknown;
 }
 
+export interface MatchTimelinePosition {
+  x: number;
+  y: number;
+}
+
+export type MatchTimelineMonsterType =
+  | "DRAGON"
+  | "BARON_NASHOR"
+  | "RIFTHERALD"
+  | "HORDE"
+  | "ATAKHAN"
+  | "";
+
+export type MatchTimelineMonsterSubType =
+  | "FIRE_DRAGON"
+  | "WATER_DRAGON"
+  | "AIR_DRAGON"
+  | "EARTH_DRAGON"
+  | "HEXTECH_DRAGON"
+  | "CHEMTECH_DRAGON"
+  | "ELDER_DRAGON"
+  | "";
+
+export type MatchTimelineBuildingType =
+  | "TOWER_BUILDING"
+  | "INHIBITOR_BUILDING"
+  | "";
+
+export type MatchTimelineTowerType =
+  | "OUTER_TURRET"
+  | "INNER_TURRET"
+  | "BASE_TURRET"
+  | "NEXUS_TURRET"
+  | "";
+
+export type MatchTimelineLaneType =
+  | "TOP_LANE"
+  | "MID_LANE"
+  | "BOT_LANE"
+  | "";
+
+export type MatchTimelineTeamId = 0 | 100 | 200;
+
+export type MatchTimelineEventType =
+  | "CHAMPION_KILL"
+  | "ELITE_MONSTER_KILL"
+  | "BUILDING_KILL";
+
+export interface MatchTimelineEvent {
+  type: MatchTimelineEventType;
+  timestamp: number;
+  killerId: number;
+  victimId: number;
+  participantId: number;
+  teamId: MatchTimelineTeamId;
+  skillSlot: number;
+  itemId: number;
+  position: MatchTimelinePosition;
+  buildingType: MatchTimelineBuildingType;
+  laneType: MatchTimelineLaneType;
+  monsterSubType: MatchTimelineMonsterSubType;
+  monsterType: MatchTimelineMonsterType;
+  towerType: MatchTimelineTowerType;
+  assistingParticipantIds?: number[];
+}
+
+export interface MatchTimelineParticipantFrame {
+  currentGold: number;
+  dominionScore: number;
+  jungleMinionsKilled: number;
+  level: number;
+  minionsKilled: number;
+  participantId: number;
+  position: MatchTimelinePosition;
+  teamScore: number;
+  totalGold: number;
+  xp: number;
+}
+
+export interface MatchTimelineFrame {
+  participantFrames: Array<MatchTimelineParticipantFrame | null>;
+  timestamp: number;
+  events?: MatchTimelineEvent[];
+}
+
+export interface MatchTimelineData {
+  frames: MatchTimelineFrame[];
+}
+
+export type CondensedTimelineEventIconKey =
+  | "kill"
+  | "dragon"
+  | "baron"
+  | "herald"
+  | "atakhan"
+  | "horde"
+  | "tower"
+  | "inhibitor"
+  | "objective";
+
+export interface CondensedTimelinePoint {
+  timestamp: number;
+  minute: number;
+  timeLabel: string;
+  blueGold: number;
+  redGold: number;
+  goldDiff: number;
+}
+
+export interface CondensedTimelineEventPoint {
+  timestamp: number;
+  minute: number;
+  timeLabel: string;
+  eventType: MatchTimelineEventType;
+  iconKey: CondensedTimelineEventIconKey;
+  teamId: MatchTimelineTeamId;
+  label: string;
+  killerId: number;
+  victimId: number;
+  position?: MatchTimelinePosition;
+  monsterType?: MatchTimelineMonsterType;
+  monsterSubType?: MatchTimelineMonsterSubType;
+  buildingType?: MatchTimelineBuildingType;
+  laneType?: MatchTimelineLaneType;
+  towerType?: MatchTimelineTowerType;
+}
+
+export interface CondensedMatchTimeline {
+  points: CondensedTimelinePoint[];
+  events: CondensedTimelineEventPoint[];
+  maxAbsDiff: number;
+  gameDurationMs: number;
+}
+
 export interface RoleStats {
   top: {
     [summonerId: string]: RoleLeaderboardStats;

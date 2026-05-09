@@ -492,7 +492,11 @@
     "damage": "Dano",
     "damageTaken": "Dano Recebido",
     "gold": "Ouro",
-    "vision": "Visão"
+    "vision": "Visão",
+    "goldDifferenceTimeline": "Linha do Tempo de Diferença de Ouro",
+    "blueTeamUpGold": "Time azul com {{value}} de ouro de vantagem",
+    "redTeamUpGold": "Time vermelho com {{value}} de ouro de vantagem",
+    "evenGold": "Ouro empatado"
   },
   "pages": {
     "matchHistory": "Histórico de Partidas",

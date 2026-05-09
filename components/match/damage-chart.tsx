@@ -49,25 +49,23 @@ const Tab = ({
 }) => (
   <button
     onClick={() => setTabState(n)}
-    className={`flex-1 h-12 flex items-center justify-center transition-colors ${
+    className={`flex-1 h-10 flex items-center justify-center transition-colors ${
       tabState === n
         ? "border-l border-r border-b-0 border-border bg-background/50 font-semibold text-foreground"
         : "bg-accent/70 border-l border-r border-b border-border/50 hover:bg-background/10 text-muted-foreground"
     }`}
   >
-    <p className="text-sm">{text}</p>
+    <p className="text-xs">{text}</p>
   </button>
 );
 
 const TeamSection = ({
   team,
-  teamName,
   tabState,
   max,
   isBlueTeam,
 }: {
   team: Participant[];
-  teamName: string;
   tabState: number;
   max: number;
   isBlueTeam: boolean;
@@ -78,49 +76,38 @@ const TeamSection = ({
     );
   }, [team, tabState]);
 
-  const barColor = isBlueTeam ? "bg-blue-500" : "bg-red-500";
+  const barColor = isBlueTeam ? "bg-blue-500/70" : "bg-red-500/70";
 
   return (
-    <div className="mb-4">
-      <div
-        className={`p-2 mb-2 rounded text-center ${
-          isBlueTeam
-            ? "bg-blue-500/20 border border-blue-500/40"
-            : "bg-red-500/20 border border-red-500/40"
-        }`}
-      >
-        <h3 className="text-lg font-semibold text-foreground m-0">
-          {teamName}
-        </h3>
-      </div>
+    <div>
       <ul className="list-none p-0 m-0">
         {sortedTeam.map((p, i) => {
           const value = p.stats[tabKey[tabState]];
           const percentage = max > 0 ? (value / max) * 100 : 0;
 
           return (
-            <li key={i} className="p-2">
-              <div className="flex items-center gap-3">
+            <li key={i} className="py-1.5">
+              <div className="flex items-center gap-2.5">
                 <Image
                   src={`${CHAMPIONICONURL}${p.championId}.png`}
-                  width={50}
-                  height={50}
+                  width={38}
+                  height={38}
                   alt={`${p.championName} champion icon`}
                   className="rounded border border-border/60 shrink-0"
-                  sizes="50px"
+                  sizes="38px"
                 />
-                <div className="flex-1 py-3.5">
+                <div className="flex-1 py-1">
                   <div
-                    className={`h-5 ${barColor} rounded-sm`}
+                    className={`h-4 ${barColor} rounded-sm`}
                     style={{
                       width: `${percentage}%`,
                     }}
                     title={formatNumber(value)}
                   />
                 </div>
-                <div className="flex items-center gap-1 w-20 justify-end shrink-0">
-                  <span className="text-lg">{tabEmojis[tabState]}</span>
-                  <span className="text-sm font-semibold text-foreground">
+                <div className="flex items-center gap-1 w-18 justify-end shrink-0">
+                  <span className="text-base leading-none">{tabEmojis[tabState]}</span>
+                  <span className="text-xs font-semibold text-foreground">
                     {formatNumber(value)}
                   </span>
                 </div>
@@ -167,7 +154,7 @@ export function DamageChart({ matchData }: DamageChartProps) {
 
   return (
     <div className="border border-border rounded-lg overflow-hidden">
-      <div className="flex h-12">
+      <div className="flex h-10">
         {tabLabels.map((label, i) => (
           <Tab
             key={i}
@@ -178,18 +165,16 @@ export function DamageChart({ matchData }: DamageChartProps) {
           />
         ))}
       </div>
-      <div className="border-l border-r border-border p-2.5">
+      <div className="px-2.5 py-2">
         <TeamSection
           team={blueTeam}
-          teamName={t("team.blueTeam")}
           tabState={tabState}
           max={max}
           isBlueTeam={true}
         />
-        <div className="h-0.5 bg-linear-to-r from-blue-500 via-muted-foreground to-red-500 rounded my-6" />
+        <div className="h-px bg-linear-to-r from-blue-500 via-muted-foreground to-red-500 rounded my-2.5" />
         <TeamSection
           team={redTeam}
-          teamName={t("team.redTeam")}
           tabState={tabState}
           max={max}
           isBlueTeam={false}
