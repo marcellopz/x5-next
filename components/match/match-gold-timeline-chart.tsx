@@ -116,7 +116,6 @@ function EventTooltip({
   t,
   participantChampionMap,
 }: EventTooltipProps) {
-  console.log("payload", payload?.map(p => p.payload));
   const payloadPoint = payload?.[0]?.payload;
 
   const labelTs = typeof label === "number" ? label : Number(label);
