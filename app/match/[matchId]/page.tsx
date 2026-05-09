@@ -10,7 +10,7 @@ import {
 import { MatchDetails } from "@/components/match/match-details";
 import { MatchComponent } from "@/components/match/match-component";
 import { DamageChart } from "@/components/match/damage-chart";
-import { MatchGoldTimelinePlaceholder } from "@/components/match/match-gold-timeline-placeholder";
+import { MatchGoldTimelinePanel } from "@/components/match/match-gold-timeline-panel";
 import { MatchPlayerComparisonTable } from "@/components/match/match-player-comparison-table";
 import { generatePageMetadata } from "@/lib/metadata";
 import { getLocale, getTranslations, t } from "@/lib/i18n";
@@ -114,7 +114,7 @@ export default async function MatchPage({ params }: MatchPageProps) {
             <DamageChart matchData={matchData} />
           </div>
           <div className="lg:col-span-8 lg:h-full">
-            <MatchGoldTimelinePlaceholder matchId={fullMatchId} />
+            <MatchGoldTimelinePanel matchId={fullMatchId} matchData={matchData} />
           </div>
         </div>
         <MatchPlayerComparisonTable matchData={matchData} />

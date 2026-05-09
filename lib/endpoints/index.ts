@@ -32,7 +32,7 @@ const FIREBASE_DATABASE_URL =
 
 if (!FIREBASE_DATABASE_URL) {
   throw new Error(
-    "FIREBASE_DATABASE_URL or NEXT_PUBLIC_FIREBASE_DATABASE_URL is not defined in environment variables"
+    "FIREBASE_DATABASE_URL or NEXT_PUBLIC_FIREBASE_DATABASE_URL is not defined in environment variables",
   );
 }
 
@@ -68,7 +68,9 @@ export async function getPlayerList(): Promise<PlayerList | null> {
 }
 
 export async function getRoleStats(matchId: string): Promise<RoleStats | null> {
-  return fetchFromFirebase<RoleStats>(`pre-processed-data/role-stats/${matchId}`);
+  return fetchFromFirebase<RoleStats>(
+    `pre-processed-data/role-stats/${matchId}`,
+  );
 }
 
 export async function getMVPPlayers(): Promise<MvpPlayers | null> {
@@ -87,26 +89,32 @@ export async function getPlayer(nameId: string): Promise<Player | null> {
 
 // Fetches rank change history for a specific player by their name_id
 export async function getPlayerRankChanges(
-  nameId: string
+  nameId: string,
 ): Promise<PlayerRankChanges | null> {
-  return fetchFromFirebase<PlayerRankChanges>(`player-rank-change-log/${nameId}`);
+  return fetchFromFirebase<PlayerRankChanges>(
+    `player-rank-change-log/${nameId}`,
+  );
 }
 
 // Fetches pre-processed overall statistics and analytics data
 export async function getSummarizedOverallData(): Promise<SummarizedOverallData | null> {
-  return fetchFromFirebase<SummarizedOverallData>("pre-processed-data/overall-stats");
+  return fetchFromFirebase<SummarizedOverallData>(
+    "pre-processed-data/overall-stats",
+  );
 }
 
 export async function getChampionOVerallData(): Promise<
   SummarizedOverallData["champions"] | null
 > {
   return fetchFromFirebase<SummarizedOverallData["champions"]>(
-    "pre-processed-data/overall-stats/champions"
+    "pre-processed-data/overall-stats/champions",
   );
 }
 
 export async function getNumberOfGames(): Promise<number | null> {
-  return fetchFromFirebase<number>("pre-processed-data/overall-stats/numberOfGames");
+  return fetchFromFirebase<number>(
+    "pre-processed-data/overall-stats/numberOfGames",
+  );
 }
 
 // Fetches initial rank change log
@@ -121,7 +129,9 @@ export async function getPlayerSummary(): Promise<PlayerSummary | null> {
 
 // Fetches all reduced data from pre-processed-data/all-reduced
 export async function getAllReducedData(): Promise<MatchWithId[]> {
-  const data = await fetchFromFirebase<AllReducedData>("pre-processed-data/all-reduced");
+  const data = await fetchFromFirebase<AllReducedData>(
+    "pre-processed-data/all-reduced",
+  );
 
   if (!data) return [];
 
@@ -131,11 +141,11 @@ export async function getAllReducedData(): Promise<MatchWithId[]> {
       ({
         matchId,
         ...matchData,
-      } as MatchWithId)
+      }) as MatchWithId,
   );
 
   matchesArray.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime(),
   );
 
   return matchesArray;
@@ -143,49 +153,57 @@ export async function getAllReducedData(): Promise<MatchWithId[]> {
 
 // Fetches role leaderboard data from pre-processed-data/role-leaderboard
 export async function getRoleLeaderboardData(): Promise<RoleLeaderboardData | null> {
-  return fetchFromFirebase<RoleLeaderboardData>("pre-processed-data/role-leaderboard");
+  return fetchFromFirebase<RoleLeaderboardData>(
+    "pre-processed-data/role-leaderboard",
+  );
 }
 
 export async function getPlayersAverageRoleStats(): Promise<PlayersAverageRoleStats | null> {
   return fetchFromFirebase<PlayersAverageRoleStats>(
-    "pre-processed-data/players-average-role-stats"
+    "pre-processed-data/players-average-role-stats",
   );
 }
 
 export async function getChampionsAverageRoleStats(): Promise<ChampionsAverageRoleStats | null> {
   return fetchFromFirebase<ChampionsAverageRoleStats>(
-    "pre-processed-data/champions-average-role-stats"
+    "pre-processed-data/champions-average-role-stats",
   );
 }
 
 export async function getPlayerRankChangeStats(): Promise<PlayerRankChangeStats | null> {
   return fetchFromFirebase<PlayerRankChangeStats>(
-    "pre-processed-data/player-rank-change-stats"
+    "pre-processed-data/player-rank-change-stats",
   );
 }
 
 export async function getVictoryStatistics(): Promise<VictoryStatistics | null> {
-  return fetchFromFirebase<VictoryStatistics>("pre-processed-data/victory-statistics");
+  return fetchFromFirebase<VictoryStatistics>(
+    "pre-processed-data/victory-statistics",
+  );
 }
 
 export async function getPlayerPhoto(
-  accountId: string
+  accountId: string,
 ): Promise<string | null> {
   return fetchFromFirebase<string>(`player-data/${accountId}/photo`);
 }
 
 // Fetches player info by account_id
 export async function getPlayerInfo(
-  accountId: string | number
+  accountId: string | number,
 ): Promise<PlayerInfo | null> {
-  return fetchFromFirebase<PlayerInfo>(`pre-processed-data/players/${accountId}`);
+  return fetchFromFirebase<PlayerInfo>(
+    `pre-processed-data/players/${accountId}`,
+  );
 }
 
 // Fetches player pairs by summonerId
 export async function getPlayerPairs(
-  summonerId: string | number
+  summonerId: string | number,
 ): Promise<PlayerPairs | null> {
-  return fetchFromFirebase<PlayerPairs>(`pre-processed-data/pairs/${summonerId}`);
+  return fetchFromFirebase<PlayerPairs>(
+    `pre-processed-data/pairs/${summonerId}`,
+  );
 }
 
 // Fetches full match data by match ID
@@ -197,17 +215,17 @@ export async function getFullMatch(matchId: string): Promise<unknown | null> {
 // Fetches match roles by match ID
 // The matchId should be in format "match{number}" (e.g., "match123")
 export async function getMatchRoles(
-  matchId: string
+  matchId: string,
 ): Promise<Record<string, string> | null> {
   return fetchFromFirebase<Record<string, string>>(
-    `pre-processed-data/match-roles/${matchId}`
+    `pre-processed-data/match-roles/${matchId}`,
   );
 }
 
 // Fetches raw timeline data by match ID
 // The matchId should be in format "match{number}" (e.g., "match123")
 export async function getMatchTimeline(
-  matchId: string
+  matchId: string,
 ): Promise<MatchTimelineData | null> {
   return fetchFromFirebase<MatchTimelineData>(`timelines/${matchId}`);
 }
@@ -218,11 +236,11 @@ const getCondensedMatchTimelineCached = unstable_cache(
     return condenseTimeline(timeline);
   },
   ["match-timeline-condensed"],
-  { tags: [ALL_PUBLIC_DATA_TAG] }
+  { tags: [ALL_PUBLIC_DATA_TAG] },
 );
 
 export async function getCondensedMatchTimeline(
-  matchId: string
+  matchId: string,
 ): Promise<CondensedMatchTimeline | null> {
   return getCondensedMatchTimelineCached(matchId);
 }

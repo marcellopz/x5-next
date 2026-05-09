@@ -1,7 +1,9 @@
 import type {
   CondensedMatchTimeline,
+  CondensedTimelineEventDot,
   CondensedTimelineEventIconKey,
   CondensedTimelineEventPoint,
+  MatchTimelineTeamId,
   MatchTimelineData,
   MatchTimelineEvent,
 } from "@/lib/types";
@@ -59,6 +61,15 @@ function labelFromEvent(event: MatchTimelineEvent): string {
   return "Event";
 }
 
+function resolveEventTeamId(event: MatchTimelineEvent): MatchTimelineTeamId {
+  if (event.participantId >= 1 && event.participantId <= 5) return 100;
+  if (event.participantId >= 6 && event.participantId <= 10) return 200;
+  if (event.killerId >= 1 && event.killerId <= 5) return 100;
+  if (event.killerId >= 6 && event.killerId <= 10) return 200;
+  if (event.teamId === 100 || event.teamId === 200) return event.teamId;
+  return 0;
+}
+
 export function condenseTimeline(
   timeline: MatchTimelineData | null
 ): CondensedMatchTimeline | null {
@@ -101,7 +112,7 @@ export function condenseTimeline(
       timeLabel: toTimeLabel(event.timestamp),
       eventType: event.type,
       iconKey: iconFromEvent(event),
-      teamId: event.teamId,
+      teamId: resolveEventTeamId(event),
       label: labelFromEvent(event),
       killerId: event.killerId,
       victimId: event.victimId,
@@ -114,6 +125,60 @@ export function condenseTimeline(
     }))
     .sort((a, b) => a.timestamp - b.timestamp);
 
+  const dotsMap = new Map<string, CondensedTimelineEventDot>();
+  for (const event of events) {
+    if (event.teamId !== 100 && event.teamId !== 200) continue;
+
+    const minuteStart = Math.floor(event.timestamp / 60000) * 60000;
+    const key = `${minuteStart}-${event.teamId}`;
+    const existing = dotsMap.get(key);
+
+    if (!existing) {
+      dotsMap.set(key, {
+        minuteStart,
+        timestamp: minuteStart,
+        teamId: event.teamId,
+        eventCount: 1,
+        events: [
+          {
+            timestamp: event.timestamp,
+            label: event.label,
+            teamId: event.teamId,
+            eventType: event.eventType,
+            killerId: event.killerId,
+            victimId: event.victimId,
+            monsterType: event.monsterType,
+            monsterSubType: event.monsterSubType,
+            buildingType: event.buildingType,
+            towerType: event.towerType,
+          },
+        ],
+      });
+      continue;
+    }
+
+    existing.eventCount += 1;
+    existing.events.push({
+      timestamp: event.timestamp,
+      label: event.label,
+      teamId: event.teamId,
+      eventType: event.eventType,
+      killerId: event.killerId,
+      victimId: event.victimId,
+      monsterType: event.monsterType,
+      monsterSubType: event.monsterSubType,
+      buildingType: event.buildingType,
+      towerType: event.towerType,
+    });
+  }
+
+  const eventDots = [...dotsMap.values()]
+    .map((dot) => ({
+      ...dot,
+      events: [...dot.events].sort((a, b) => a.timestamp - b.timestamp),
+    }))
+    .sort((a, b) => a.minuteStart - b.minuteStart || a.teamId - b.teamId);
+
   const maxAbsDiff = points.reduce((max, point) => {
     const absDiff = Math.abs(point.goldDiff);
     return absDiff > max ? absDiff : max;
@@ -124,6 +189,7 @@ export function condenseTimeline(
   return {
     points,
     events,
+    eventDots,
     maxAbsDiff,
     gameDurationMs,
   };

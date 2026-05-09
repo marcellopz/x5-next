@@ -669,9 +669,29 @@ export interface CondensedTimelineEventPoint {
   towerType?: MatchTimelineTowerType;
 }
 
+export interface CondensedTimelineEventDot {
+  timestamp: number;
+  minuteStart: number;
+  teamId: 100 | 200;
+  eventCount: number;
+  events: Array<{
+    timestamp: number;
+    label: string;
+    teamId: 100 | 200;
+    eventType: MatchTimelineEventType;
+    killerId: number;
+    victimId: number;
+    monsterType?: MatchTimelineMonsterType;
+    monsterSubType?: MatchTimelineMonsterSubType;
+    buildingType?: MatchTimelineBuildingType;
+    towerType?: MatchTimelineTowerType;
+  }>;
+}
+
 export interface CondensedMatchTimeline {
   points: CondensedTimelinePoint[];
   events: CondensedTimelineEventPoint[];
+  eventDots: CondensedTimelineEventDot[];
   maxAbsDiff: number;
   gameDurationMs: number;
 }

@@ -1,9 +1,11 @@
 "use client";
 
+import Image from "next/image";
 import {
   Area,
   AreaChart,
   CartesianGrid,
+  ReferenceArea,
   ReferenceLine,
   ResponsiveContainer,
   Scatter,
@@ -14,17 +16,39 @@ import {
 } from "recharts";
 import { chartTheme } from "@/components/home/activity-section/chart-theme";
 import { useFormatNumber, useTranslations } from "@/lib/i18n/locale-context";
-import type {
-  CondensedMatchTimeline,
-  CondensedTimelineEventIconKey,
-  CondensedTimelineEventPoint,
-} from "@/lib/types";
+import {
+  baronLoseUrl,
+  baronWinUrl,
+  CHAMPIONICONURL,
+  dragonLoseUrl,
+  dragonWinUrl,
+  turretLoseUrl,
+  turretWinUrl,
+} from "@/lib/resources";
+import type { CondensedMatchTimeline, CondensedTimelineEventDot } from "@/lib/types";
 
 interface MatchGoldTimelineChartProps {
   timeline: CondensedMatchTimeline;
+  participantChampionMap: Record<number, number>;
 }
 
-interface EventChartPoint extends CondensedTimelineEventPoint {
+interface EventChartPoint {
+  timestamp: number;
+  minuteStart: number;
+  teamId: 100 | 200;
+  eventCount: number;
+  events: Array<{
+    timestamp: number;
+    label: string;
+    teamId: 100 | 200;
+    eventType: "CHAMPION_KILL" | "ELITE_MONSTER_KILL" | "BUILDING_KILL";
+    killerId: number;
+    victimId: number;
+    monsterType?: string;
+    monsterSubType?: string;
+    buildingType?: string;
+    towerType?: string;
+  }>;
   y: number;
 }
 
@@ -38,18 +62,6 @@ interface GoldDiffTooltipProps {
 
 const CHART_SYNC_ID = "match-gold-timeline-sync";
 const SHARED_Y_AXIS_WIDTH = 30;
-
-const EVENT_ICON_LETTER: Record<CondensedTimelineEventIconKey, string> = {
-  kill: "K",
-  dragon: "D",
-  baron: "B",
-  herald: "H",
-  atakhan: "A",
-  horde: "G",
-  tower: "T",
-  inhibitor: "I",
-  objective: "O",
-};
 
 function formatTimeLabel(timestamp: number): string {
   const totalSeconds = Math.max(0, Math.floor(timestamp / 1000));
@@ -75,23 +87,194 @@ function EventDot({
 }) {
   if (typeof cx !== "number" || typeof cy !== "number" || !payload) return null;
 
-  const letter = EVENT_ICON_LETTER[payload.iconKey] ?? "O";
   const fill = eventColor(payload.teamId);
+  const radius = Math.min(12, 4 + payload.eventCount * 1.3);
 
   return (
     <g>
-      <circle cx={cx} cy={cy} r={9} fill={fill} opacity={0.9} />
-      <text
-        x={cx}
-        y={cy + 3}
-        textAnchor="middle"
-        fill="#ffffff"
-        fontSize={9}
-        fontWeight={700}
-      >
-        {letter}
-      </text>
+      <circle cx={cx} cy={cy} r={radius} fill={fill} opacity={0.85} />
     </g>
+  );
+}
+
+interface EventTooltipProps {
+  payload?: Array<{ payload?: EventChartPoint }>;
+  label?: number | string;
+  minuteDots: Map<number, EventChartPoint[]>;
+  t: (key: string) => string;
+  participantChampionMap: Record<number, number>;
+}
+
+function getMinuteStart(timestamp: number): number {
+  return Math.floor(timestamp / 60000) * 60000;
+}
+
+function EventTooltip({
+  payload,
+  label,
+  minuteDots,
+  t,
+  participantChampionMap,
+}: EventTooltipProps) {
+  console.log("payload", payload?.map(p => p.payload));
+  const payloadPoint = payload?.[0]?.payload;
+
+  const labelTs = typeof label === "number" ? label : Number(label);
+  const fallbackTs =
+    payloadPoint?.minuteStart ??
+    payloadPoint?.timestamp;
+  const referenceTs = Number.isFinite(labelTs) ? labelTs : fallbackTs;
+
+  if (referenceTs === undefined || !Number.isFinite(referenceTs)) return null;
+  const minuteStart = getMinuteStart(referenceTs);
+  const pointsForMinute = minuteDots.get(minuteStart) ?? [];
+
+  const blueEvents = pointsForMinute
+    .filter((minutePoint) => minutePoint.teamId === 100)
+    .flatMap((minutePoint) => minutePoint.events)
+    .sort((a, b) => a.timestamp - b.timestamp);
+
+  const redEvents = pointsForMinute
+    .filter((minutePoint) => minutePoint.teamId === 200)
+    .flatMap((minutePoint) => minutePoint.events)
+    .sort((a, b) => a.timestamp - b.timestamp);
+
+  const objectiveIconByTeam = (teamId: 100 | 200, event: EventChartPoint["events"][number]) => {
+    const isBlue = teamId === 100;
+    if (event.eventType === "ELITE_MONSTER_KILL") {
+      if (event.monsterType === "BARON_NASHOR") {
+        return isBlue ? baronWinUrl : baronLoseUrl;
+      }
+      return isBlue ? dragonWinUrl : dragonLoseUrl;
+    }
+    if (event.eventType === "BUILDING_KILL") {
+      return isBlue ? turretWinUrl : turretLoseUrl;
+    }
+    return isBlue ? dragonWinUrl : dragonLoseUrl;
+  };
+
+  const championIconByParticipant = (participantId: number) => {
+    const championId = participantChampionMap[participantId];
+    if (!championId) return null;
+    return `${CHAMPIONICONURL}${championId}.png`;
+  };
+
+  const EventRow = ({
+    event,
+    rowKey,
+  }: {
+    event: EventChartPoint["events"][number];
+    rowKey: string;
+  }) => {
+    const killerIcon = championIconByParticipant(event.killerId);
+    const targetIcon =
+      event.eventType === "CHAMPION_KILL"
+        ? championIconByParticipant(event.victimId)
+        : objectiveIconByTeam(event.teamId, event);
+
+    return (
+      <div
+        key={rowKey}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "6px",
+          marginBottom: "2px",
+        }}
+      >
+        <span style={{ minWidth: "36px", opacity: 0.8 }}>
+          {formatTimeLabel(event.timestamp)}
+        </span>
+        <span
+          style={{
+            width: "24px",
+            height: "24px",
+            borderRadius: "9999px",
+            border: "1px solid rgba(139, 115, 85, 0.7)",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
+          }}
+        >
+          {killerIcon ? (
+            <Image src={killerIcon} alt="Killer champion" width={22} height={22} />
+          ) : (
+            <span style={{ width: "22px", textAlign: "center" }}>?</span>
+          )}
+        </span>
+        <span>⚔️</span>
+        <span
+          style={{
+            width: "24px",
+            height: "24px",
+            borderRadius: "9999px",
+            border: "1px solid rgba(139, 115, 85, 0.7)",
+            display: "inline-flex",
+            alignItems: "center",
+            justifyContent: "center",
+            overflow: "hidden",
+          }}
+        >
+          {targetIcon ? (
+            <Image src={targetIcon} alt="Victim or objective" width={22} height={22} />
+          ) : (
+            <span style={{ width: "22px", textAlign: "center" }}>?</span>
+          )}
+        </span>
+      </div>
+    );
+  };
+
+  return (
+    <div
+      style={{
+        backgroundColor: chartTheme.tooltip.background,
+        border: `1px solid ${chartTheme.tooltip.border}`,
+        borderRadius: "8px",
+        padding: "8px 10px",
+        maxWidth: "320px",
+      }}
+    >
+      <p style={{ color: chartTheme.tooltip.text, fontWeight: 600 }}>
+        {formatTimeLabel(minuteStart)}
+      </p>
+      <div style={{ color: chartTheme.tooltip.text, fontSize: "12px", lineHeight: 1.35 }}>
+        <div style={{ marginBottom: "4px", color: "#3B82F6", fontWeight: 600 }}>
+          {t("team.blueTeam")}
+        </div>
+        {blueEvents.length > 0 ? (
+          blueEvents.map((event, index) => (
+            <EventRow
+              key={`blue-${event.timestamp}-${index}`}
+              event={event}
+              rowKey={`blue-${event.timestamp}-${index}`}
+            />
+          ))
+        ) : (
+          <div>-</div>
+        )}
+        <div style={{ margin: "6px 0 4px", color: "#EF4444", fontWeight: 600 }}>
+          {t("team.redTeam")}
+        </div>
+        {redEvents.length > 0 ? (
+          redEvents.map((event, index) => (
+            <EventRow
+              key={`red-${event.timestamp}-${index}`}
+              event={event}
+              rowKey={`red-${event.timestamp}-${index}`}
+            />
+          ))
+        ) : (
+          <div>-</div>
+        )}
+        {blueEvents.length === 0 && redEvents.length === 0 && (
+          <div style={{ marginTop: "6px", color: chartTheme.tooltip.label }}>
+            {t("common.noDataAvailable")}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }
 
@@ -131,7 +314,10 @@ function GoldDiffTooltip({
   );
 }
 
-export function MatchGoldTimelineChart({ timeline }: MatchGoldTimelineChartProps) {
+export function MatchGoldTimelineChart({
+  timeline,
+  participantChampionMap,
+}: MatchGoldTimelineChartProps) {
   const t = useTranslations();
   const formatNumber = useFormatNumber();
   const diffValues = timeline.points.map((point) => point.goldDiff);
@@ -161,10 +347,22 @@ export function MatchGoldTimelineChart({ timeline }: MatchGoldTimelineChartProps
     timeline.points[timeline.points.length - 1]?.timestamp ?? 0
   );
 
-  const eventData: EventChartPoint[] = timeline.events.map((event, index) => ({
-    ...event,
-    y: index % 2 === 0 ? 0.3 : 0.7,
-  }));
+  const eventData: EventChartPoint[] = (timeline.eventDots ?? []).map(
+    (dot: CondensedTimelineEventDot) => ({
+      ...dot,
+      y: dot.teamId === 100 ? 0.7 : 0.3,
+    })
+  );
+
+  const minuteDots = new Map<number, EventChartPoint[]>();
+  for (const point of eventData) {
+    const bucket = minuteDots.get(point.minuteStart);
+    if (bucket) {
+      bucket.push(point);
+    } else {
+      minuteDots.set(point.minuteStart, [point]);
+    }
+  }
 
   return (
     <div className="h-full border border-border rounded-lg p-4 bg-background/20 flex flex-col min-h-[520px] lg:min-h-0">
@@ -177,6 +375,7 @@ export function MatchGoldTimelineChart({ timeline }: MatchGoldTimelineChartProps
           <AreaChart
             data={timeline.points}
             syncId={CHART_SYNC_ID}
+            syncMethod="value"
             margin={{ top: 8, right: 12, left: 0, bottom: 0 }}
           >
             <defs>
@@ -242,8 +441,19 @@ export function MatchGoldTimelineChart({ timeline }: MatchGoldTimelineChartProps
         <ResponsiveContainer width="100%" height="100%">
           <ScatterChart
             syncId={CHART_SYNC_ID}
+            syncMethod="value"
             margin={{ top: 0, right: 12, left: 0, bottom: 0 }}
           >
+            <defs>
+              <linearGradient id="eventsRedHalf" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#EF4444" stopOpacity={0.2} />
+                <stop offset="100%" stopColor="#EF4444" stopOpacity={0.04} />
+              </linearGradient>
+              <linearGradient id="eventsBlueHalf" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stopColor="#3B82F6" stopOpacity={0.2} />
+                <stop offset="100%" stopColor="#3B82F6" stopOpacity={0.04} />
+              </linearGradient>
+            </defs>
             <CartesianGrid
               strokeDasharray="3 3"
               stroke={chartTheme.grid}
@@ -268,19 +478,32 @@ export function MatchGoldTimelineChart({ timeline }: MatchGoldTimelineChartProps
               axisLine={false}
               tickLine={false}
             />
+            <ReferenceArea
+              x1={0}
+              x2={xDomainEnd}
+              y1={0.5}
+              y2={1}
+              fill="url(#eventsBlueHalf)"
+              ifOverflow="extendDomain"
+              strokeOpacity={0}
+            />
+            <ReferenceArea
+              x1={0}
+              x2={xDomainEnd}
+              y1={0}
+              y2={0.5}
+              fill="url(#eventsRedHalf)"
+              ifOverflow="extendDomain"
+              strokeOpacity={0}
+            />
             <Tooltip
-              contentStyle={{
-                backgroundColor: chartTheme.tooltip.background,
-                border: `1px solid ${chartTheme.tooltip.border}`,
-                borderRadius: "8px",
-              }}
-              labelStyle={{ color: chartTheme.tooltip.text, fontWeight: 600 }}
-              itemStyle={{ color: chartTheme.tooltip.label }}
-              formatter={(_value, _name, item) => {
-                const payload = item.payload as EventChartPoint;
-                return [payload.label, payload.eventType];
-              }}
-              labelFormatter={(label) => formatTimeLabel(Number(label ?? 0))}
+              content={
+                <EventTooltip
+                  minuteDots={minuteDots}
+                  t={t}
+                  participantChampionMap={participantChampionMap}
+                />
+              }
             />
             <Scatter data={eventData} shape={<EventDot />} />
           </ScatterChart>
