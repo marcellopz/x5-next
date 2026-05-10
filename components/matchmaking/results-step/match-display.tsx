@@ -85,7 +85,7 @@ export function MatchDisplay({ matchResults }: MatchDisplayProps) {
   // Memoize the copy function to avoid recreating it on every render
   const copyToClipboard = useCallback(async () => {
     try {
-      const textToCopy = `${matchText}\n${window.location.href}`;
+      const textToCopy = `${matchText}\n\n${window.location.href}`;
       await navigator.clipboard.writeText(textToCopy);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
