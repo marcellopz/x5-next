@@ -621,7 +621,7 @@
     "needExactly10": "Need exactly 10 players (currently {{count}})",
     "processingCombinations": "Processing all possible combinations",
     "matchResults": "Match Results",
-    "regenerate": "Regenerate",
+    "regenerate": "Rebolar",
     "copy": "Copy",
     "copied": "Copied!",
     "noMatchesFound": "No matches found"
