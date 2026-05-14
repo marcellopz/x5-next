@@ -33,6 +33,7 @@ const KEY_PLAYER_COMBOS_ENABLED = "pc";
 const KEY_PLAYER_COMBOS = "co";
 const KEY_PLAYER_SEPARATIONS_ENABLED = "pa";
 const KEY_PLAYER_SEPARATIONS = "rv";
+const KEY_ROLE_VARIETY = "rv2";
 const KEY_WILDCARDS = "w";
 
 export const MATCHMAKING_QUERY_KEYS = [
@@ -49,6 +50,7 @@ export const MATCHMAKING_QUERY_KEYS = [
   KEY_PLAYER_COMBOS,
   KEY_PLAYER_SEPARATIONS_ENABLED,
   KEY_PLAYER_SEPARATIONS,
+  KEY_ROLE_VARIETY,
   KEY_WILDCARDS,
 ] as const;
 
@@ -106,6 +108,9 @@ function createInitialConfig(): MatchmakingConfig {
     playerSeparations: {
       enabled: initialMatchmakingConfig.playerSeparations.enabled,
       pairs: [],
+    },
+    roleVariety: {
+      enabled: initialMatchmakingConfig.roleVariety.enabled,
     },
   };
 }
@@ -232,6 +237,11 @@ export function encodeMatchmakingStateToQuery(input: EncodedStateInput): URLSear
     if (pairs.length > 0) {
       params.set(KEY_PLAYER_SEPARATIONS, pairs.join(";"));
     }
+  }
+
+  // Role variety is on by default; only persist when explicitly disabled.
+  if (!config.roleVariety.enabled) {
+    params.set(KEY_ROLE_VARIETY, "0");
   }
 
   return params;
@@ -393,6 +403,11 @@ export function decodeMatchmakingStateFromQuery(
         );
     }
   }
+
+  // Role variety: default true; only "0" disables it.
+  config.roleVariety = {
+    enabled: query.get(KEY_ROLE_VARIETY) !== "0",
+  };
 
   const rawStep = Number.parseInt(query.get(KEY_STEP) || "1", 10);
   const step: Step = rawStep >= 1 && rawStep <= 3 ? (rawStep as Step) : 1;

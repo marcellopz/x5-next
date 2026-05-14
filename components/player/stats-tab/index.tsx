@@ -20,7 +20,6 @@ export function PlayerStatsTab() {
     playerSummary,
     rankChanges,
     initialRanksForPlayer,
-    matches,
   } = usePlayerData();
 
   const sameTeam = useMemo(() => {
@@ -86,8 +85,6 @@ export function PlayerStatsTab() {
           <RankByRoleChart
             initialRanks={initialRanksForPlayer}
             rankChanges={rankChanges}
-            matches={matches}
-            summonerId={playerInfo?.summonerId}
           />
         </div>
       </div>

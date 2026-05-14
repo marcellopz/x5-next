@@ -15,6 +15,82 @@ interface MatchDisplayProps {
   matchResults: MatchmakingResult | null;
 }
 
+/**
+ * Pick N matches to display from the source set.
+ *
+ * When `varietyEnabled` is true, runs a greedy selection that minimizes how
+ * often each player ends up in the same role across the displayed set, while
+ * preserving randomness via the initial shuffle (so re-rolls produce different
+ * options). When disabled, returns a plain random shuffle of N matches.
+ */
+function pickDisplayedMatches(
+  source: MatchResult[],
+  n: number,
+  varietyEnabled: boolean
+): MatchResult[] {
+  if (source.length === 0 || n <= 0) return [];
+
+  const shuffled = [...source].sort(() => Math.random() - 0.5);
+  if (!varietyEnabled || shuffled.length <= n) {
+    return shuffled.slice(0, n);
+  }
+
+  // roleCount[accountId][roleIndex] -> number of times this player has been
+  // assigned to that role across already-picked matches.
+  const roleCount = new Map<number | string, number[]>();
+
+  function costOf(match: MatchResult): number {
+    let s = 0;
+    for (let i = 0; i < match.pairings.length; i++) {
+      const roleIdx = i % 5;
+      const counts = roleCount.get(match.pairings[i].account_id);
+      if (counts) s += counts[roleIdx];
+    }
+    return s;
+  }
+
+  function applyMatch(match: MatchResult) {
+    for (let i = 0; i < match.pairings.length; i++) {
+      const roleIdx = i % 5;
+      const playerId = match.pairings[i].account_id;
+      let counts = roleCount.get(playerId);
+      if (!counts) {
+        counts = [0, 0, 0, 0, 0];
+        roleCount.set(playerId, counts);
+      }
+      counts[roleIdx] += 1;
+    }
+  }
+
+  const selected: MatchResult[] = [];
+  const usedIndices = new Set<number>();
+
+  // Seed pick: first match from the shuffled order keeps the result random.
+  selected.push(shuffled[0]);
+  usedIndices.add(0);
+  applyMatch(shuffled[0]);
+
+  while (selected.length < n) {
+    let bestIdx = -1;
+    let bestCost = Infinity;
+    for (let i = 0; i < shuffled.length; i++) {
+      if (usedIndices.has(i)) continue;
+      const c = costOf(shuffled[i]);
+      // Strictly less-than keeps ties broken by shuffle order (i.e., random).
+      if (c < bestCost) {
+        bestCost = c;
+        bestIdx = i;
+      }
+    }
+    if (bestIdx === -1) break;
+    selected.push(shuffled[bestIdx]);
+    usedIndices.add(bestIdx);
+    applyMatch(shuffled[bestIdx]);
+  }
+
+  return selected;
+}
+
 export function MatchDisplay({ matchResults }: MatchDisplayProps) {
   const t = useTranslations();
   const [copied, setCopied] = useState(false);
@@ -34,22 +110,30 @@ export function MatchDisplay({ matchResults }: MatchDisplayProps) {
   // Initialize matches when sourceMatches or config changes
   useEffect(() => {
     if (sourceMatches.length > 0) {
-      // Shuffle and select N matches
-      const shuffled = [...sourceMatches].sort(() => Math.random() - 0.5);
-      setMatches(shuffled.slice(0, config.matchOptions));
+      setMatches(
+        pickDisplayedMatches(
+          sourceMatches,
+          config.matchOptions,
+          config.roleVariety.enabled
+        )
+      );
     } else {
       setMatches([]);
     }
-  }, [sourceMatches, config.matchOptions]);
+  }, [sourceMatches, config.matchOptions, config.roleVariety.enabled]);
 
   // Regenerate/reshuffle the displayed matches
   const handleRegenerate = useCallback(() => {
     if (sourceMatches.length > 0) {
-      // Shuffle and select N matches
-      const shuffled = [...sourceMatches].sort(() => Math.random() - 0.5);
-      setMatches(shuffled.slice(0, config.matchOptions));
+      setMatches(
+        pickDisplayedMatches(
+          sourceMatches,
+          config.matchOptions,
+          config.roleVariety.enabled
+        )
+      );
     }
-  }, [sourceMatches, config.matchOptions]);
+  }, [sourceMatches, config.matchOptions, config.roleVariety.enabled]);
 
   // Memoize the formatted match text since it's expensive to compute
   const matchText = useMemo(() => {

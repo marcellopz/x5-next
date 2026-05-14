@@ -165,19 +165,31 @@ function SusceptibilityList({
   players,
   getPlayerName,
   t,
+  highlight,
+  highlightTone,
 }: {
   players: SusceptiblePlayer[];
   getPlayerName: (nameId: string) => string;
   t: (key: string) => string;
+  highlight?: boolean;
+  highlightTone?: "progression" | "regression";
 }) {
   if (players.length === 0) return null;
+
+  const highlightedCardClass =
+    highlightTone === "regression"
+      ? "border-red-500/60 bg-red-500/15"
+      : "border-green-500/60 bg-green-500/15";
 
   return (
     <div className="flex flex-wrap gap-2">
       {players.map((player) => (
         <div
           key={`${player.nameId}-${player.level}-${player.wins}-${player.loses}`}
-          className="w-fit max-w-full rounded-lg border border-border px-3 py-2"
+          className={cn(
+            "w-fit max-w-full rounded-lg border border-border px-3 py-2 transition-colors",
+            highlight && highlightedCardClass
+          )}
         >
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1 text-sm">
             <Link
@@ -209,6 +221,7 @@ function SusceptibilityCategory({
   getPlayerName,
   t,
   titleClassName,
+  guaranteedTone,
 }: {
   title: string;
   reviewPlayers: SusceptiblePlayer[];
@@ -216,6 +229,7 @@ function SusceptibilityCategory({
   getPlayerName: (nameId: string) => string;
   t: (key: string) => string;
   titleClassName: string;
+  guaranteedTone: "progression" | "regression";
 }) {
   const hasCandidates = reviewPlayers.length > 0 || guaranteedPlayers.length > 0;
   if (!hasCandidates) return null;
@@ -245,6 +259,8 @@ function SusceptibilityCategory({
               players={guaranteedPlayers}
               getPlayerName={getPlayerName}
               t={t}
+              highlight
+              highlightTone={guaranteedTone}
             />
           </div>
         )}
@@ -343,6 +359,7 @@ export function RankAnalysis({ data, playerList }: RankAnalysisProps) {
                       getPlayerName={getPlayerName}
                       t={t}
                       titleClassName="text-green-500"
+                      guaranteedTone="progression"
                     />
                   )}
 
@@ -355,6 +372,7 @@ export function RankAnalysis({ data, playerList }: RankAnalysisProps) {
                         getPlayerName={getPlayerName}
                         t={t}
                         titleClassName="text-red-500"
+                        guaranteedTone="regression"
                       />
                     </div>
                   )}

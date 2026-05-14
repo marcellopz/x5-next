@@ -55,6 +55,10 @@ export interface PlayerSeparationsConfig {
   pairs: PlayerSeparationPair[];
 }
 
+export interface RoleVarietyConfig {
+  enabled: boolean;
+}
+
 export interface MatchmakingConfig {
   matchOptions: number;
   tolerance: number;
@@ -62,6 +66,7 @@ export interface MatchmakingConfig {
   avoidRoles: AvoidRolesConfig;
   playerCombos: PlayerCombosConfig;
   playerSeparations: PlayerSeparationsConfig;
+  roleVariety: RoleVarietyConfig;
 }
 
 interface MatchmakingContextType {
@@ -126,6 +131,9 @@ export const initialMatchmakingConfig: MatchmakingConfig = {
   playerSeparations: {
     enabled: false,
     pairs: [],
+  },
+  roleVariety: {
+    enabled: true,
   },
 };
 

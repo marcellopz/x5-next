@@ -94,6 +94,19 @@ export function AlgoConfigStep({ onPrevious, onNext }: AlgoConfigStepProps) {
           <CardDescription>{t("matchmaking.advancedOptionsDescription")}</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
+          {/* Maximize Role Variety */}
+          <Checkbox
+            id="roleVariety"
+            checked={config.roleVariety.enabled}
+            onChange={(e) =>
+              setConfig((prev) => ({
+                ...prev,
+                roleVariety: { enabled: e.target.checked },
+              }))
+            }
+            label={t("matchmaking.maximizeRoleVariety")}
+          />
+
           {/* Use Pre-set Lanes */}
           <div className="space-y-2">
             <div className="flex items-center space-x-2">

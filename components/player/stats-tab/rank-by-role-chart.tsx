@@ -7,17 +7,13 @@ import {
   Legend,
   Line,
   ResponsiveContainer,
-  Scatter,
   XAxis,
   YAxis,
-  ZAxis,
 } from "recharts";
 import { chartTheme } from "@/components/home/activity-section/chart-theme";
-import { buildGameScatterByRole } from "@/lib/build-game-scatter-by-role";
 import { buildPlayerRankHistorySeries } from "@/lib/build-player-rank-history-series";
 import type {
   InitialRankPlayer,
-  MatchWithId,
   PlayerRankChanges,
   Role,
 } from "@/lib/types";
@@ -41,18 +37,35 @@ const ROLE_LABEL_KEYS: Record<Role, string> = {
   support: "roles.support",
 };
 
+// Distinct dash patterns so coinciding step lines still read as separate
+// traces. Recharts' default Legend previews each pattern automatically.
+const ROLE_DASH: Record<Role, string | undefined> = {
+  top: undefined,
+  jungle: "6 3",
+  mid: "2 3",
+  adc: "8 3 2 3",
+  support: "1 3",
+};
+
+// Small role offsets to keep overlapping lines visually distinct while still
+// preserving overall rank evolution readability.
+const baseYOffset = 0.16;
+const ROLE_Y_OFFSET: Record<Role, number> = {
+  top: -baseYOffset,
+  jungle: -baseYOffset / 2,
+  mid: 0,
+  adc: baseYOffset / 2,
+  support: baseYOffset,
+};
+
 interface RankByRoleChartProps {
   initialRanks: InitialRankPlayer | null;
   rankChanges: PlayerRankChanges | null;
-  matches: MatchWithId[];
-  summonerId: string | number | undefined;
 }
 
 export function RankByRoleChart({
   initialRanks,
   rankChanges,
-  matches,
-  summonerId,
 }: RankByRoleChartProps) {
   const t = useTranslations();
   const formatDate = useFormatDate();
@@ -62,24 +75,18 @@ export function RankByRoleChart({
     [initialRanks, rankChanges]
   );
 
-  const scatterByRole = useMemo(
+  const dataWithRoleOffsets = useMemo(
     () =>
-      buildGameScatterByRole(
-        initialRanks,
-        rankChanges,
-        matches,
-        summonerId
-      ),
-    [initialRanks, rankChanges, matches, summonerId]
+      data.map((row) => ({
+        ...row,
+        top: row.top + ROLE_Y_OFFSET.top,
+        jungle: row.jungle + ROLE_Y_OFFSET.jungle,
+        mid: row.mid + ROLE_Y_OFFSET.mid,
+        adc: row.adc + ROLE_Y_OFFSET.adc,
+        support: row.support + ROLE_Y_OFFSET.support,
+      })),
+    [data]
   );
-
-  const maxGameCount = useMemo(() => {
-    const counts = ROLES.flatMap((r) =>
-      scatterByRole[r].map((p) => p.count)
-    );
-    const m = counts.length > 0 ? Math.max(...counts) : 1;
-    return Math.max(m, 2);
-  }, [scatterByRole]);
 
   if (data.length === 0) {
     return (
@@ -96,29 +103,29 @@ export function RankByRoleChart({
     );
   }
 
-  const ranks = data.flatMap((row) => ROLES.map((role) => row[role]));
-  const scatterY = ROLES.flatMap((r) => scatterByRole[r].map((p) => p.y));
-  const allY = [...ranks, ...scatterY];
+  const allY = dataWithRoleOffsets.flatMap((row) =>
+    ROLES.map((role) => row[role])
+  );
   const minR = Math.min(...allY);
   const maxR = Math.max(...allY);
-  const pad = Math.max(1, Math.round((maxR - minR) * 0.08));
+  const pad = 0.3;
   const yDomain = [Math.max(0, minR - pad), maxR + pad] as [number, number];
+  const tickStart = Math.ceil(yDomain[0]);
+  const tickEnd = Math.ceil(yDomain[1]);
+  const yTicks = Array.from(
+    { length: Math.max(1, tickEnd - tickStart + 2) },
+    (_, i) => tickStart + i
+  );
 
   return (
     <div className="bg-background/30 border border-border rounded-lg h-[440px] w-full p-4 flex flex-col">
-      <h3 className="text-sm font-semibold text-foreground mb-1">
+      <h3 className="text-sm font-semibold text-foreground mb-2">
         {t("playerStatsTab.rankByRoleTitle")}
       </h3>
-      <p className="text-xs text-muted-foreground mb-2">
-        {t("playerStatsTab.rankByRoleDescription")}
-      </p>
-      <p className="text-xs text-muted-foreground/80 mb-2">
-        {t("playerStatsTab.rankByRoleGameDots")}
-      </p>
       <div className="flex-1 min-h-0 w-full">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart
-            data={data}
+            data={dataWithRoleOffsets}
             margin={{ top: 8, right: 40, left: 4, bottom: 8 }}
           >
             <CartesianGrid
@@ -142,16 +149,12 @@ export function RankByRoleChart({
             <YAxis
               domain={yDomain}
               allowDecimals={false}
+              ticks={yTicks}
+              interval={0}
               tick={{ fill: chartTheme.text, fontSize: 12 }}
               tickLine={{ stroke: chartTheme.axis }}
               axisLine={{ stroke: chartTheme.axis }}
               width={36}
-            />
-            <ZAxis
-              dataKey="count"
-              type="number"
-              domain={[1, maxGameCount]}
-              range={[160, 900]}
             />
             <Legend
               wrapperStyle={{
@@ -169,25 +172,10 @@ export function RankByRoleChart({
                 name={role}
                 stroke={ROLE_COLORS[role]}
                 strokeWidth={2}
+                strokeDasharray={ROLE_DASH[role]}
                 dot={false}
                 activeDot={false}
                 connectNulls={false}
-                isAnimationActive={false}
-              />
-            ))}
-            {ROLES.map((role) => (
-              <Scatter
-                key={`${role}-games`}
-                data={scatterByRole[role]}
-                dataKey="y"
-                name={role}
-                zIndex={650}
-                fill={ROLE_COLORS[role]}
-                fillOpacity={0.88}
-                stroke={ROLE_COLORS[role]}
-                strokeWidth={1}
-                strokeOpacity={0.9}
-                legendType="none"
                 isAnimationActive={false}
               />
             ))}
