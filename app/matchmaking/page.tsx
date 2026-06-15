@@ -1,7 +1,8 @@
 import { getPlayerList } from "@/lib/endpoints";
 import FormContainer from "@/components/matchmaking/form-container";
-import { generatePageMetadata } from "@/lib/metadata";
+import { getSeasonName, getSeasonPrefix } from "@/lib/metadata";
 import { getLocale, getTranslations, t } from "@/lib/i18n";
+import type { Metadata } from "next";
 
 type MatchmakingPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
@@ -48,10 +49,14 @@ function extractActiveFilters(
   return filters;
 }
 
-export async function generateMetadata({ searchParams }: MatchmakingPageProps) {
+export async function generateMetadata({
+  searchParams,
+}: MatchmakingPageProps): Promise<Metadata> {
   const query = await searchParams;
   const locale = await getLocale();
   const trans = getTranslations(locale);
+  const seasonName = getSeasonName();
+  const seasonPrefix = getSeasonPrefix();
 
   const selectedPlayers = extractSelectedPlayers(getFirstParam(query.p));
   const activeFilters = extractActiveFilters(query);
@@ -65,21 +70,21 @@ export async function generateMetadata({ searchParams }: MatchmakingPageProps) {
       ? `Filters: ${activeFilters.join(", ")}`
       : "Filters: default";
 
-  const pageTitle = `${t(trans, "pages.matchmaking")} (${selectedPlayers.length}/10)`;
-  const embedDescription = `${playersSummary}. ${filtersSummary}.`;
-  const metadata = generatePageMetadata(pageTitle, embedDescription);
+  const pageTitle = `${seasonPrefix} - ${t(trans, "pages.matchmaking")} (${selectedPlayers.length}/10)`;
+  const embedDescription = [`x5 ${seasonName}`, playersSummary, filtersSummary].join("\n");
 
   return {
-    ...metadata,
+    title: pageTitle,
+    description: embedDescription,
     openGraph: {
-      title: metadata.title,
-      description: metadata.description,
+      title: pageTitle,
+      description: embedDescription,
       type: "website",
     },
     twitter: {
       card: "summary",
-      title: metadata.title,
-      description: metadata.description,
+      title: pageTitle,
+      description: embedDescription,
     },
   };
 }
