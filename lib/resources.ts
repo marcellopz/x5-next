@@ -174,6 +174,7 @@ export const championIds = {
   799: "Ambessa",
   800: "Mel",
   804: "Yunara",
+  805: "Locke",
   875: "Sett",
   876: "Lillia",
   887: "Gwen",
@@ -197,10 +198,7 @@ const championSplashNameIds: Record<number, string> = Object.fromEntries(
     const numericId = Number(id);
     const overriddenNameId = championSplashNameIdOverrides[numericId];
     const normalizedNameId =
-      overriddenNameId ??
-      championName
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g, "");
+      overriddenNameId ?? championName.toLowerCase().replace(/[^a-z0-9]/g, "");
 
     return [numericId, normalizedNameId];
   }),
