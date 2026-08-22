@@ -322,7 +322,7 @@
   },
   "admin": {
     "configError": "Erro de Configuração",
-    "invalidConfig": "Configuração inválida. NEXT_PUBLIC_PROJECT_ID deve ser \"x5-season-3\". Valor atual:",
+    "invalidConfig": "Configuração inválida. NEXT_PUBLIC_PROJECT_ID deve ser \"x5-season-3\" ou \"x5andrey-47bb7\". Valor atual:",
     "notSet": "não definido",
     "dashboard": "Painel Admin",
     "logout": "Sair",

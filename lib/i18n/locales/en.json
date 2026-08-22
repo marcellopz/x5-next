@@ -332,7 +332,7 @@
   },
   "admin": {
     "configError": "Configuration Error",
-    "invalidConfig": "Invalid project configuration. NEXT_PUBLIC_PROJECT_ID must be set to \"x5-season-3\". Current value:",
+    "invalidConfig": "Invalid project configuration. NEXT_PUBLIC_PROJECT_ID must be set to \"x5-season-3\" or \"x5andrey-47bb7\". Current value:",
     "notSet": "not set",
     "dashboard": "Admin Dashboard",
     "logout": "Logout",

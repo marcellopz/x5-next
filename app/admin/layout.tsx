@@ -6,8 +6,9 @@ export default async function AdminLayout({
   children: React.ReactNode;
 }) {
   const projectId = process.env.NEXT_PUBLIC_PROJECT_ID;
+  const allowedProjectIds = ["x5-season-3", "x5andrey-47bb7"];
 
-  if (projectId !== "x5-season-3") {
+  if (!projectId || !allowedProjectIds.includes(projectId)) {
     const locale = await getLocale();
     const trans = getTranslations(locale);
     return (
