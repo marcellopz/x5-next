@@ -1,6 +1,6 @@
 import { getPlayerList } from "@/lib/endpoints";
 import FormContainer from "@/components/matchmaking/form-container";
-import { getSeasonName, getSeasonPrefix } from "@/lib/metadata";
+import { BRAND_NAME } from "@/lib/metadata";
 import { getLocale, getTranslations, t } from "@/lib/i18n";
 import {
   buildMatchCountsSummary,
@@ -20,9 +20,6 @@ export async function generateMetadata({
   const query = await searchParams;
   const locale = await getLocale();
   const trans = getTranslations(locale);
-  const seasonName = getSeasonName();
-  const seasonPrefix = getSeasonPrefix();
-
   const selectedPlayers = extractSelectedPlayersFromQuery(query);
   const activeFilters = extractFormattedFiltersFromQuery(query);
   const config = buildMatchmakingConfigFromQuery(query);
@@ -42,9 +39,9 @@ export async function generateMetadata({
   const filtersSummary =
     activeFilters.length > 0 ? activeFilters.join("\n") : "Filters: default";
 
-  const pageTitle = `${seasonPrefix} - ${t(trans, "pages.matchmaking")} (${selectedPlayers.length}/10)`;
+  const pageTitle = `${BRAND_NAME} - ${t(trans, "pages.matchmaking")} (${selectedPlayers.length}/10)`;
   const embedDescription = [
-    `x5 ${seasonName}`,
+    BRAND_NAME,
     playersSummary,
     filtersSummary,
     matchesCountSummary,

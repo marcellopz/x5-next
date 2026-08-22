@@ -8,7 +8,6 @@ import { ChevronDown } from "lucide-react";
 import { BrandLogo } from "./brand-logo";
 import { LanguageToggle } from "./language-toggle";
 import { cn } from "@/lib/utils";
-import { SeasonSelector } from "./season-selector";
 import { useTranslations } from "@/lib/i18n/locale-context";
 import { statRoutes } from "@/app/stats/stat-routes";
 
@@ -173,7 +172,6 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
         <div className="flex items-center justify-between h-14 px-4 border-b border-border">
           <div className="flex items-center gap-2">
             <BrandLogo />
-            <SeasonSelector />
           </div>
           <button
             onClick={onClose}

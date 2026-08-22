@@ -7,8 +7,8 @@ export function BrandLogo() {
     <Link href="/" className="flex items-center gap-2">
       <div className="size-8 rounded-md overflow-hidden ring-1 ring-border">
         <Image
-          src="/grilha_icon.png"
-          alt="x5 Logo"
+          src="/andrey_icon.png"
+          alt="x5 de Graves"
           width={32}
           height={32}
           className="w-full h-full object-cover"
@@ -16,7 +16,7 @@ export function BrandLogo() {
           priority
         />
       </div>
-      <div className="text-sm font-semibold tracking-tight">x5</div>
+      <div className="text-sm font-semibold tracking-tight">x5 de Graves</div>
       {/* <Badge variant="secondary">2.0</Badge> */}
     </Link>
   );

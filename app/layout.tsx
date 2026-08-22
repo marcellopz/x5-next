@@ -3,7 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/ui/footer";
 import { Navbar } from "@/components/ui/navbar";
-import { getSeasonPrefix } from "@/lib/metadata";
 import { getLocale, getTranslations, t } from "@/lib/i18n";
 import { LocaleProvider } from "@/lib/i18n/locale-context";
 import { Analytics } from "@vercel/analytics/next";
@@ -21,9 +20,8 @@ const geistMono = Geist_Mono({
 export async function generateMetadata(): Promise<Metadata> {
   const locale = await getLocale();
   const trans = getTranslations(locale);
-  const prefix = getSeasonPrefix();
   return {
-    title: prefix === "x5s3" ? t(trans, "layout.titleSeason3") : t(trans, "layout.titleSeason2"),
+    title: t(trans, "layout.title"),
     description: t(trans, "layout.description"),
   };
 }

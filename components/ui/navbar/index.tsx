@@ -3,7 +3,6 @@ import { NavigationMenu } from "./navigation-menu";
 import { LanguageToggle } from "./language-toggle";
 import { MobileMenuButton } from "./mobile-menu";
 import CreateMatchButton from "./create-match-button";
-import { SeasonSelector } from "./season-selector";
 
 export function Navbar() {
   return (
@@ -11,7 +10,6 @@ export function Navbar() {
       <div className="container mx-auto flex h-14 w-full items-center gap-4 px-4">
         <div className="flex items-center gap-1.5">
           <BrandLogo />
-          <SeasonSelector />
         </div>
         <NavigationMenu />
         <CreateMatchButton />

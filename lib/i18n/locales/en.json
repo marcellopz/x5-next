@@ -7,13 +7,13 @@
     "createMatch": "Create Match"
   },
   "footer": {
-    "brand": "x5 dos nerds",
+    "brand": "x5 de Graves",
     "tagline": "Built as a hobby project, for a group of friends. If you're interested, contact through Discord or email.",
     "contact": "Contact",
     "explore": "Explore",
     "discord": "Discord",
     "email": "Email",
-    "copyright": "x5 dos nerds",
+    "copyright": "x5 de Graves",
     "builtFor": "Fan project. Not affiliated with Riot Games."
   },
   "playerTabs": {
@@ -259,8 +259,7 @@
     "loadingMatch": "Loading match data..."
   },
   "layout": {
-    "titleSeason3": "x5 season 3",
-    "titleSeason2": "x5 season 2",
+    "title": "x5 de Graves",
     "description": "Custom league of legends analytics dashboard"
   },
   "matchPage": {
@@ -330,15 +329,6 @@
     "previousItem": "Previous item",
     "nextItem": "Next item",
     "showLess": "Show Less"
-  },
-  "season": {
-    "season1": "season 1",
-    "season2": "season 2",
-    "season2Legacy": "season 2 legacy",
-    "season3": "season 3",
-    "season3Legacy": "season 3 legacy",
-    "s2": "s2",
-    "s3": "s3"
   },
   "admin": {
     "configError": "Configuration Error",
@@ -507,7 +497,7 @@
     "evenGold": "Even gold"
   },
   "home": {
-    "title": "x5 dos nerds",
+    "title": "x5 de Graves",
     "description": "Custom league of legends analytics dashboard",
     "playerLeaderboard": "Player Leaderboard",
     "highestWinRate": "Highest Win Rate",

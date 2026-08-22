@@ -7,13 +7,13 @@
     "createMatch": "Criar Partida"
   },
   "footer": {
-    "brand": "x5 dos nerds",
+    "brand": "x5 de Graves",
     "tagline": "Feito como projeto de hobby, para um grupo de amigos. Se tiver interesse, entre em contato pelo Discord ou por email.",
     "contact": "Contato",
     "explore": "Explorar",
     "discord": "Discord",
     "email": "Email",
-    "copyright": "x5 dos nerds",
+    "copyright": "x5 de Graves",
     "builtFor": "Projeto de fãs. Sem afiliação com a Riot Games."
   },
   "playerTabs": {
@@ -259,8 +259,7 @@
     "loadingMatch": "Carregando dados da partida..."
   },
   "layout": {
-    "titleSeason3": "x5 season 3",
-    "titleSeason2": "x5 season 2",
+    "title": "x5 de Graves",
     "description": "Dashboard de analytics personalizado de League of Legends"
   },
   "matchPage": {
@@ -320,15 +319,6 @@
     "previousItem": "Item anterior",
     "nextItem": "Próximo item",
     "showLess": "Mostrar menos"
-  },
-  "season": {
-    "season1": "season 1",
-    "season2": "season 2",
-    "season2Legacy": "season 2 legacy",
-    "season3": "season 3",
-    "season3Legacy": "season 3 legacy",
-    "s2": "s2",
-    "s3": "s3"
   },
   "admin": {
     "configError": "Erro de Configuração",
@@ -507,7 +497,7 @@
     "matchmakingDescription": "Crie times equilibrados com algoritmos avançados"
   },
   "home": {
-    "title": "x5 dos nerds",
+    "title": "x5 de Graves",
     "description": "Dashboard de analytics personalizado de League of Legends",
     "playerLeaderboard": "Ranking de Jogadores",
     "highestWinRate": "Maior Taxa de Vitória",
