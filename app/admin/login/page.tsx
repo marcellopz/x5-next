@@ -3,6 +3,7 @@
 import { useState, useTransition } from "react";
 import { useTranslations } from "@/lib/i18n/locale-context";
 import { loginAction } from "../actions";
+import { useAdminEnabled } from "../admin-enabled-context";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +17,7 @@ import {
 
 export default function AdminLoginPage() {
   const t = useTranslations();
+  const adminEnabled = useAdminEnabled();
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [isPending, startTransition] = useTransition();
@@ -56,7 +58,7 @@ export default function AdminLoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder={t("admin.passwordPlaceholder")}
-                disabled={isPending}
+                disabled={!adminEnabled || isPending}
               />
             </div>
 
@@ -66,7 +68,7 @@ export default function AdminLoginPage() {
               </div>
             )}
 
-            <Button type="submit" disabled={isPending} className="w-full">
+            <Button type="submit" disabled={!adminEnabled || isPending} className="w-full">
               {isPending ? t("admin.loggingIn") : t("admin.loginButton")}
             </Button>
           </form>

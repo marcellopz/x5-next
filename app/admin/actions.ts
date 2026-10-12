@@ -6,6 +6,7 @@ import {
   setAdminSession,
   clearAdminSession,
   isAdminAuthenticated,
+  isAdminEnabled,
 } from "@/lib/admin-auth";
 import { db } from "@/lib/firebase-admin";
 import type { Player, PlayerList, RankChangeEntry } from "@/lib/types";
@@ -15,6 +16,10 @@ import { revalidateAllPublicData } from "@/lib/revalidate";
  * Server action to handle admin login
  */
 export async function loginAction(formData: FormData) {
+  if (!isAdminEnabled()) {
+    return { error: "Admin is disabled" };
+  }
+
   const password = formData.get("password") as string;
 
   if (!password) {

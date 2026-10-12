@@ -15,9 +15,11 @@ import { AddPlayerDialog } from "@/components/admin/dialogs/add-player-dialog";
 import { EditPlayerDialog } from "@/components/admin/dialogs/edit-player-dialog";
 import { BatchRoleEditDialog } from "@/components/admin/dialogs/batch-role-edit-dialog";
 import { ViewMatchesDialog } from "@/components/admin/dialogs/view-matches-dialog";
+import { useAdminEnabled } from "./admin-enabled-context";
 
 export default function AdminDashboard() {
   const t = useTranslations();
+  const adminEnabled = useAdminEnabled();
   const [addPlayerOpen, setAddPlayerOpen] = useState(false);
   const [editPlayerOpen, setEditPlayerOpen] = useState(false);
   const [batchRoleEditOpen, setBatchRoleEditOpen] = useState(false);
@@ -76,6 +78,7 @@ export default function AdminDashboard() {
               onClick={() => setAddPlayerOpen(true)}
               className="w-full"
               variant="default"
+              disabled={!adminEnabled}
             >
               {t("admin.addPlayer")}
             </Button>
@@ -83,6 +86,7 @@ export default function AdminDashboard() {
               onClick={() => setEditPlayerOpen(true)}
               className="w-full"
               variant="outline"
+              disabled={!adminEnabled}
             >
               {t("admin.editPlayer")}
             </Button>
@@ -90,6 +94,7 @@ export default function AdminDashboard() {
               onClick={() => setBatchRoleEditOpen(true)}
               className="w-full"
               variant="outline"
+              disabled={!adminEnabled}
             >
               {t("admin.batchRoleEdit")}
             </Button>
@@ -106,6 +111,7 @@ export default function AdminDashboard() {
               onClick={() => setViewMatchesOpen(true)}
               className="w-full"
               variant="default"
+              disabled={!adminEnabled}
             >
               {t("admin.viewMatches")}
             </Button>
@@ -122,7 +128,7 @@ export default function AdminDashboard() {
               onClick={handleRevalidate}
               className="w-full"
               variant="outline"
-              disabled={isRevalidating}
+              disabled={!adminEnabled || isRevalidating}
             >
               {isRevalidating ? t("admin.revalidating") : t("admin.revalidateAllPaths")}
             </Button>

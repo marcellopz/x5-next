@@ -23,7 +23,12 @@ export async function generateMetadata(): Promise<Metadata> {
   const trans = getTranslations(locale);
   const prefix = getSeasonPrefix();
   return {
-    title: prefix === "x5s3" ? t(trans, "layout.titleSeason3") : t(trans, "layout.titleSeason2"),
+    title:
+      prefix === "x5s4"
+        ? t(trans, "layout.titleSeason4")
+        : prefix === "x5s3"
+          ? t(trans, "layout.titleSeason3")
+          : t(trans, "layout.titleSeason2"),
     description: t(trans, "layout.description"),
   };
 }

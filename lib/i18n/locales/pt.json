@@ -259,6 +259,7 @@
     "loadingMatch": "Carregando dados da partida..."
   },
   "layout": {
+    "titleSeason4": "x5 season 4",
     "titleSeason3": "x5 season 3",
     "titleSeason2": "x5 season 2",
     "description": "Dashboard de analytics personalizado de League of Legends"
@@ -327,12 +328,15 @@
     "season2Legacy": "season 2 legacy",
     "season3": "season 3",
     "season3Legacy": "season 3 legacy",
+    "season4": "season 4",
     "s2": "s2",
-    "s3": "s3"
+    "s3": "s3",
+    "s4": "s4"
   },
   "admin": {
     "configError": "Erro de Configuração",
     "invalidConfig": "Configuração inválida. NEXT_PUBLIC_PROJECT_ID deve ser \"x5-season-3\". Valor atual:",
+    "disabled": "O admin está desativado. Defina ADMIN_ENABLED=true para ativá-lo.",
     "notSet": "não definido",
     "dashboard": "Painel Admin",
     "logout": "Sair",

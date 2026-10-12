@@ -3,6 +3,11 @@ import { cookies } from "next/headers";
 const ADMIN_SESSION_COOKIE = "admin_session";
 const ADMIN_SESSION_VALUE = "authenticated";
 
+export function isAdminEnabled(): boolean {
+  const value = process.env.ADMIN_ENABLED?.trim().toLowerCase();
+  return value === "true" || value === "1";
+}
+
 /**
  * Verify if the provided password matches the admin password
  */

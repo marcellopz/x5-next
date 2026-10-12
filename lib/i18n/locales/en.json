@@ -259,6 +259,7 @@
     "loadingMatch": "Loading match data..."
   },
   "layout": {
+    "titleSeason4": "x5 season 4",
     "titleSeason3": "x5 season 3",
     "titleSeason2": "x5 season 2",
     "description": "Custom league of legends analytics dashboard"
@@ -337,12 +338,15 @@
     "season2Legacy": "season 2 legacy",
     "season3": "season 3",
     "season3Legacy": "season 3 legacy",
+    "season4": "season 4",
     "s2": "s2",
-    "s3": "s3"
+    "s3": "s3",
+    "s4": "s4"
   },
   "admin": {
     "configError": "Configuration Error",
     "invalidConfig": "Invalid project configuration. NEXT_PUBLIC_PROJECT_ID must be set to \"x5-season-3\". Current value:",
+    "disabled": "Admin is disabled. Set ADMIN_ENABLED=true to enable it.",
     "notSet": "not set",
     "dashboard": "Admin Dashboard",
     "logout": "Logout",

@@ -18,16 +18,22 @@ const SEASON_OPTIONS: SeasonOption[] = [
   { nameKey: "season.season2Legacy", url: "https://x5-season-2-legacy.vercel.app" },
   { nameKey: "season.season3", url: "https://x5-season-3.vercel.app" },
   { nameKey: "season.season3Legacy", url: "https://x5-season-3-legacy.vercel.app" },
+  { nameKey: "season.season4", url: "https://x5-season-4.vercel.app" },
 ];
 
 function isMainSeason(nameKey: string) {
-  return nameKey === "season.season2" || nameKey === "season.season3";
+  return (
+    nameKey === "season.season2" ||
+    nameKey === "season.season3" ||
+    nameKey === "season.season4"
+  );
 }
 
-function getCurrentSeasonKey(): "s3" | "s2" {
+function getCurrentSeasonKey(): "s4" | "s3" | "s2" {
   const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || "";
   if (projectId.includes("season-2") || projectId.includes("s2")) return "s2";
-  return "s3";
+  if (projectId.includes("season-3") || projectId.includes("s3")) return "s3";
+  return "s4";
 }
 
 export function SeasonSelector() {
@@ -38,8 +44,18 @@ export function SeasonSelector() {
   const searchParams = useSearchParams();
   const seasonKey = getCurrentSeasonKey();
   const currentSeason = {
-    full: seasonKey === "s3" ? t("season.season3") : t("season.season2"),
-    short: seasonKey === "s3" ? t("season.s3") : t("season.s2"),
+    full:
+      seasonKey === "s4"
+        ? t("season.season4")
+        : seasonKey === "s3"
+          ? t("season.season3")
+          : t("season.season2"),
+    short:
+      seasonKey === "s4"
+        ? t("season.s4")
+        : seasonKey === "s3"
+          ? t("season.s3")
+          : t("season.s2"),
   };
 
   // Close dropdown when clicking outside
@@ -93,12 +109,19 @@ export function SeasonSelector() {
           <div className="py-1">
             {allSeasons.map((season) => {
               const isCurrent =
+                (seasonKey === "s4" && season.nameKey === "season.season4") ||
                 (seasonKey === "s3" && season.nameKey === "season.season3") ||
                 (seasonKey === "s2" && season.nameKey === "season.season2");
+              const currentMainSeasonKey =
+                seasonKey === "s4"
+                  ? "season.season4"
+                  : seasonKey === "s3"
+                    ? "season.season3"
+                    : "season.season2";
               const shouldKeepRoute =
-                isMainSeason(season.nameKey) && isMainSeason(`season.${seasonKey === "s3" ? "season3" : "season2"}`);
+                isMainSeason(season.nameKey) && isMainSeason(currentMainSeasonKey);
               const href = shouldKeepRoute
-                ? `${season.url}${currentPath}${currentQuery ? `?${currentQuery}` : ""}`
+                ? `${season.url === "/" ? "" : season.url}${currentPath}${currentQuery ? `?${currentQuery}` : ""}`
                 : season.url;
               return (
                 <Link
