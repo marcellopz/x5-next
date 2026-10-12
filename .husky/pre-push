@@ -17,5 +17,11 @@ if [ "$SKIP_VERCEL_DEPLOY" = "1" ]; then
   exit 0
 fi
 
+if ! pnpm exec vercel whoami >/dev/null 2>&1; then
+  echo "Vercel CLI is not authenticated. Skipping production deploy so git push can continue."
+  echo "Run vercel login later, or push with SKIP_VERCEL_DEPLOY=1 to skip this check."
+  exit 0
+fi
+
 echo "Deploying x5-season-3 to production from main"
 pnpm run vercel:deploy:prod
