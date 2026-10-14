@@ -16,6 +16,11 @@
     "copyright": "x5 dos nerds",
     "builtFor": "Fan project. Not affiliated with Riot Games."
   },
+  "playerCard": {
+    "copyImage": "Copy card image",
+    "copied": "Copied!",
+    "copyFailed": "Could not copy image"
+  },
   "playerTabs": {
     "summary": "Summary",
     "champions": "Champions",

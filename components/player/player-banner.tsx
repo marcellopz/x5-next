@@ -335,7 +335,7 @@ export function PlayerBanner({
         {/* sm: Stacked layout */}
         <div className="flex flex-col md:hidden gap-6 items-center">
           <div className="flex justify-center">
-            <PlayerCard player={player} />
+            <PlayerCard player={player} showCopyButton />
           </div>
           <div className="flex flex-col gap-2 items-center">
             <PlayerInfoSection
@@ -363,7 +363,7 @@ export function PlayerBanner({
         {/* md: Two-row layout */}
         <div className="hidden md:flex lg:hidden flex-col gap-6">
           <div className="flex flex-row gap-2 items-start justify-center">
-            <PlayerCard player={player} />
+            <PlayerCard player={player} showCopyButton />
             <PlayerInfoSection
               playerInfo={playerInfo}
               player={player}
@@ -389,7 +389,7 @@ export function PlayerBanner({
         {/* lg+: Single-row layout */}
         <div className="hidden lg:flex flex-row gap-6 items-center">
           <div className="flex flex-row gap-2 items-start">
-            <PlayerCard player={player} />
+            <PlayerCard player={player} showCopyButton />
             <PlayerInfoSection
               playerInfo={playerInfo}
               player={player}

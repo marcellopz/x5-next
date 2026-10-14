@@ -1,6 +1,8 @@
 // eslint-disable-next-line storybook/no-renderer-packages
 import type { Meta, StoryObj } from "@storybook/react";
 import { PlayerCard } from "@/components/ui/player-card";
+import { PlayerCardS4 } from "@/components/ui/player-card/player-card-s4";
+import { PlayerCardLegacy } from "@/components/ui/player-card/player-card-legacy";
 import type { Player } from "@/lib/types";
 
 const meta = {
@@ -93,6 +95,33 @@ export const MultipleCards: Story = {
       <PlayerCard player={samplePlayer} />
       <PlayerCard player={proPlayer} />
       <PlayerCard player={newPlayer} />
+    </div>
+  ),
+};
+
+export const Season4: Story = {
+  args: {
+    player: samplePlayer,
+  },
+  render: () => (
+    <div className="flex gap-4 flex-wrap">
+      <PlayerCardS4
+        player={{ ...samplePlayer, top: 6, jungle: 7, mid: 8, adc: 6, support: 5 }}
+        showCopyButton
+      />
+      <PlayerCardS4 player={{ ...longNamePlayer, top: 10, jungle: 9, mid: 3, adc: 2, support: 0 }} />
+    </div>
+  ),
+};
+
+export const LegacyVsSeason4: Story = {
+  args: {
+    player: samplePlayer,
+  },
+  render: () => (
+    <div className="flex gap-4 flex-wrap">
+      <PlayerCardLegacy player={samplePlayer} />
+      <PlayerCardS4 player={samplePlayer} />
     </div>
   ),
 };

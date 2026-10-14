@@ -16,6 +16,11 @@
     "copyright": "x5 dos nerds",
     "builtFor": "Projeto de fãs. Sem afiliação com a Riot Games."
   },
+  "playerCard": {
+    "copyImage": "Copiar imagem da carta",
+    "copied": "Copiado!",
+    "copyFailed": "Não foi possível copiar a imagem"
+  },
   "playerTabs": {
     "summary": "Resumo",
     "champions": "Campeões",
