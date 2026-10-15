@@ -40,6 +40,9 @@ export default async function Home() {
   const playerList: Player[] = allPlayersObject
     ? Object.values(allPlayersObject).filter((player) => !player.hide)
     : [];
+  const registeredAccountIds: string[] = Object.values(allPlayersObject ?? {})
+    .map((player) => String(player.account_id ?? "").trim())
+    .filter((id) => id !== "");
   // Calculate some basic stats for the cards
   const totalPlayers = playerList ? playerList.length : 0;
 
@@ -70,6 +73,7 @@ export default async function Home() {
 
       <PlayerOverallLeaderboard
         leaderboard={summarizedOverallData?.leaderboard}
+        registeredAccountIds={registeredAccountIds}
       />
 
       <RolesSection roleLeaderboard={roleLeaderboard} />

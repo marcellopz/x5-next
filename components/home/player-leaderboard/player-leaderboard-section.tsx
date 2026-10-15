@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import { CompactLeaderboard } from "@/components/ui/compact-leaderboard";
 import { CollapsibleSection } from "@/components/ui/collapsible-section";
 import type { LeaderboardItem } from "@/components/ui/compact-leaderboard";
-import { Leaderboard } from "@/lib/types";
+import { Leaderboard, LeaderboardEntry } from "@/lib/types";
 import { useTranslations } from "@/lib/i18n/locale-context";
 
 const defaultLeaderboard: Leaderboard = {
@@ -16,12 +16,30 @@ const defaultLeaderboard: Leaderboard = {
 };
 
 export function PlayerOverallLeaderboard({
-  leaderboard = defaultLeaderboard,
+  leaderboard: rawLeaderboard = defaultLeaderboard,
+  registeredAccountIds,
 }: {
   leaderboard?: Leaderboard;
+  registeredAccountIds?: string[];
 }) {
   const t = useTranslations();
   const [expanded, setExpanded] = useState(false);
+
+  // Skip players that are not registered in the player list
+  const leaderboard = useMemo<Leaderboard>(() => {
+    if (!registeredAccountIds) return rawLeaderboard;
+    const registered = new Set(registeredAccountIds);
+    const keep = (entries?: LeaderboardEntry[]) =>
+      entries?.filter((e) => registered.has(String(e.summonerId)));
+    return {
+      ...rawLeaderboard,
+      killParticipation: keep(rawLeaderboard.killParticipation),
+      winRate: keep(rawLeaderboard.winRate),
+      winRateLast20Games: keep(rawLeaderboard.winRateLast20Games),
+      numberOfChampionsPlayed: keep(rawLeaderboard.numberOfChampionsPlayed),
+      numberOfGames: keep(rawLeaderboard.numberOfGames),
+    } as Leaderboard;
+  }, [rawLeaderboard, registeredAccountIds]);
 
   // Transform leaderboard data to CompactLeaderboard format
   const winRateData: LeaderboardItem[] = useMemo(
