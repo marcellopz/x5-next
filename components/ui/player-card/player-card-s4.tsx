@@ -33,7 +33,7 @@ const roles: { key: keyof Pick<Player, "top" | "jungle" | "mid" | "adc" | "suppo
 ];
 
 const goldTextGradient = "linear-gradient(180deg, #FBEBB8 0%, #EED28C 50%, #CFA650 100%)";
-const labelTextGradient = "linear-gradient(180deg, #FFF8E6 0%, #F2E4BE 55%, #DCC283 100%)";
+const labelTextGradient = "linear-gradient(180deg, #FDF0C8 0%, #F0DA9C 50%, #D6B467 100%)";
 
 function gradientText(gradient: string): CSSProperties {
   return {
@@ -153,7 +153,7 @@ const roleRowStyle: CSSProperties = {
 
 const roleLabelStyle: CSSProperties = {
   flex: 1,
-  fontSize: 19,
+  fontSize: 23,
   fontWeight: 700,
   letterSpacing: "0.08em",
   lineHeight: 1,
@@ -163,10 +163,10 @@ const roleLabelStyle: CSSProperties = {
 };
 
 const roleValueStyle: CSSProperties = {
-  width: 40,
+  width: 46,
   textAlign: "center",
   fontVariantNumeric: "tabular-nums",
-  fontSize: 28,
+  fontSize: 31,
   lineHeight: 1,
   paddingTop: 2,
   fontWeight: 800,
@@ -208,7 +208,7 @@ function BackgroundEngraving({ idPrefix }: { idPrefix: string }) {
           <path
             d="M0 4.5 Q12 0 24 4.5 T48 4.5"
             fill="none"
-            stroke="#E8C878"
+            stroke="#B89448"
             strokeOpacity="0.16"
             strokeWidth="0.8"
           />
@@ -244,15 +244,15 @@ function RowFrame({ y }: { y: number }) {
         points="36,0 444,0 452,8 452,40 444,48 36,48 28,40 28,8"
         fill="#081631"
         fillOpacity="0.45"
-        stroke="#D9B45A"
-        strokeOpacity="0.88"
-        strokeWidth="1.3"
+        stroke="#A8873F"
+        strokeOpacity="0.9"
+        strokeWidth="2"
       />
       <polygon
         points="38,3 442,3 449,10 449,38 442,45 38,45 31,38 31,10"
-        stroke="#E8C878"
+        stroke="#B89448"
         strokeOpacity="0.33"
-        strokeWidth="0.9"
+        strokeWidth="1.3"
       />
     </g>
   );
@@ -278,7 +278,7 @@ function Ornaments({ idPrefix }: { idPrefix: string }) {
         </linearGradient>
       </defs>
 
-      <g stroke="#E8C878">
+      <g stroke="#B89448">
         <circle cx="240" cy="470" r="178" strokeOpacity="0.1" strokeWidth="1" />
         <circle
           cx="240"
@@ -310,16 +310,16 @@ function Ornaments({ idPrefix }: { idPrefix: string }) {
         points="70,26 410,26 430,51 410,76 70,76 50,51"
         fill="#081631"
         fillOpacity="0.75"
-        stroke="#C9A24A"
-        strokeWidth="1.2"
+        stroke="#9A7A38"
+        strokeWidth="2"
       />
       <polygon
         points="74,30 406,30 425,51 406,72 74,72 55,51"
-        stroke="#E8C878"
+        stroke="#B89448"
         strokeOpacity="0.3"
         strokeWidth="0.8"
       />
-      <path d="M50 51 H30 M430 51 H450" stroke="#C9A24A" strokeWidth="1" />
+      <path d="M50 51 H30 M430 51 H450" stroke="#9A7A38" strokeWidth="1.6" />
       <polygon points="22,51 26,47 30,51 26,55" fill="#E8C878" />
       <polygon points="450,51 454,47 458,51 454,55" fill="#E8C878" />
 
@@ -344,51 +344,74 @@ function BorderFrames() {
     >
       <polygon
         points="24,8 456,8 472,24 472,636 456,652 24,652 8,636 8,24"
-        stroke="#E8C878"
-        strokeWidth="1.2"
+        stroke="#B89448"
+        strokeWidth="2"
       />
       <polygon
         points="27,13 453,13 467,27 467,633 453,647 27,647 13,633 13,27"
-        stroke="#E8C878"
-        strokeOpacity="0.3"
-        strokeWidth="0.8"
+        stroke="#B89448"
+        strokeOpacity="0.35"
+        strokeWidth="1.2"
       />
       <polygon
         points="48,88 432,88 450,106 450,306 432,324 48,324 30,306 30,106"
-        stroke="#D9B45A"
-        strokeWidth="2"
+        stroke="#A8873F"
+        strokeWidth="3"
       />
       <polygon
         points="46,83 434,83 455,104 455,308 434,329 46,329 25,308 25,104"
-        stroke="#E8C878"
+        stroke="#B89448"
         strokeOpacity="0.4"
-        strokeWidth="1"
+        strokeWidth="1.4"
       />
       <path
         d="M30 106 L48 88 M450 106 L432 88 M30 306 L48 324 M450 306 L432 324"
-        stroke="#F3D98B"
-        strokeWidth="2"
+        stroke="#B89448"
+        strokeWidth="3"
       />
     </svg>
   );
 }
 
-function PhotoPlaceholder() {
+const skeletonBlock: CSSProperties = {
+  position: "absolute",
+  background: "#1B3560",
+  borderRadius: 8,
+};
+
+function CardSkeleton({ visible }: { visible: boolean }) {
   return (
-    <svg
-      width="64"
-      height="64"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="#8FA3C4"
-      strokeWidth="1.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+    <div
       aria-hidden="true"
+      style={{
+        position: "absolute",
+        inset: 0,
+        zIndex: 10,
+        background:
+          "radial-gradient(ellipse at 50% 30%, #143466 0%, #0A1A35 60%, #050E20 100%)",
+        opacity: visible ? 1 : 0,
+        visibility: visible ? "visible" : "hidden",
+        pointerEvents: "none",
+        transition: "opacity 300ms, visibility 300ms",
+      }}
     >
-      <circle cx="12" cy="8" r="4" />
-      <path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8" />
-    </svg>
+      <div style={{ ...skeletonBlock, left: 100, top: 34, width: 280, height: 34 }} />
+      <div style={{ ...skeletonBlock, left: 30, top: 88, width: 420, height: 236 }} />
+      {roles.map((role, i) => (
+        <div
+          key={role.key}
+          style={{
+            ...skeletonBlock,
+            background: "rgba(8,22,49,0.6)",
+            border: "1px solid rgba(168,135,63,0.35)",
+            left: 28,
+            top: ROWS_TOP + i * (ROW_HEIGHT + ROW_GAP),
+            width: 424,
+            height: ROW_HEIGHT,
+          }}
+        />
+      ))}
+    </div>
   );
 }
 
@@ -462,7 +485,6 @@ export function PlayerCardS4({
             <h1 style={nameStyle}>{player.name}</h1>
 
             <div style={photoBoxStyle}>
-              {!photoLoaded && <PhotoPlaceholder />}
               {photoSrc && (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
@@ -517,6 +539,8 @@ export function PlayerCardS4({
             <div style={footerStyle}>X5DOSNERDS</div>
 
             <BorderFrames />
+
+            <CardSkeleton visible={!photoLoaded} />
           </div>
         </div>
       </div>

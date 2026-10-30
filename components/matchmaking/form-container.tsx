@@ -11,7 +11,7 @@ import type { Player } from "@/lib/types";
 import { Button } from "../ui/button";
 import { ChevronLeft } from "lucide-react";
 import { useTranslations } from "@/lib/i18n/locale-context";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   decodeMatchmakingStateFromQuery,
   encodeMatchmakingStateToQuery,
@@ -39,7 +39,6 @@ function FormContent() {
     config,
     hydrateMatchmakingState,
   } = useMatchmaking();
-  const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const hasHydratedFromUrlRef = useRef(false);
@@ -85,8 +84,8 @@ function FormContent() {
     }
 
     const nextUrl = nextQueryString ? `${pathname}?${nextQueryString}` : pathname;
-    router.replace(nextUrl, { scroll: false });
-  }, [config, currentStep, pathname, players, router, searchParams, selectedPlayerIds]);
+    window.history.replaceState(window.history.state, "", nextUrl);
+  }, [config, currentStep, pathname, players, searchParams, selectedPlayerIds]);
 
   const handleNext = () => {
     if (currentStep < steps.length) {
