@@ -43,6 +43,7 @@ function FormContent() {
   const searchParams = useSearchParams();
   const hasHydratedFromUrlRef = useRef(false);
   const initialQueryStringRef = useRef(searchParams.toString());
+  const [isUrlStateHydrated, setIsUrlStateHydrated] = useState(false);
 
   useLayoutEffect(() => {
     if (hasHydratedFromUrlRef.current) {
@@ -57,10 +58,11 @@ function FormContent() {
     });
     setCurrentStep(decoded.step);
     hasHydratedFromUrlRef.current = true;
+    setIsUrlStateHydrated(true);
   }, [hydrateMatchmakingState, players]);
 
   useEffect(() => {
-    if (!hasHydratedFromUrlRef.current) {
+    if (!isUrlStateHydrated) {
       return;
     }
 
@@ -85,7 +87,15 @@ function FormContent() {
 
     const nextUrl = nextQueryString ? `${pathname}?${nextQueryString}` : pathname;
     window.history.replaceState(window.history.state, "", nextUrl);
-  }, [config, currentStep, pathname, players, searchParams, selectedPlayerIds]);
+  }, [
+    config,
+    currentStep,
+    isUrlStateHydrated,
+    pathname,
+    players,
+    searchParams,
+    selectedPlayerIds,
+  ]);
 
   const handleNext = () => {
     if (currentStep < steps.length) {
